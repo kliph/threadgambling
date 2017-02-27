@@ -1,0 +1,20 @@
+* Threadgambling
+Streak with the thread.
+* Update dependencies
+#+BEGIN_SRC sh :tangle script/update :shebang "#!/bin/bash"
+  lein deps
+#+END_SRC
+* Tests
+#+BEGIN_SRC sh :tangle script/test :shebang "#!/bin/bash"
+  script/update
+
+  echo "🌯  Running tests..."
+  if [ -n "$1" ]; then
+      lein test "$1"
+  else
+      lein test
+  fi
+#+END_SRC
+
+* To start a server with figwheel
+Connect to a repl using =C-c M-j=.  Run =(figwheel-up)=
