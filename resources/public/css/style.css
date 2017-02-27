@@ -398,3 +398,13 @@ h2 {
   opacity: 0.54;
   letter-spacing: 0px;
 }
+
+div#nav-links span.pull-right {
+  float: right;
+}
+
+div#nav-links a {
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+}

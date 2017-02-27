@@ -3,35 +3,23 @@
             [cljs-react-material-ui.icons :as ic]
             [cljs-react-material-ui.reagent :as rui]
             [reagent.core :as r]
+            [threadgambling.fixtures :as f]
+            [threadgambling.state :as s]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
 
-(def app-state (r/atom {:page :home
-                        :tables  [{:position 1
-                                   :club "Tottenham"}
-                                  {:position 3
-                                   :club "Mighty Morecambe Shrimps"}
-                                  {:position 2
-                                   :club "Chelsea"}]}))
+(def nav-links
+  [:div#nav-links
+   [:span
+    [:a {} "threadgambling"]]
+   [:span.pull-right
+    [:a {:on-click #(swap! s/app-state assoc :page :fixtures)}
+     "Fixtures"]]])
 
-(defn pick-row [props]
-  (let [{:keys [position club]} props]
-    [:tr
-     [:td position]
-     [:td club]]))
-
-(defn pick-table []
-  [:div
-   [:h2 "Tables"]
-   [:table
-    {:cell-spacing "0" :width "100%"}
-    [:thead>tr
-     [:th "Position"]
-     [:th "Club"]]
-    [:tbody
-     (map (fn [x] ^{:key (:position x)} [pick-row x])
-          (sort-by :position (@app-state :tables)))]]])
+(defmulti current-page #(@s/app-state :page))
+(defmethod current-page :fixtures []
+  [f/fixtures-page])
 
 (defn home-page []
   [rui/mui-theme-provider
@@ -39,12 +27,7 @@
    [:div
     [rui/app-bar { ;; :style {:position "fixed"}
                   :show-menu-icon-button false
-                  :title "threadgambling"}]
-    [pick-table]]])
+                  :title (r/as-element nav-links)}]
+    [current-page]]])
 
-
-(defmulti current-page #(@app-state :page))
-(defmethod current-page :home []
-  [home-page])
-
-(r/render-component [current-page] (by-id "app"))
+(r/render-component [home-page] (by-id "app"))
