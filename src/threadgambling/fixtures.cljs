@@ -1,5 +1,6 @@
 (ns threadgambling.fixtures
-  (:require [threadgambling.state :as s]))
+  (:require [threadgambling.state :as s]
+            [cljs-react-material-ui.core :as ui]))
 
 (defn pick-item [props]
   (let [{:keys [name]} props]
@@ -13,7 +14,7 @@
      [pick-item away-club]]))
 
 (defn fixtures-page []
-  [:div
+  [:div#fixtures
    [:h2 "Fixtures"]
    [:table
     {:cell-spacing "0" :width "100%"}
@@ -23,4 +24,8 @@
      [:th "Away"]]
     [:tbody
      (map (fn [x] ^{:key (str (:home-club x) (:away-club x))} [pick-row x])
-          (sort-by :date (@s/app-state :fixtures)))]]])
+          (sort-by :date (@s/app-state :fixtures)))]]
+   [ui/raised-button
+    {:label "Confirm"
+     :full-width true
+     :className "pick-button"}]])
