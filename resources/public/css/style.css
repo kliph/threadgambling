@@ -407,4 +407,8 @@ div#nav-links a {
   text-decoration: none;
   cursor: pointer;
   color: white;
+  margin-right: 0.75em;
+}
+div#nav-links a:last-child {
+  margin-right: 0px;
 }

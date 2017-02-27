@@ -4,6 +4,7 @@
             [cljs-react-material-ui.reagent :as rui]
             [reagent.core :as r]
             [threadgambling.fixtures :as f]
+            [threadgambling.standings :as standings]
             [threadgambling.state :as s]
             [goog.dom]))
 
@@ -15,11 +16,15 @@
     [:a {} "threadgambling"]]
    [:span.pull-right
     [:a {:on-click #(swap! s/app-state assoc :page :fixtures)}
-     "Fixtures"]]])
+     "Fixtures"]
+    [:a {:on-click #(swap! s/app-state assoc :page :standings)}
+     "Standings"]]])
 
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
   [f/fixtures-page])
+(defmethod current-page :standings []
+  [standings/standings-page])
 
 (defn home-page []
   [rui/mui-theme-provider
