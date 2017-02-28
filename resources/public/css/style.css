@@ -431,3 +431,12 @@ div#footer li {
   padding-left: 2em;
   padding-right: 2em;
 }
+
+div.standings a {
+  cursor: pointer;
+  color: blue;
+}
+
+div.standings a:hover {
+  text-decoration: underline;
+}

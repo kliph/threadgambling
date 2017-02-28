@@ -5,14 +5,14 @@
   (let [{:keys [rank team user points streak current-pick]} props]
     [:tr
      [:td rank]
-     [:td team]
+     [:td [:a {:on-click #(swap! s/app-state assoc :page :team)} team]]
      [:td user]
      [:td points]
      [:td streak]
      [:td current-pick]]))
 
 (defn standings-page []
-  [:div
+  [:div.standings
    [:h2 "Standings"]
    [:table
     {:cell-spacing "0" :width "100%"}

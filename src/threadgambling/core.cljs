@@ -6,6 +6,7 @@
             [threadgambling.fixtures :as f]
             [threadgambling.standings :as standings]
             [threadgambling.state :as s]
+            [threadgambling.team :as team]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -45,6 +46,8 @@
   [f/fixtures-page])
 (defmethod current-page :standings []
   [standings/standings-page])
+(defmethod current-page :team []
+  [team/team-page])
 
 (defn home-page []
   [rui/mui-theme-provider
