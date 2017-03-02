@@ -399,6 +399,18 @@ h2 {
   letter-spacing: 0px;
 }
 
+h3 {
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 400;
+  padding-left: 24px;
+  padding-bottom: 0.5em;
+  color: #000000;
+  opacity: 0.54;
+  letter-spacing: 0px;
+}
+
 div#nav-links span.pull-right {
   float: right;
 }
@@ -419,17 +431,28 @@ div.pick-button {
   margin-bottom: 1em;
 }
 
+div#footer {
+  display: flex;
+  flex: 1;
+}
+
+div#third {
+  flex: 0 0 33.3333%;
+}
+
 div#footer ul {
   list-style: none;
   padding-top: 1em;
   padding-bottom: 2em;
   display: flex;
   justify-content: center;
+  flex: 1;
 }
 
 div#footer li {
-  padding-left: 2em;
-  padding-right: 2em;
+  display: flex;
+  justify-content: center;
+  flex: 0 0 33.3333%;
 }
 
 div.standings a {
@@ -439,4 +462,56 @@ div.standings a {
 
 div.standings a:hover {
   text-decoration: underline;
+}
+
+div.home-container {
+  display: flex;
+  flex-direction: column;
+}
+
+div.home-container div.team-info {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  align-content: stretch;
+}
+
+div.home-container div.team-info div.team-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  padding: 1em;
+  flex: 0 0 33.3333%;
+}
+
+
+div#pick-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 33.3333%;
+}
+
+div#pick-container div#pick-locked {
+  background: red;
+  color: white;
+  padding: 0.3em;
+}
+
+div.home-container div.home-nav {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex: 1;
+}
+
+div.home-container div.rank {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 33.3333%;
 }

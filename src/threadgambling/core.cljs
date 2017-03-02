@@ -7,6 +7,7 @@
             [threadgambling.standings :as standings]
             [threadgambling.state :as s]
             [threadgambling.team :as team]
+            [threadgambling.home :as home]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -30,7 +31,7 @@
 (def nav-links
   [:div#nav-links
    [:span
-    [:a {} "threadgambling"]]
+    [:a {:on-click #(swap! s/app-state assoc :page :home)} "threadgambling"]]
    [:span.pull-right
     [ui/flat-button
      {:on-click #(swap! s/app-state assoc :page :fixtures)
@@ -39,7 +40,13 @@
     [ui/flat-button
      {:on-click #(swap! s/app-state assoc :page :standings)
       :style {:color "#FFFFFF"}
-      :label "Standings"}]]])
+      :label "Standings"}]
+    [ui/flat-button
+     {:style {:color "#FFFFFF"}
+      :label "Account"}]
+    [ui/flat-button
+     {:style {:color "#FFFFFF"}
+      :label "Sign Out"}]]])
 
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
@@ -48,8 +55,10 @@
   [standings/standings-page])
 (defmethod current-page :team []
   [team/team-page])
+(defmethod current-page :home []
+  [home/home-page])
 
-(defn home-page []
+(defn app-container []
   [rui/mui-theme-provider
    {:mui-theme (ui/get-mui-theme)}
    [:div
@@ -57,8 +66,8 @@
                   :show-menu-icon-button false
                   :title (r/as-element nav-links)}]
     [:div
-     {:style {:padding "1em"}}
+     {:style {:padding-top "1em"}}
      [current-page]]
     [footer]]])
 
-(r/render-component [home-page] (by-id "app"))
+(r/render-component [app-container] (by-id "app"))
