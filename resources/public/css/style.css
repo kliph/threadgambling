@@ -404,7 +404,6 @@ h3 {
   text-overflow: ellipsis;
   font-size: 16px;
   font-weight: 400;
-  padding-left: 24px;
   padding-bottom: 0.5em;
   color: #000000;
   opacity: 0.54;
@@ -455,12 +454,12 @@ div#footer li {
   flex: 0 0 33.3333%;
 }
 
-div.standings a {
+a {
   cursor: pointer;
   color: blue;
 }
 
-div.standings a:hover {
+a:hover {
   text-decoration: underline;
 }
 

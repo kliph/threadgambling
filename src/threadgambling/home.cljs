@@ -9,8 +9,9 @@
      [:span#pick-icon "[Icon]"]
      [:div#pick-locked "LOCKED"]]
     [:div.team-container
-     [:h3 "Colin Smith"]
-     [:h2 "South Philly Kittens"]]
+     [:h3 (get-in @s/app-state [:account :name])]
+     [:h2 {:style {:padding-left "0"}} (get-in @s/app-state [:account :team])]
+     [:a {:on-click #(swap! s/app-state assoc :page :update-account)} "Update Account"]]
     [:div.rank
      [:span "1th Place"]]]
    [:div#footer

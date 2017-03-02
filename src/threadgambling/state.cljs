@@ -2,6 +2,9 @@
   (:require [reagent.core :as r]))
 
 (def app-state (r/atom {:page :standings
+                        :account {:name "Colin Smith"
+                                  :team "South Philly Kittens"
+                                  :email "foo@example.com"}
                         :results [{:date "Jan 1 2017"
                                    :round 1
                                    :team "Spurs"

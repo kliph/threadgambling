@@ -8,6 +8,7 @@
             [threadgambling.state :as s]
             [threadgambling.team :as team]
             [threadgambling.home :as home]
+            [threadgambling.account :as account]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -43,9 +44,6 @@
       :label "Standings"}]
     [ui/flat-button
      {:style {:color "#FFFFFF"}
-      :label "Account"}]
-    [ui/flat-button
-     {:style {:color "#FFFFFF"}
       :label "Sign Out"}]]])
 
 (defmulti current-page #(@s/app-state :page))
@@ -57,6 +55,8 @@
   [team/team-page])
 (defmethod current-page :home []
   [home/home-page])
+(defmethod current-page :update-account []
+  [account/update-page])
 
 (defn app-container []
   [rui/mui-theme-provider
