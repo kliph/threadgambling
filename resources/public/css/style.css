@@ -514,3 +514,10 @@ div.home-container div.rank {
   justify-content: center;
   flex: 0 0 33.3333%;
 }
+
+div#sign-in-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 5em;
+  padding-bottom: 5em;
+}

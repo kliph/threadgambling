@@ -1,7 +1,8 @@
 (ns threadgambling.state
   (:require [reagent.core :as r]))
 
-(def app-state (r/atom {:page :standings
+(def app-state (r/atom {:page :sign-in
+                        :signed-in false
                         :account {:name "Colin Smith"
                                   :team "South Philly Kittens"
                                   :email "foo@example.com"}

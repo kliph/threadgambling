@@ -9,6 +9,7 @@
             [threadgambling.team :as team]
             [threadgambling.home :as home]
             [threadgambling.account :as account]
+            [threadgambling.auth :as auth]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -29,22 +30,27 @@
       {:href "https://www.facebook.com/soccerthread/"
        :label "Facebook"}]]]])
 
-(def nav-links
+(defn nav-links []
   [:div#nav-links
    [:span
-    [:a {:on-click #(swap! s/app-state assoc :page :home)} "threadgambling"]]
-   [:span.pull-right
-    [ui/flat-button
-     {:on-click #(swap! s/app-state assoc :page :fixtures)
-      :style {:color "#FFFFFF"}
-      :label "Fixtures"}]
-    [ui/flat-button
-     {:on-click #(swap! s/app-state assoc :page :standings)
-      :style {:color "#FFFFFF"}
-      :label "Standings"}]
-    [ui/flat-button
-     {:style {:color "#FFFFFF"}
-      :label "Sign Out"}]]])
+    [:a {:on-click #(when (:signed-in @s/app-state)
+                      (swap! s/app-state assoc :page :home))} "threadgambling"]]
+   (if (:signed-in @s/app-state)
+     [:span.pull-right
+      [ui/flat-button
+       {:on-click #(swap! s/app-state assoc :page :fixtures)
+        :style {:color "#FFFFFF"}
+        :label "Fixtures"}]
+      [ui/flat-button
+       {:on-click #(swap! s/app-state assoc :page :standings)
+        :style {:color "#FFFFFF"}
+        :label "Standings"}]
+      [ui/flat-button
+       {:on-click #(swap! s/app-state assoc
+                          :page :sign-in
+                          :signed-in false)
+        :style {:color "#FFFFFF"}
+        :label "Sign Out"}]])])
 
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
@@ -57,6 +63,8 @@
   [home/home-page])
 (defmethod current-page :update-account []
   [account/update-page])
+(defmethod current-page :sign-in []
+  [auth/sign-in-page])
 
 (defn app-container []
   [rui/mui-theme-provider
@@ -64,7 +72,7 @@
    [:div
     [rui/app-bar { ;; :style {:position "fixed"}
                   :show-menu-icon-button false
-                  :title (r/as-element nav-links)}]
+                  :title (r/as-element (nav-links))}]
     [:div
      {:style {:padding-top "1em"}}
      [current-page]]
