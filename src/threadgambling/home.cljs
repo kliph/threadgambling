@@ -10,12 +10,11 @@
      [:div#pick-locked "LOCKED"]]
     [:div.team-container
      [:h3 (get-in @s/app-state [:account :name])]
-     [:h2 {:style {:padding-left "0"}} (get-in @s/app-state [:account :team])]
-     [:a {:on-click #(swap! s/app-state assoc :page :update-account)} "Update Account"]]
+     [:h2 {:style {:padding-left "0"}} (get-in @s/app-state [:account :team])]]
     [:div.rank
      [:span "1th Place"]]]
-   [:div#footer
-    [:div#third]
+   [:div.actions
+    [:div.quarter]
     [:ul
      [:li
       [ui/flat-button
@@ -27,5 +26,12 @@
         :label "Standings"}]]
      [:li
       [ui/flat-button
-       {:label "Results"}]]]
-    [:div#third]]])
+       {:on-click #(swap! s/app-state assoc :page :update-account)
+        :label "Update Account"}]]
+     [:li
+      [ui/flat-button
+       {:on-click #(swap! s/app-state assoc
+                          :page :sign-in
+                          :signed-in false)
+        :label "Sign Out"}]]]
+    [:div.quarter]]])

@@ -435,8 +435,33 @@ div#footer {
   flex: 1;
 }
 
-div#third {
+div.third {
   flex: 0 0 33.3333%;
+}
+
+div.quarter {
+  flex: 0 0 25%;
+}
+
+div.actions {
+  display: flex;
+}
+
+div.actions ul {
+  list-style: none;
+  padding-top: 1em;
+  padding-bottom: 2em;
+  display: flex;
+  justify-content: start;
+  flex-flow: row wrap;
+  flex: 1;
+}
+
+
+div.actions li {
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: space-around;
 }
 
 div#footer ul {
@@ -447,6 +472,7 @@ div#footer ul {
   justify-content: center;
   flex: 1;
 }
+
 
 div#footer li {
   display: flex;
