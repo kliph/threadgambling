@@ -33,6 +33,17 @@
                                                     :output-dir "resources/public/js/out"
                                                     :optimizations :none
                                                     :recompile-dependents true
+                                                    :source-map true}}
+                                        {:id "admin"
+                                         :source-paths ["src"]
+                                         :figwheel true
+                                         :compiler {:main "threadgambling.admin"
+                                                    :preloads [devtools.preload]
+                                                    :asset-path "js/out"
+                                                    :output-to "resources/public/js/admin.js"
+                                                    :output-dir "resources/public/js/admin/out"
+                                                    :optimizations :none
+                                                    :recompile-dependents true
                                                     :source-map true}}]}}
              :uberjar {:env {:production true}
                        :source-paths ["src"]
@@ -44,5 +55,15 @@
                                                         :asset-path "js/out"
                                                         :output-to "resources/public/js/main.js"
                                                         :output-dir "resources/public/js/out"
+                                                        :optimizations :advanced
+                                                        :pretty-print false}}
+                                            {:id "admin"
+                                             :source-paths ["src"]
+                                             :jar true
+                                             :compiler {:main "threadgambling.admin"
+                                                        :preloads [devtools.preload]
+                                                        :asset-path "js/admin/out"
+                                                        :output-to "resources/public/js/admin.js"
+                                                        :output-dir "resources/public/js/admin/out"
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}})

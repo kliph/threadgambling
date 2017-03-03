@@ -10,6 +10,8 @@
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
+  (GET "/admin" []
+       (slurp (io/resource "public/admin.html")))
   (route/resources "/")
   (ANY "*" []
        (route/not-found "<h1>404 Not found</h1>")))
