@@ -15,6 +15,19 @@ Streak with the thread.
       lein test
   fi
 #+END_SRC
+* To Start a server
+#+BEGIN_SRC sh :tangle script/server :shebang "#!/bin/bash"
+  script/update
+
+  echo "🌯  Starting server..."
+  echo "🌯  You'll need to manually start a figwheel repl (See README.org for details)..."
+
+  lein run -m threadgambling.web
+#+END_SRC
 
 * To start a server with figwheel
 Connect to a repl using =C-c M-j=.  Run =(figwheel-up)=
+
+* To switch builds
+Switch builds by using =(switch-to-build :id)= from a figwheel cljs
+repl
