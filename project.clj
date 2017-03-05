@@ -39,7 +39,7 @@
                                          :figwheel true
                                          :compiler {:main "threadgambling.admin"
                                                     :preloads [devtools.preload]
-                                                    :asset-path "js/out"
+                                                    :asset-path "js/admin/out"
                                                     :output-to "resources/public/js/admin.js"
                                                     :output-dir "resources/public/js/admin/out"
                                                     :optimizations :none
