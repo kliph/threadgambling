@@ -19,15 +19,18 @@
    [:ul
     [:li
      [ui/flat-button
-      {:href "https://soundcloud.com/user-70053674"
+      {:style {:color "#FFFFFF"}
+       :href "https://soundcloud.com/user-70053674"
        :label "Podcast"}]]
     [:li
      [ui/flat-button
-      {:href "https://twitter.com/soccerthread"
+      {:style {:color "#FFFFFF"}
+       :href "https://twitter.com/soccerthread"
        :label "Twitter"}]]
     [:li
      [ui/flat-button
-      {:href "https://www.facebook.com/soccerthread/"
+      {:style {:color "#FFFFFF"}
+       :href "https://www.facebook.com/soccerthread/"
        :label "Facebook"}]]]])
 
 (defn nav-links []
@@ -70,12 +73,17 @@
   [rui/mui-theme-provider
    {:mui-theme (ui/get-mui-theme)}
    [:div
-    [rui/app-bar { ;; :style {:position "fixed"}
+    [rui/app-bar {:style {:background-color "#29002E"}
                   :show-menu-icon-button false
                   :title (r/as-element (nav-links))}]
     [:div
-     {:style {:padding-top "1em"}}
-     [current-page]]
+     {:style {:padding-top "1em"
+              :padding-bottom "3em"
+              :box-shadow "0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12)"
+              :position "relative"
+              :z-index 1000}}
+     [:div {:style {:margin "1em"}}
+      [current-page]]]
     [footer]]])
 
 (r/render-component [app-container] (by-id "app"))

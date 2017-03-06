@@ -1,31 +1,65 @@
 (ns threadgambling.fixtures
-  (:require [threadgambling.state :as s]
+  (:require [reagent.core :as r]
+            [threadgambling.state :as s]
             [cljs-react-material-ui.core :as ui]))
 
-(defn pick-item [props]
-  (let [{:keys [name]} props]
-    [:td name]))
+(def previously-picked?
+  (get-in @s/app-state [:account :picked] #{}))
 
-(defn pick-row [props]
+(defn toggle-picked! [a]
+  (if (= @a "picked")
+    (reset! a "pickable")
+    (reset! a "picked")))
+
+(defn reset-other-picked! [table-state name]
+  (doall
+   (map
+    (fn [x]
+      (compare-and-set! (val x) "picked" "pickable"))
+    (filter #(not= (key %) name) table-state))))
+
+(defn pick-item [props table-state]
+  (let [{:keys [name]} props
+        td-state (get table-state name)]
+    (fn []
+      (if (previously-picked? name)
+        [:td {:class @td-state} name]
+        [:td {:class @td-state
+              :on-click #(do
+                           (reset-other-picked! table-state name)
+                           (toggle-picked! td-state))}
+         name]))))
+
+(defn pick-row [props table-state]
   (let [{:keys [home-club away-club]} props]
     [:tr
-     [pick-item home-club]
-     [:td "-"]
-     [pick-item away-club]]))
+     [pick-item home-club table-state]
+     [:td "vs"]
+     [pick-item away-club table-state]
+     ]))
 
 (defn fixtures-page []
-  [:div#fixtures
-   [:h2 "Fixtures"]
-   [:table
-    {:cell-spacing "0" :width "100%"}
-    [:thead>tr
-     [:th "Home"]
-     [:th]
-     [:th "Away"]]
-    [:tbody
-     (map (fn [x] ^{:key (str (:home-club x) (:away-club x))} [pick-row x])
-          (sort-by :date (@s/app-state :fixtures)))]]
-   [ui/raised-button
-    {:label "Confirm"
-     :full-width true
-     :className "pick-button"}]])
+  (let [sorted-fixtures (sort-by :date (@s/app-state :fixtures))
+        table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
+                       (into (map #(get-in % [:away-club :name]) sorted-fixtures))
+)
+        table-vals (map #(if (previously-picked? %)
+                           (r/atom "disabled")
+                           (r/atom "pickable"))
+                        table-keys)
+        table-state (zipmap table-keys table-vals)]
+    (fn []
+      [:div#fixtures
+       [:h2 "Fixtures"]
+       [:table
+        [:thead>tr
+         [:th "Home"]
+         [:th]
+         [:th "Away"]]
+        [:tbody
+         (map (fn [x] ^{:key (str (:home-club x) (:away-club x))} [pick-row x table-state])
+              sorted-fixtures)]]
+       [ui/raised-button
+        {:label "Confirm"
+         :full-width true
+         :className "pick-button"}]])))

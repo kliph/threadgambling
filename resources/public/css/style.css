@@ -379,10 +379,6 @@ input::-moz-focus-inner {
     height: 100%;
 }
 
-#app {
-    background-color: #f5f5f5;
-}
-
 body, html {
   min-height: 100%;
 }
@@ -394,8 +390,7 @@ h2 {
   font-weight: 400;
   padding-left: 24px;
   padding-bottom: 0.5em;
-  color: #000000;
-  opacity: 0.54;
+  color: #29002E;
   letter-spacing: 0px;
 }
 
@@ -405,9 +400,49 @@ h3 {
   font-size: 16px;
   font-weight: 400;
   padding-bottom: 0.5em;
-  color: #000000;
-  opacity: 0.54;
+  color: #29002E;
   letter-spacing: 0px;
+}
+
+table {
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  cell-spacing: 0;
+  margin: 0 auto;
+  color: #29002E;
+}
+
+th {
+  font-size: 16px;
+  font-weight: 400;
+  padding-bottom: 0.5em;
+  color: #29002E;
+  letter-spacing: 0px;
+}
+
+div#fixtures th {
+  width: 33%;
+  padding-bottom: 1em;
+}
+
+div#fixtures td {
+  text-align: center;
+  padding: 0.5em;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-style: inset;
+}
+
+div#fixtures td.disabled {
+  opacity: 0.54;
+}
+
+div#fixtures td.picked {
+  border: 2px solid #FB0049;
+  box-sizing: border-box;
+}
+
+div#fixtures td.pickable:hover {
+  background-color: #FB0049;
 }
 
 div#nav-links span.pull-right {
@@ -433,6 +468,7 @@ div.pick-button {
 div#footer {
   display: flex;
   flex: 1;
+  background-color: #29002E;
 }
 
 div.third {

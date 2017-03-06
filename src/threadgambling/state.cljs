@@ -5,7 +5,8 @@
                         :signed-in false
                         :account {:name "Colin Smith"
                                   :team "South Philly Kittens"
-                                  :email "foo@example.com"}
+                                  :email "foo@example.com"
+                                  :picked #{"Tottenham" "Leicester"}}
                         :results [{:date "Jan 1 2017"
                                    :round 1
                                    :team "Spurs"
