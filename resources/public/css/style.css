@@ -441,6 +441,11 @@ div#fixtures td.picked {
   box-sizing: border-box;
 }
 
+div#fixtures td.confirmed {
+  border: 2px solid #00FF87;
+  box-sizing: border-box;
+}
+
 div#fixtures td.pickable:hover {
   background-color: #FB0049;
 }

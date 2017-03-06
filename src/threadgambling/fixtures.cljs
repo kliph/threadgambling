@@ -18,17 +18,31 @@
       (compare-and-set! (val x) "picked" "pickable"))
     (filter #(not= (key %) name) table-state))))
 
+(defn disable-other-pickable! [table-state]
+  (doall
+   (map
+    (fn [x]
+      (compare-and-set! (val x) "pickable" ""))
+    table-state)))
+
+(defn confirm-pick! [table-state]
+  (let [pick (first (filter #(= @(val %) "picked") table-state))]
+    (when pick
+      (js/console.log (str "Picked " (key pick)))
+      (disable-other-pickable! table-state)
+      (reset! (val pick) "confirmed"))))
+
 (defn pick-item [props table-state]
   (let [{:keys [name]} props
         td-state (get table-state name)]
     (fn []
-      (if (previously-picked? name)
-        [:td {:class @td-state} name]
+      (if (= @td-state "pickable")
         [:td {:class @td-state
               :on-click #(do
                            (reset-other-picked! table-state name)
                            (toggle-picked! td-state))}
-         name]))))
+         name]
+        [:td {:class @td-state} name]))))
 
 (defn pick-row [props table-state]
   (let [{:keys [home-club away-club]} props]
@@ -62,4 +76,5 @@
        [ui/raised-button
         {:label "Confirm"
          :full-width true
+         :on-click #(confirm-pick! table-state)
          :className "pick-button"}]])))
