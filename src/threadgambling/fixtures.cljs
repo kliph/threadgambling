@@ -39,6 +39,7 @@
       (if (#{"pickable" "picked"} @td-state)
         [:td {:class @td-state
               :on-click #(do
+                           (js/console.log table-state)
                            (reset-other-picked! table-state name)
                            (toggle-picked! td-state))}
          name]
