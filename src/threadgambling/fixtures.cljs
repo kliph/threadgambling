@@ -36,7 +36,7 @@
   (let [{:keys [name]} props
         td-state (get table-state name)]
     (fn []
-      (if (= @td-state "pickable")
+      (if (#{"pickable" "picked"} @td-state)
         [:td {:class @td-state
               :on-click #(do
                            (reset-other-picked! table-state name)
