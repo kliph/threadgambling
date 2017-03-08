@@ -10,6 +10,7 @@
                     :underline-focus-style {:border-color purp}
                     :floating-label-focus-style {:color purp}
                     :floating-label-text label
+                    :name label
                     :value (get-in @s/app-state value-ks "")
                     :on-change #(swap! s/app-state
                                        assoc-in
