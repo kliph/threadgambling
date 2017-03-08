@@ -588,3 +588,13 @@ div#sign-in-page {
   padding-top: 5em;
   padding-bottom: 5em;
 }
+
+div#update-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+div.spacer {
+  padding: 1em;
+}
