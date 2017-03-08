@@ -5,8 +5,6 @@ script/update
 
 lein clean
 
-lein cljsbuild once test
-
 echo "🌯  Running tests..."
 if [ -n "$1" ]; then
     lein test "$1"
