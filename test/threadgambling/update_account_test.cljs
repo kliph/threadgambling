@@ -39,6 +39,28 @@
                  :account
                  :name) "test")))))
 
-(deftest change-email)
+(deftest change-email
+  (testing "Changing email updates the state"
+    (let [_ (r/render (test-util/test-container [account/update-page]) c)
+          email-input (sel1 "input[name=\"Email\"]")]
+      (is (= (dommy/value email-input) (-> @s/app-state
+                                          :account
+                                          :email)))
+      (change-input! email-input "test")
+      (is (= (dommy/value email-input) "test"))
+      (is (= (-> @s/app-state
+                 :account
+                 :email) "test")))))
 
-(deftest change-team-name)
+(deftest change-team-name
+  (testing "Changing team name updates the state"
+    (let [_ (r/render (test-util/test-container [account/update-page]) c)
+          team-input (sel1 "input[name=\"Team Name\"]")]
+      (is (= (dommy/value team-input) (-> @s/app-state
+                                           :account
+                                           :team)))
+      (change-input! team-input "test")
+      (is (= (dommy/value team-input) "test"))
+      (is (= (-> @s/app-state
+                 :account
+                 :team) "test")))))
