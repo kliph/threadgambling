@@ -8,12 +8,17 @@
   :min-lein-version "2.5.3"
   :dependencies [[org.clojure/clojure "1.9.0-alpha12"]
                  [org.clojure/clojurescript "1.9.229"]
-                 [cljs-react-material-ui "0.2.21"]
-                 [reagent "0.6.0" :exclusions [org.clojure/tools.reader cljsjs/react]]
+                 [cljs-react-material-ui "0.2.38" :exclusions [cljsjs/material-ui]]
+                 [cljsjs/material-ui "0.17.0-0" :exclusions [cljsjs/react]]
+                 [reagent "0.6.0" :exclusions [org.clojure/tools.reader cljsjs/react cljsjs/react-dom]]
+                 [cljs-react-test "0.1.4-SNAPSHOT" :exclusions [cljsjs/react-with-addons]]
+                 [prismatic/dommy "1.1.0"]
                  [compojure "1.5.1"]
+                 [lein-doo "0.1.7"]
                  [ring/ring-jetty-adapter "1.5.0"]
                  [environ "1.0.0"]]
   :plugins [[environ/environ.lein "0.3.1"]
+            [lein-doo "0.1.7"]
             [lein-cljsbuild "1.1.4"]]
   :hooks [environ.leiningen.hooks]
   :figwheel {:css-dirs ["resources/public/css"]
@@ -44,7 +49,14 @@
                                                     :output-dir "resources/public/js/admin/out"
                                                     :optimizations :none
                                                     :recompile-dependents true
-                                                    :source-map true}}]}}
+                                                    :source-map true}}
+                                        {:id "test"
+                                         :source-paths ["src" "test"]
+                                         :compiler {:output-to "resources/public/js/test.js"
+                                                    :asset-path "js/test/out"
+                                                    :output-dir "resources/public/js/test/out"
+                                                    :main "threadgambling.runner"
+                                                    :optimizations :simple}}]}}
              :uberjar {:env {:production true}
                        :source-paths ["src"]
                        :prep-tasks ["compile" ["cljsbuild" "once"]]
