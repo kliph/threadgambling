@@ -389,7 +389,7 @@ h2 {
   font-size: 20px;
   font-weight: 400;
   padding-left: 24px;
-  padding-bottom: 0.5em;
+  padding-bottom: 2em;
   color: #29002E;
   letter-spacing: 0px;
 }
@@ -413,8 +413,8 @@ table {
 }
 
 th {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 500;
   padding-bottom: 0.5em;
   color: #29002E;
   letter-spacing: 0px;
@@ -425,7 +425,17 @@ div#fixtures th {
   padding-bottom: 1em;
 }
 
-div#fixtures td {
+div#standings th {
+  width: 16.6%;
+}
+
+
+
+tr.standings:nth-child(even) {
+  background-color: rgba(41, 0, 46, 0.23);
+}
+
+td {
   text-align: center;
   padding: 0.5em;
   border: 2px solid rgba(0, 0, 0, 0);
