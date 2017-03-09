@@ -1,14 +1,13 @@
 (ns threadgambling.account
   (:require [threadgambling.state :as s]
+            [threadgambling.color :as c]
             [cljs-react-material-ui.core :as ui]))
-
-(def purp "#29002E")
 
 (defn atom-input [props]
   (let [{:keys [value-ks label]} props]
     [ui/text-field {:type "text"
-                    :underline-focus-style {:border-color purp}
-                    :floating-label-focus-style {:color purp}
+                    :underline-focus-style {:border-color c/purp}
+                    :floating-label-focus-style {:color c/purp}
                     :floating-label-text label
                     :name label
                     :value (get-in @s/app-state value-ks "")

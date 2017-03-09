@@ -10,6 +10,7 @@
             [threadgambling.home :as home]
             [threadgambling.account :as account]
             [threadgambling.auth :as auth]
+            [threadgambling.color :as c]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -19,17 +20,17 @@
    [:ul
     [:li
      [ui/flat-button
-      {:style {:color "#FFFFFF"}
+      {:style {:color c/white}
        :href "https://soundcloud.com/user-70053674"
        :label "Podcast"}]]
     [:li
      [ui/flat-button
-      {:style {:color "#FFFFFF"}
+      {:style {:color c/white}
        :href "https://twitter.com/soccerthread"
        :label "Twitter"}]]
     [:li
      [ui/flat-button
-      {:style {:color "#FFFFFF"}
+      {:style {:color c/white}
        :href "https://www.facebook.com/soccerthread/"
        :label "Facebook"}]]]])
 
@@ -42,17 +43,17 @@
      [:span.pull-right
       [ui/flat-button
        {:on-click #(swap! s/app-state assoc :page :fixtures)
-        :style {:color "#FFFFFF"}
+        :style {:color c/white}
         :label "Fixtures"}]
       [ui/flat-button
        {:on-click #(swap! s/app-state assoc :page :standings)
-        :style {:color "#FFFFFF"}
+        :style {:color c/white}
         :label "Standings"}]
       [ui/flat-button
        {:on-click #(swap! s/app-state assoc
                           :page :sign-in
                           :signed-in false)
-        :style {:color "#FFFFFF"}
+        :style {:color c/white}
         :label "Sign Out"}]])])
 
 (defmulti current-page #(@s/app-state :page))
@@ -73,7 +74,7 @@
   [rui/mui-theme-provider
    {:mui-theme (ui/get-mui-theme)}
    [:div
-    [rui/app-bar {:style {:background-color "#29002E"}
+    [rui/app-bar {:style {:background-color c/purp}
                   :show-menu-icon-button false
                   :title (r/as-element (nav-links))}]
     [:div
