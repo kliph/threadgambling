@@ -3,7 +3,7 @@
 
 (defn standings-row [props]
   (let [{:keys [rank team user points streak current-pick]} props]
-    [:tr.standings
+    [:tr.zebra
      [:td rank]
      [:td [:a {:on-click #(swap! s/app-state assoc :page :team)} team]]
      [:td user]

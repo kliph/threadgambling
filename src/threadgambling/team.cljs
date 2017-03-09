@@ -3,7 +3,7 @@
 
 (defn results-row [props]
   (let [{:keys [date round team points]} props]
-    [:tr
+    [:tr.zebra
      [:td date]
      [:td round]
      [:td team]
