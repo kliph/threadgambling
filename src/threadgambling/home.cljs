@@ -18,20 +18,18 @@
     [:ul
      [:li
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc :page :fixtures)
+       {:href "/#/fixtures"
         :label "Fixtures"}]]
      [:li
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc :page :standings)
+       {:href "/#/standings"
         :label "Standings"}]]
      [:li
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc :page :update-account)
+       {:href "/#/update-account"
         :label "Update Account"}]]
      [:li
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc
-                          :page :sign-in
-                          :signed-in false)
+       {:href "/#/sign-out"
         :label "Sign Out"}]]]
     [:div.quarter]]])

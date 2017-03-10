@@ -5,7 +5,7 @@
   (let [{:keys [rank team user points streak current-pick]} props]
     [:tr.zebra
      [:td rank]
-     [:td [:a {:on-click #(swap! s/app-state assoc :page :team)} team]]
+     [:td [:a {:href "/#/team"} team]]
      [:td user]
      [:td points]
      [:td streak]

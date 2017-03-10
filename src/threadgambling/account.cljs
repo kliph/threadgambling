@@ -29,5 +29,6 @@
    [:div.spacer]
    [ui/raised-button
     {:label "Save changes"
+     :href "/#/"
      :full-width true
      :className "update-button"}]])

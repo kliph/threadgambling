@@ -3,13 +3,8 @@
             [cljs-react-material-ui.icons :as ic]
             [cljs-react-material-ui.reagent :as rui]
             [reagent.core :as r]
-            [threadgambling.fixtures :as f]
-            [threadgambling.standings :as standings]
+            [threadgambling.routes :as routes]
             [threadgambling.state :as s]
-            [threadgambling.team :as team]
-            [threadgambling.home :as home]
-            [threadgambling.account :as account]
-            [threadgambling.auth :as auth]
             [threadgambling.color :as c]
             [goog.dom]))
 
@@ -37,38 +32,21 @@
 (defn nav-links []
   [:div#nav-links
    [:span
-    [:a {:on-click #(when (:signed-in @s/app-state)
-                      (swap! s/app-state assoc :page :home))} "threadgambling"]]
+    [:a {:href "/#/"} "threadgambling"]]
    (if (:signed-in @s/app-state)
      [:span.pull-right
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc :page :fixtures)
+       {:href "/#/fixtures"
         :style {:color c/white}
         :label "Fixtures"}]
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc :page :standings)
+       {:href "/#/standings"
         :style {:color c/white}
         :label "Standings"}]
       [ui/flat-button
-       {:on-click #(swap! s/app-state assoc
-                          :page :sign-in
-                          :signed-in false)
+       {:href "/#/sign-out"
         :style {:color c/white}
         :label "Sign Out"}]])])
-
-(defmulti current-page #(@s/app-state :page))
-(defmethod current-page :fixtures []
-  [f/fixtures-page])
-(defmethod current-page :standings []
-  [standings/standings-page])
-(defmethod current-page :team []
-  [team/team-page])
-(defmethod current-page :home []
-  [home/home-page])
-(defmethod current-page :update-account []
-  [account/update-page])
-(defmethod current-page :sign-in []
-  [auth/sign-in-page])
 
 (defn app-container []
   [rui/mui-theme-provider
@@ -84,7 +62,7 @@
               :position "relative"
               :z-index 1000}}
      [:div {:style {:margin "1em"}}
-      [current-page]]]
+      [routes/current-page]]]
     [footer]]])
 
 (r/render-component [app-container] (by-id "app"))

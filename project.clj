@@ -13,6 +13,7 @@
                  [reagent "0.6.0" :exclusions [org.clojure/tools.reader cljsjs/react cljsjs/react-dom]]
                  [cljs-react-test "0.1.4-SNAPSHOT" :exclusions [cljsjs/react-with-addons]]
                  [prismatic/dommy "1.1.0"]
+                 [secretary "1.2.3"]
                  [compojure "1.5.1"]
                  [lein-doo "0.1.7"]
                  [ring/ring-jetty-adapter "1.5.0"]
