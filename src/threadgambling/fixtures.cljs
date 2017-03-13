@@ -1,6 +1,11 @@
 (ns threadgambling.fixtures
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as r]
             [threadgambling.state :as s]
+            [cognitect.transit :as t]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]
+            [cljs.reader :refer [read-string]]
             [cljs-react-material-ui.core :as ui]))
 
 (def previously-picked?
@@ -52,16 +57,36 @@
      [pick-item away-club table-state]
      ]))
 
+(defn fetch-fixtures! [fixtures-atom]
+  (go (let [r (t/reader :json)
+            response (<! (http/get "/fixtures"))
+            raw-cljs-resp (->> response
+                               :body
+                               (t/read r))
+            fixtures  (map
+                       (fn [x]
+                         {:home-club {:name (get x "homeTeamName")}
+                          :away-club {:name (get x "awayTeamName")}
+                          :date (get x "date")})
+                       (get raw-cljs-resp "fixtures" []))]
+        (js/console.log fixtures)
+        (swap! fixtures-atom assoc
+               :fixtures fixtures
+               :fetched true))))
+
 (defn fixtures-page []
-  (let [sorted-fixtures (sort-by :date (@s/app-state :fixtures))
+   (let [fixtures-atom (@s/app-state :fixtures)
+        sorted-fixtures (sort-by :date @fixtures-atom)
+        _ (js/console.log sorted-fixtures)
         table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
                        (into (map #(get-in % [:away-club :name]) sorted-fixtures))
-)
+                       )
         table-vals (map #(if (previously-picked? %)
                            (r/atom "disabled")
                            (r/atom "pickable"))
                         table-keys)
         table-state (zipmap table-keys table-vals)]
+    (fetch-fixtures! fixtures-atom)
     (fn []
       [:div#fixtures
        [:h2 "Fixtures"]

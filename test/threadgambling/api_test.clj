@@ -1,6 +1,125 @@
 (ns threadgambling.api-test
   (:require [clojure.test :refer [deftest testing is]]))
+(def sample-response
+  {:count 10,
+   :fixtures
+   [{:date "2017-03-08T19:45:00Z",
+     :awayTeamId 70,
+     :homeTeamName "Manchester City FC",
+     :matchday 28,
+     :odds {:homeWin 1.22, :draw 6.5, :awayWin 15.0},
+     :status "FINISHED",
+     :result {:goalsHomeTeam 0, :goalsAwayTeam 0},
+     :competitionId 426,
+     :id 150572,
+     :homeTeamId 65,
+     :awayTeamName "Stoke City FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 563,
+     :homeTeamName "AFC Bournemouth",
+     :matchday 28,
+     :odds {:homeWin 2.5, :draw 3.4, :awayWin 2.9},
+     :status "FINISHED",
+     :result {:goalsHomeTeam 3, :goalsAwayTeam 2},
+     :competitionId 426,
+     :id 150565,
+     :homeTeamId 1044,
+     :awayTeamName "West Ham United FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 346,
+     :homeTeamName "Chelsea FC",
+     :matchday 28,
+     :odds nil,
+     :status "POSTPONED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150568,
+     :homeTeamId 61,
+     :awayTeamName "Watford FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 73,
+     :homeTeamName "Crystal Palace FC",
+     :matchday 28,
+     :odds nil,
+     :status "POSTPONED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150569,
+     :homeTeamId 354,
+     :awayTeamName "Tottenham Hotspur FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 74,
+     :homeTeamName "Everton FC",
+     :matchday 28,
+     :odds {:homeWin 1.7, :draw 3.8, :awayWin 5.5},
+     :status "FINISHED",
+     :result {:goalsHomeTeam 3, :goalsAwayTeam 0},
+     :competitionId 426,
+     :id 150570,
+     :homeTeamId 62,
+     :awayTeamName "West Bromwich Albion FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 72,
+     :homeTeamName "Hull City FC",
+     :matchday 28,
+     :odds {:homeWin 2.4, :draw 3.4, :awayWin 3.0},
+     :status "FINISHED",
+     :result {:goalsHomeTeam 2, :goalsAwayTeam 1},
+     :competitionId 426,
+     :id 150571,
+     :homeTeamId 322,
+     :awayTeamName "Swansea City FC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 71,
+     :homeTeamName "Middlesbrough FC",
+     :matchday 28,
+     :odds nil,
+     :status "POSTPONED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150573,
+     :homeTeamId 343,
+     :awayTeamName "Sunderland AFC"}
+    {:date "2017-03-11T15:00:00Z",
+     :awayTeamId 66,
+     :homeTeamName "Southampton FC",
+     :matchday 28,
+     :odds nil,
+     :status "POSTPONED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150574,
+     :homeTeamId 340,
+     :awayTeamName "Manchester United FC"}
+    {:date "2017-03-11T17:30:00Z",
+     :awayTeamId 338,
+     :homeTeamName "Arsenal FC",
+     :matchday 28,
+     :odds nil,
+     :status "POSTPONED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150566,
+     :homeTeamId 57,
+     :awayTeamName "Leicester City FC"}
+    {:date "2017-03-12T16:00:00Z",
+     :awayTeamId 328,
+     :homeTeamName "Liverpool FC",
+     :matchday 28,
+     :odds {:homeWin 1.25, :draw 6.5, :awayWin 13.0},
+     :status "TIMED",
+     :result {:goalsHomeTeam nil, :goalsAwayTeam nil},
+     :competitionId 426,
+     :id 150826,
+     :homeTeamId 64,
+     :awayTeamName "Burnley FC"}]})
 
 (deftest setup-test
   (testing "Setup"
     (is (= 1 1))))
+
+(deftest stores-fetched-fixtures-in-database)
+
+(deftest updates-fetched-fixtures-in-database-when-status-changed)
+
+(deftest returns-json-fixture-response)

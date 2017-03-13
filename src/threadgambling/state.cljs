@@ -57,12 +57,4 @@
                                      :points "31"
                                      :streak "4"
                                      :current-pick "-"}]
-                        :fixtures [{:home-club {:name "Tottenham"}
-                                    :away-club {:name "Everton"}
-                                    :date "2017-Jan-1"}
-                                   {:home-club {:name "Morecambe"}
-                                    :away-club {:name "Handsome Pigeons"}
-                                    :date "2017-Jan-1"}
-                                   {:home-club {:name "Leicester"}
-                                    :away-club {:name "Man City"}
-                                    :date "2017-Jan-1"}]}))
+                        :fixtures (r/atom {:fetched false})}))

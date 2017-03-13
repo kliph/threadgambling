@@ -30,6 +30,8 @@
   (.click node)
   (r/flush))
 
+(deftest displays-fixtures-when-delay-fetching)
+
 (deftest picking-pickable-test
   (testing "Clicking pickable toggles to picked and back"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
