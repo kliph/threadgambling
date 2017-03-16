@@ -19,20 +19,21 @@
                              "X-Auth-Token" (env :auth-token)}})
       :body))
 
-
-
-#_(defmacro with-db-error-printing )
+(defmacro with-db-error-printing [body]
+  `(try
+     ~body
+     (catch Exception e#
+       (-> e#
+           .getNextException
+           .printStackTrace))))
 
 (defn save-fixtures! [resp-body gameweek]
-  (try (sql/insert! db/db :fixtures [:body :gameweek] [resp-body gameweek])
-       (catch Exception e
-         (-> e
-             .getNextException
-             .printStackTrace))))
+  (with-db-error-printing
+    (sql/insert! db/db :fixtures [:body :gameweek] [resp-body gameweek])))
 
-
-
-#_(defn get-current-fixtures [])
+#_(defn get-fixtures [gameweek]
+  (with-db-error-printing
+    (sql/select db/db :fixtures)))
 
 (defroutes app
   (GET "/" []
