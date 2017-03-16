@@ -8,6 +8,7 @@
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]
             [threadgambling.models.migration :as schema]
+            [luminus-migrations.core :as migrations]
             [clojure.java.jdbc :as sql]
             [threadgambling.db :as db]
             [cljs.build.api :as cljs-build]))
@@ -48,7 +49,11 @@
 
 (def handler (site #'app))
 
-(defn -main [& [port]]
-  (schema/migrate)
-  (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty handler {:port port :join? false})))
+(defn -main [& args]
+  (cond
+    (some #{"migrate" "rollback"} args)
+    (do
+      (migrations/migrate args {:database-url (:database-url env)}))
+    :else
+    (let [port (Integer. (or (env :port) 5000))]
+      (jetty/run-jetty handler {:port port :join? false}))))

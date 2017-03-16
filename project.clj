@@ -6,6 +6,7 @@
   :clean-targets ^{:protect false} [:target-path "out" "resources/public/js"]
   :repl-options {:init-ns dev.repl}
   :min-lein-version "2.5.3"
+  :main threadgambling.web
   :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
                  [org.clojure/clojurescript "1.9.229"]
                  [org.clojure/core.async "0.3.441"]
@@ -18,6 +19,7 @@
                  [secretary "1.2.3"]
                  [clj-http "2.3.0"]
                  [cljs-http "0.1.42"]
+                 [luminus-migrations "0.3.0"]
                  [com.layerware/hugsql "0.4.7"]
                  [org.clojure/java.jdbc "0.7.0-alpha2"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
@@ -27,9 +29,13 @@
                  [lein-doo "0.1.7"]
                  [ring/ring-jetty-adapter "1.5.0"]
                  [ring/ring-mock "0.3.0"]
+                 [conman "0.6.3"]
+                 [mount "0.1.11"]
                  [environ "1.0.0"]]
+  :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
   :plugins [[environ/environ.lein "0.3.1"]
             [lein-doo "0.1.7"]
+            [migratus-lein "0.4.4"]
             [lein-cljsbuild "1.1.4"]]
   :hooks [environ.leiningen.hooks]
   :figwheel {:css-dirs ["resources/public/css"]

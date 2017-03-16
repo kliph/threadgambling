@@ -1,1 +1,3 @@
-{:auth-token "ABC123"}
+{:dev {:auth-token "abc123"
+       :database-url "jdbc:postgresql://localhost:5432/dev-db"}
+ :test {:database-url "jdbc:postgresql://localhost:5432/test-db"}}
