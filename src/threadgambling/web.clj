@@ -21,7 +21,7 @@
 
 
 
-(defmacro with-db-error-printing )
+#_(defmacro with-db-error-printing )
 
 (defn save-fixtures! [resp-body gameweek]
   (try (sql/insert! db/db :fixtures [:body :gameweek] [resp-body gameweek])
@@ -38,14 +38,16 @@
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
-       (get-fixtures))
+       (fetch-fixtures))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")
   (ANY "*" []
        (route/not-found "<h1>404 Not found</h1>")))
 
+(def handler (site #'app))
+
 (defn -main [& [port]]
   (schema/migrate)
   (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty (site #'app) {:port port :join? false})))
+    (jetty/run-jetty handler {:port port :join? false})))

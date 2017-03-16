@@ -6,7 +6,7 @@
   :clean-targets ^{:protect false} [:target-path "out" "resources/public/js"]
   :repl-options {:init-ns dev.repl}
   :min-lein-version "2.5.3"
-  :dependencies [[org.clojure/clojure "1.9.0-alpha12"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
                  [org.clojure/clojurescript "1.9.229"]
                  [org.clojure/core.async "0.3.441"]
                  [com.cognitect/transit-cljs "0.8.239"]
@@ -22,9 +22,11 @@
                  [org.clojure/java.jdbc "0.7.0-alpha2"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.clojure/data.json "0.2.6"]
+                 [stubadub "2.0.0"]
                  [compojure "1.5.1"]
                  [lein-doo "0.1.7"]
                  [ring/ring-jetty-adapter "1.5.0"]
+                 [ring/ring-mock "0.3.0"]
                  [environ "1.0.0"]]
   :plugins [[environ/environ.lein "0.3.1"]
             [lein-doo "0.1.7"]

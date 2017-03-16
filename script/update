@@ -1,7 +1,9 @@
 #!/bin/bash
 lein deps
 
-if [ ! "$( psql -tAc "SELECT 1 FROM pg_database WHERE datname='threadgambling-dev'" )" = '1' ]; then
+if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
+    echo "🌯  DB exists"
+else
     echo "🌯  Creating DB"
     createdb threadgambling-dev
 fi
