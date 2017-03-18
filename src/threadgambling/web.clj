@@ -7,40 +7,41 @@
             [clojure.data.json :as json]
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]
-            [threadgambling.models.migration :as schema]
+            [threadgambling.db.core :as db]
             [luminus-migrations.core :as migrations]
-            [clojure.java.jdbc :as sql]
-            [threadgambling.db :as db]
             [cljs.build.api :as cljs-build]))
 
-(defn fetch-fixtures []
+(defn fixtures-updated? [response-body record]
+  (let [parse-fn #(-> %
+                      (json/read-str :key-fn keyword)
+                      :fixtures)
+        parsed-response-fixtures (parse-fn response-body)
+        parsed-record-fixtures (parse-fn (get record :body "{}"))]
+    (not= parsed-response-fixtures
+          parsed-record-fixtures)))
+
+
+(defn save-fixtures! [body]
+  (when (fixtures-updated? body
+                           (-> (db/get-fixtures-by-gameweek {:gameweek 28})
+                               (select-keys [:body])))
+    (db/save-fixtures! {:gameweek 28
+                        :body body}))
+  body)
+
+(defn fetch-fixtures! []
   (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
                   {:query-params {"matchday" "28"}
                    :headers {"X-Response-Control" "minified"
                              "X-Auth-Token" (env :auth-token)}})
-      :body))
-
-(defmacro with-db-error-printing [body]
-  `(try
-     ~body
-     (catch Exception e#
-       (-> e#
-           .getNextException
-           .printStackTrace))))
-
-(defn save-fixtures! [resp-body gameweek]
-  (with-db-error-printing
-    (sql/insert! db/db :fixtures [:body :gameweek] [resp-body gameweek])))
-
-#_(defn get-fixtures [gameweek]
-  (with-db-error-printing
-    (sql/select db/db :fixtures)))
+      :body
+      save-fixtures!))
 
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
-       (fetch-fixtures))
+       (fetch-fixtures!))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")

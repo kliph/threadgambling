@@ -1,5 +1,6 @@
 (ns threadgambling.db.core
   (:require [conman.core :as conman]
+            [environ.core :refer [env]]
             [mount.core :refer [defstate]]))
 
 (def db-spec

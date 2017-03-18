@@ -4,7 +4,8 @@ INSERT INTO fixtures
 (body, gameweek)
 VALUES (:body, :gameweek)
 
--- :name get-fixtures :? :1
--- :doc retrieve a fixture given the gameweek
+-- :name get-fixtures-by-gameweek :? :1
+-- :doc retrieve the most recent fixture given the gameweek
 SELECT * FROM fixtures
 WHERE gameweek = :gameweek
+ORDER BY created_at desc

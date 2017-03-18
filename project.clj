@@ -9,7 +9,7 @@
   :main threadgambling.web
   :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
                  [org.clojure/clojurescript "1.9.229"]
-                 [org.clojure/core.async "0.3.441"]
+                 [org.clojure/core.async "0.3.442"]
                  [com.cognitect/transit-cljs "0.8.239"]
                  [cljs-react-material-ui "0.2.38" :exclusions [cljsjs/material-ui]]
                  [cljsjs/material-ui "0.17.0-0" :exclusions [cljsjs/react]]
@@ -34,6 +34,7 @@
                  [environ "1.0.0"]]
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
   :plugins [[environ/environ.lein "0.3.1"]
+            [lein-environ "1.1.0"]
             [lein-doo "0.1.7"]
             [migratus-lein "0.4.4"]
             [lein-cljsbuild "1.1.4"]]
@@ -41,39 +42,47 @@
   :figwheel {:css-dirs ["resources/public/css"]
              :server-port 3450}
   :uberjar-name "threadgambling.jar"
-  :profiles {:dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                  [figwheel-sidecar "0.5.7"]
-                                  [binaryage/devtools "0.8.1"]]
-                   :source-paths ["src" "dev"]
-                   :cljsbuild {:builds [{:id "dev"
-                                         :source-paths ["src"]
-                                         :figwheel true
-                                         :compiler {:main "threadgambling.core"
-                                                    :preloads [devtools.preload]
-                                                    :asset-path "js/out"
-                                                    :output-to "resources/public/js/main.js"
-                                                    :output-dir "resources/public/js/out"
-                                                    :optimizations :none
-                                                    :recompile-dependents true
-                                                    :source-map true}}
-                                        {:id "admin"
-                                         :source-paths ["src"]
-                                         :figwheel true
-                                         :compiler {:main "threadgambling.admin"
-                                                    :preloads [devtools.preload]
-                                                    :asset-path "js/admin/out"
-                                                    :output-to "resources/public/js/admin.js"
-                                                    :output-dir "resources/public/js/admin/out"
-                                                    :optimizations :none
-                                                    :recompile-dependents true
-                                                    :source-map true}}
-                                        {:id "test"
-                                         :source-paths ["src" "test"]
-                                         :compiler {:output-to "resources/public/js/test.js"
-                                                    :asset-path "js/test/out"
-                                                    :output-dir "resources/public/js/test/out"
-                                                    :main "threadgambling.runner"
-                                                    :optimizations :simple}}]}}
+  :profiles {:project/dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
+                                          [figwheel-sidecar "0.5.7"]
+                                          [pjstadig/humane-test-output "0.8.1"]
+                                          [binaryage/devtools "0.8.1"]]
+                           :plugins [[com.jakemccrary/lein-test-refresh "0.19.0"]]
+                           :injections [(require 'pjstadig.humane-test-output)
+                                        (pjstadig.humane-test-output/activate!)]
+                           :source-paths ["src" "dev"]
+                           :cljsbuild {:builds [{:id "dev"
+                                                 :source-paths ["src"]
+                                                 :figwheel true
+                                                 :compiler {:main "threadgambling.core"
+                                                            :preloads [devtools.preload]
+                                                            :asset-path "js/out"
+                                                            :output-to "resources/public/js/main.js"
+                                                            :output-dir "resources/public/js/out"
+                                                            :optimizations :none
+                                                            :recompile-dependents true
+                                                            :source-map true}}
+                                                {:id "admin"
+                                                 :source-paths ["src"]
+                                                 :figwheel true
+                                                 :compiler {:main "threadgambling.admin"
+                                                            :preloads [devtools.preload]
+                                                            :asset-path "js/admin/out"
+                                                            :output-to "resources/public/js/admin.js"
+                                                            :output-dir "resources/public/js/admin/out"
+                                                            :optimizations :none
+                                                            :recompile-dependents true
+                                                            :source-map true}}
+                                                {:id "test"
+                                                 :source-paths ["src" "test"]
+                                                 :compiler {:output-to "resources/public/js/test.js"
+                                                            :asset-path "js/test/out"
+                                                            :output-dir "resources/public/js/test/out"
+                                                            :main "threadgambling.runner"
+                                                            :optimizations :simple}}]}}
+             :profiles/test {}
+             :proflies/dev {}
+             :dev [:project/dev :profiles/dev]
+             :test [:project/dev :profiles/test]
              :uberjar {:env {:production true}
                        :source-paths ["src"]
                        :prep-tasks ["compile" ["cljsbuild" "once"]]
