@@ -31,7 +31,10 @@
                  [ring/ring-mock "0.3.0"]
                  [conman "0.6.3"]
                  [mount "0.1.11"]
-                 [environ "1.0.0"]]
+                 [environ "1.0.0"]
+                 [org.clojure/tools.logging "0.3.1"]
+                 [org.slf4j/slf4j-log4j12 "1.7.12"]
+                 [log4j/log4j "1.2.17"]]
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
   :plugins [[environ/environ.lein "0.3.1"]
             [lein-environ "1.1.0"]
