@@ -31,12 +31,15 @@
   body)
 
 (defn fetch-fixtures! []
-  (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
-                  {:query-params {"matchday" "28"}
-                   :headers {"X-Response-Control" "minified"
-                             "X-Auth-Token" (env :auth-token)}})
-      :body
-      save-fixtures!))
+  (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
+                             {:query-params {"matchday" "28"}
+                              :headers {"X-Response-Control" "minified"
+                                        "X-Auth-Token" (env :auth-token)}})
+                 :body
+                 save-fixtures!)]
+    {:status 200
+     :headers {"Content-Type" "application/json; charset=utf-8"}
+     :body body}))
 
 (defroutes app
   (GET "/" []
