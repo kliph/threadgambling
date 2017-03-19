@@ -7,7 +7,8 @@
             [clojure.data.json :as json]
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]
-            [threadgambling.db.core :as db]
+            [threadgambling.db.core :refer [*db*] :as db]
+            [mount.core :as mount]
             [luminus-migrations.core :as migrations]
             [cljs.build.api :as cljs-build]))
 
@@ -57,4 +58,5 @@
       (migrations/migrate args {:database-url (:database-url env)}))
     :else
     (let [port (Integer. (or (env :port) 5000))]
+      (mount/start #'threadgambling.db.core/*db*)
       (jetty/run-jetty handler {:port port :join? false}))))
