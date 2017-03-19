@@ -11,17 +11,18 @@
 
 (use-fixtures :each (fn [test-fn]
                       (with-redefs [s/app-state
-                                    (r/atom {:fixtures [{:home-club {:name "Tottenham"}
-                                                         :away-club {:name "Everton"}
-                                                         :date "2017-Jan-1"}
-                                                        {:home-club {:name "Morecambe"}
-                                                         :away-club {:name "Handsome Pigeons"}
-                                                         :date "2017-Jan-1"}
-                                                        {:home-club {:name "Leicester"}
-                                                         :away-club {:name "Man City"}
-                                                         :date "2017-Jan-1"}]
-                                             :account {:picked #{"Tottenham" "Leicester"}}})]
-
+                                    (r/atom {:fixtures (r/atom {:fetched true
+                                                                :fixtures [{:home-club {:name "Tottenham"}
+                                                                            :away-club {:name "Everton"}
+                                                                            :date "2017-Jan-1"}
+                                                                           {:home-club {:name "Morecambe"}
+                                                                            :away-club {:name "Handsome Pigeons"}
+                                                                            :date "2017-Jan-1"}
+                                                                           {:home-club {:name "Leicester"}
+                                                                            :away-club {:name "Man City"}
+                                                                            :date "2017-Jan-1"}]})
+                                             :account {:picked #{"Tottenham" "Leicester"}}})
+                                    fixtures/fetch-fixtures! (fn [_])]
                         (binding [c (tu/new-container!)]
                           (test-fn)
                           (tu/unmount! c)))))
