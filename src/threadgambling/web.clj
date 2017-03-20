@@ -10,7 +10,8 @@
             [threadgambling.db.core :refer [*db*] :as db]
             [mount.core :as mount]
             [luminus-migrations.core :as migrations]
-            [cljs.build.api :as cljs-build]))
+            [cljs.build.api :as cljs-build])
+  (:gen-class))
 
 (defn fixtures-updated? [response-body record]
   (let [parse-fn #(-> %

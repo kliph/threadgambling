@@ -2,18 +2,18 @@
 Streak with the thread.
 * Initial setup
 #+BEGIN_SRC sh :tangle script/bootstrap :shebang "#!/bin/bash"
-lein deps
+  lein deps
 
-if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
-    echo "🌯  DB exists"
-else
-    echo "🌯  Creating DB"
-    createdb threadgambling-dev
-    createdb threadgambling-test
-fi
-echo "🌯  DB is good to go"
+  if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
+      echo "🌯  DB exists"
+  else
+      echo "🌯  Creating DB"
+      createdb threadgambling-dev
+      createdb threadgambling-test
+  fi
+  echo "🌯  DB is good to go"
 
-lein run migrate
+  lein run migrate
 #+END_SRC
 * Update dependencies
 #+BEGIN_SRC sh :tangle script/update :shebang "#!/bin/bash"
@@ -49,6 +49,10 @@ script/bootstrap
 * To start a server with figwheel
 Connect to a repl using =C-c M-j=.  Run =(figwheel-up)=
 
+* To migrate production
+#+BEGIN_SRC sh :tangle script/migrate-production :shebang "#!/bin/bash"
+  heroku run lein run migrate
+#+END_SRC
 * To switch builds
 Switch builds by using =(switch-to-build :id)= from a figwheel cljs
 repl
