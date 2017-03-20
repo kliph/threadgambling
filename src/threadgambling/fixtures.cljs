@@ -30,10 +30,10 @@
     table-state)))
 
 (defn confirm-pick! [table-state]
-  (let [pick (first (filter #(= (deref (val %)) "picked")  table-state))]
+  (let [pick (first (filter #(= (deref (val %)) "picked")  @table-state))]
     (when pick
       (js/console.log (str "Picked " (key pick)))
-      (disable-other-pickable! table-state)
+      (disable-other-pickable! @table-state)
       (reset! (val pick) "confirmed"))))
 
 (defn pick-item [props table-state]
@@ -82,7 +82,7 @@
       (map (fn [x] ^{:key (str (:home-club x) (:away-club x))} [pick-row x @table-state])
            sorted-fixtures))]]
    [:div
-    {:on-click #(confirm-pick! @table-state)
+    {:on-click #(confirm-pick! table-state)
      :className "pick-button"}
     [ui/raised-button
      {:label "Confirm"

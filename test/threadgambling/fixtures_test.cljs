@@ -76,12 +76,15 @@
       (click button)
       (is (= 0 (count (sel c [:.confirmed]))))))
   (testing "Clicking confirm with something picked confirms it"
-    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
-          pickable (sel1 c [:.pickable])
-          button (sel1 c [:.pick-button :button])]
+    (let [table-state (r/atom {"Tottenham" (r/atom "disabled")
+                               "Morecambe" (r/atom "pickable")
+                               "Leciester" (r/atom "disabled")
+                               "Everton" (r/atom "picked")})
+          _ (r/render (test-util/test-container [fixtures/table-and-confirm-button
+                                                 table-state
+                                                 {}]) c)
+          button (sel1 c [:.pick-button])]
       (is (= 0 (count (sel c [:.confirmed]))))
-      (click pickable)
       (click button)
-      (is (= 1 (count (sel c [:.confirmed]))))
-      (is (= (dommy/text pickable)
-             (dommy/text (sel1 c [:.confirmed])))))))
+      (is (= "confirmed"
+              @(get @table-state "Everton"))))))
