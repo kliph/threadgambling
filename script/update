@@ -1,11 +1,2 @@
 #!/bin/bash
-lein deps
-
-if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
-    echo "🌯  DB exists"
-else
-    echo "🌯  Creating DB"
-    createdb threadgambling-dev
-    createdb threadgambling-test
-fi
-echo "🌯  DB is good to go"
+script/bootstrap

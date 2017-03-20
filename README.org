@@ -1,19 +1,40 @@
 * Threadgambling
 Streak with the thread.
+* Initial setup
+#+BEGIN_SRC sh :tangle script/bootstrap :shebang "#!/bin/bash"
+lein deps
+
+if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
+    echo "🌯  DB exists"
+else
+    echo "🌯  Creating DB"
+    createdb threadgambling-dev
+    createdb threadgambling-test
+fi
+echo "🌯  DB is good to go"
+
+lein run migrate
+#+END_SRC
 * Update dependencies
 #+BEGIN_SRC sh :tangle script/update :shebang "#!/bin/bash"
-  lein deps
+script/bootstrap
 #+END_SRC
 * Tests
 #+BEGIN_SRC sh :tangle script/test :shebang "#!/bin/bash"
+  set -e
+
   script/update
+
+  lein clean
 
   echo "🌯  Running tests..."
   if [ -n "$1" ]; then
       lein test "$1"
   else
       lein test
+      lein doo phantom test once
   fi
+
 #+END_SRC
 * To Start a server
 #+BEGIN_SRC sh :tangle script/server :shebang "#!/bin/bash"

@@ -7,39 +7,45 @@
             [clojure.data.json :as json]
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]
-            [threadgambling.models.migration :as schema]
-            [clojure.java.jdbc :as sql]
-            [threadgambling.db :as db]
+            [threadgambling.db.core :refer [*db*] :as db]
+            [mount.core :as mount]
+            [luminus-migrations.core :as migrations]
             [cljs.build.api :as cljs-build]))
 
-(defn fetch-fixtures []
-  (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
-                  {:query-params {"matchday" "28"}
-                   :headers {"X-Response-Control" "minified"
-                             "X-Auth-Token" (env :auth-token)}})
-      :body))
+(defn fixtures-updated? [response-body record]
+  (let [parse-fn #(-> %
+                      (json/read-str :key-fn keyword)
+                      :fixtures)
+        parsed-response-fixtures (parse-fn response-body)
+        parsed-record-fixtures (parse-fn (get record :body "{}"))]
+    (not= parsed-response-fixtures
+          parsed-record-fixtures)))
 
-(defmacro with-db-error-printing [body]
-  `(try
-     ~body
-     (catch Exception e#
-       (-> e#
-           .getNextException
-           .printStackTrace))))
 
-(defn save-fixtures! [resp-body gameweek]
-  (with-db-error-printing
-    (sql/insert! db/db :fixtures [:body :gameweek] [resp-body gameweek])))
+(defn save-fixtures! [body]
+  (when (fixtures-updated? body
+                           (-> (db/get-fixtures-by-gameweek {:gameweek 28})
+                               (select-keys [:body])))
+    (db/save-fixtures! {:gameweek 28
+                        :body body}))
+  body)
 
-#_(defn get-fixtures [gameweek]
-  (with-db-error-printing
-    (sql/select db/db :fixtures)))
+(defn fetch-fixtures! []
+  (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
+                             {:query-params {"matchday" "28"}
+                              :headers {"X-Response-Control" "minified"
+                                        "X-Auth-Token" (env :auth-token)}})
+                 :body
+                 save-fixtures!)]
+    {:status 200
+     :headers {"Content-Type" "application/json; charset=utf-8"}
+     :body body}))
 
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
-       (fetch-fixtures))
+       (fetch-fixtures!))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")
@@ -48,7 +54,12 @@
 
 (def handler (site #'app))
 
-(defn -main [& [port]]
-  (schema/migrate)
-  (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty handler {:port port :join? false})))
+(defn -main [& args]
+  (cond
+    (some #{"migrate" "rollback"} args)
+    (do
+      (migrations/migrate args {:database-url (:database-url env)}))
+    :else
+    (let [port (Integer. (or (env :port) 5000))]
+      (mount/start #'threadgambling.db.core/*db*)
+      (jetty/run-jetty handler {:port port :join? false}))))

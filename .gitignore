@@ -9,3 +9,4 @@ out/
 *jar
 pom.xml
 .lein-env
+profiles.clj
