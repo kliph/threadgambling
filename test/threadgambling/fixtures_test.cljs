@@ -11,17 +11,18 @@
 
 (use-fixtures :each (fn [test-fn]
                       (with-redefs [s/app-state
-                                    (r/atom {:fixtures [{:home-club {:name "Tottenham"}
-                                                         :away-club {:name "Everton"}
-                                                         :date "2017-Jan-1"}
-                                                        {:home-club {:name "Morecambe"}
-                                                         :away-club {:name "Handsome Pigeons"}
-                                                         :date "2017-Jan-1"}
-                                                        {:home-club {:name "Leicester"}
-                                                         :away-club {:name "Man City"}
-                                                         :date "2017-Jan-1"}]
-                                             :account {:picked #{"Tottenham" "Leicester"}}})]
-
+                                    (r/atom {:fixtures (r/atom {:fetched true
+                                                                :fixtures [{:home-club {:name "Tottenham"}
+                                                                            :away-club {:name "Everton"}
+                                                                            :date "2017-Jan-1"}
+                                                                           {:home-club {:name "Morecambe"}
+                                                                            :away-club {:name "Handsome Pigeons"}
+                                                                            :date "2017-Jan-1"}
+                                                                           {:home-club {:name "Leicester"}
+                                                                            :away-club {:name "Man City"}
+                                                                            :date "2017-Jan-1"}]})
+                                             :account {:picked #{"Tottenham" "Leicester"}}})
+                                    fixtures/fetch-fixtures! (fn [_])]
                         (binding [c (tu/new-container!)]
                           (test-fn)
                           (tu/unmount! c)))))
@@ -29,6 +30,8 @@
 (defn click [node]
   (.click node)
   (r/flush))
+
+(deftest displays-fixtures-when-delay-fetching)
 
 (deftest picking-pickable-test
   (testing "Clicking pickable toggles to picked and back"
@@ -73,12 +76,15 @@
       (click button)
       (is (= 0 (count (sel c [:.confirmed]))))))
   (testing "Clicking confirm with something picked confirms it"
-    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
-          pickable (sel1 c [:.pickable])
-          button (sel1 c [:.pick-button :button])]
+    (let [table-state (r/atom {"Tottenham" (r/atom "disabled")
+                               "Morecambe" (r/atom "pickable")
+                               "Leciester" (r/atom "disabled")
+                               "Everton" (r/atom "picked")})
+          _ (r/render (test-util/test-container [fixtures/table-and-confirm-button
+                                                 table-state
+                                                 {}]) c)
+          button (sel1 c [:.pick-button])]
       (is (= 0 (count (sel c [:.confirmed]))))
-      (click pickable)
       (click button)
-      (is (= 1 (count (sel c [:.confirmed]))))
-      (is (= (dommy/text pickable)
-             (dommy/text (sel1 c [:.confirmed])))))))
+      (is (= "confirmed"
+              @(get @table-state "Everton"))))))

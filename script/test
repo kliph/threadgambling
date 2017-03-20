@@ -9,6 +9,6 @@ echo "🌯  Running tests..."
 if [ -n "$1" ]; then
     lein test "$1"
 else
-    lein doo phantom test once
     lein test
+    lein doo phantom test once
 fi

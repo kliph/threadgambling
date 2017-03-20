@@ -8,12 +8,23 @@
             [threadgambling.auth :as auth]
             [threadgambling.state :as s]
             [goog.events :as events]
+            [reagent.core :as r]
             [goog.history.EventType :as EventType])
   (:import goog.History))
+
+
+(defn timer-component []
+  (let [seconds-elapsed (:seconds @s/app-state)]
+    (fn []
+      (js/setTimeout #(swap! seconds-elapsed inc) 1000)
+      [:div
+       "Seconds elapsed: " @seconds-elapsed])))
 
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
   [f/fixtures-page])
+(defmethod current-page :seconds []
+  [timer-component])
 (defmethod current-page :standings []
   [standings/standings-page])
 (defmethod current-page :team []
