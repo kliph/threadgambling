@@ -377,30 +377,57 @@ input::-moz-focus-inner {
     height: 100%;
 }
 
+@media screen and (max-width: 400px) {
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .team-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-container #pick-container {
+    order: 2;
+  }
+
+  .home-container .team-container {
+    order: 1;
+  }
+
+
+  #nav-links .pull-right {
+    display: none;
+  }
+
+}
+
+@media screen and (min-width: 400px) {
 body, html {
   min-height: 100%;
 }
 
+.home-container .team-info {
+  flex: 1;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  align-content: stretch;
+}
+
+
 h2 {
-  font-family: Roboto, sans-serif;
-  text-overflow: ellipsis;
   font-size: 20px;
-  font-weight: 400;
-  padding-left: 24px;
-  padding-bottom: 2em;
-  color: #29002E;
-  letter-spacing: 0;
 }
 
 h3 {
-  font-family: Roboto, sans-serif;
-  text-overflow: ellipsis;
   font-size: 16px;
-  font-weight: 400;
-  padding-bottom: 0.5em;
-  color: #29002E;
-  letter-spacing: 0;
 }
+
 
 table {
   font-family: Roboto, sans-serif;
@@ -457,13 +484,6 @@ td {
 
 #nav-links .pull-right {
   float: right;
-}
-
-#nav-links a {
-  text-decoration: none;
-  cursor: pointer;
-  color: white;
-  margin-right: 0.75em;
 }
 
 #nav-links a:last-child {
@@ -540,14 +560,6 @@ a:hover {
   flex-direction: column;
 }
 
-.home-container .team-info {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  align-content: stretch;
-}
 
 .home-container .team-info .team-container {
   display: flex;
@@ -560,13 +572,6 @@ a:hover {
 }
 
 
-#pick-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  flex: 0 0 33.3333%;
-}
 
 #pick-locked {
   background: red;
@@ -602,4 +607,43 @@ a:hover {
 
 .spacer {
   padding: 1em;
+}
+}
+
+h2 {
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  padding-left: 24px;
+  padding-bottom: 2em;
+  color: #29002E;
+  letter-spacing: 0;
+}
+
+h3 {
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  padding-bottom: 0.5em;
+  color: #29002E;
+  letter-spacing: 0;
+}
+
+#nav-links a {
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+  margin-right: 0.75em;
+}
+
+#pick-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 33.3333%;
+}
+
+.home-container .team-info {
+  display: flex;
 }
