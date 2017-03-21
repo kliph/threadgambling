@@ -10,10 +10,12 @@
 (def previously-picked?
   (get-in @s/app-state [:account :picked] #{}))
 
-(defn toggle-picked! [a]
+(defn toggle-picked! [a confirm-disabled]
   (if (= @a "picked")
-    (reset! a "pickable")
-    (reset! a "picked")))
+    (do (reset! a "pickable")
+        (reset! confirm-disabled true))
+    (do (reset! a "picked")
+        (reset! confirm-disabled false))))
 
 (defn reset-other-picked! [table-state name]
   (doall
@@ -36,24 +38,25 @@
       (disable-other-pickable! @table-state)
       (reset! (val pick) "confirmed"))))
 
-(defn pick-item [props table-state]
-  (let [{:keys [name]} props
+(defn pick-item [props club table-state]
+  (let [{:keys [name]} club
+        {:keys [confirm-disabled]} props
         td-state (get table-state name)]
     (fn []
       (if (#{"pickable" "picked"} @td-state)
         [:td {:class @td-state
               :on-click #(do
                            (reset-other-picked! table-state name)
-                           (toggle-picked! td-state))}
+                           (toggle-picked! td-state confirm-disabled))}
          name]
         [:td {:class @td-state} name]))))
 
 (defn pick-row [props table-state]
   (let [{:keys [home-club away-club]} props]
     [:tr
-     [pick-item home-club table-state]
+     [pick-item props home-club table-state]
      [:td "vs"]
-     [pick-item away-club table-state]]))
+     [pick-item props away-club table-state]]))
 
 (defn fetch-fixtures! [fixtures-atom]
   (go (let [response (<! (http/get "/fixtures"))
@@ -70,7 +73,7 @@
                :fixtures fixtures
                :fetched true))))
 
-(defn table-and-confirm-button [table-state sorted-fixtures]
+(defn table-and-confirm-button [table-state sorted-fixtures confirm-disabled]
   [:div
    [:table
     [:thead>tr
@@ -79,13 +82,18 @@
      [:th "Away"]]
     [:tbody
      (doall
-      (map (fn [x] ^{:key (str (:home-club x) (:away-club x))} [pick-row x @table-state])
+      (map (fn [fixture]
+             ^{:key (str (:home-club fixture) (:away-club fixture))}
+             [pick-row (-> fixture
+                           (assoc :confirm-disabled confirm-disabled))
+              @table-state])
            sorted-fixtures))]]
    [:div
     {:on-click #(confirm-pick! table-state)
      :className "pick-button"}
     [ui/raised-button
      {:label "Confirm"
+      :disabled @confirm-disabled
       :full-width true}]]])
 
 (defn fixtures-page []
@@ -99,7 +107,8 @@
                                 (r/atom "disabled")
                                 (r/atom "pickable"))
                              table-keys)
-            table-state (r/atom (zipmap table-keys table-vals))]
+            table-state (r/atom (zipmap table-keys table-vals))
+            confirm-disabled (r/atom true)]
         [:div#fixtures
          [:h2 "Fixtures"]
-         [table-and-confirm-button table-state sorted-fixtures]]))))
+         [table-and-confirm-button table-state sorted-fixtures confirm-disabled]]))))

@@ -69,20 +69,31 @@
       (is (= 0 (count (sel c [:.picked])))))))
 
 (deftest confirm-button
-  (testing "Clicking confirm does nothing"
-    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
+  (testing "Confirm is disabled when nothing is selected"
+    (let [table-state (r/atom {"Tottenham" (r/atom "disabled")
+                               "Morecambe" (r/atom "pickable")
+                               "Leciester" (r/atom "disabled")
+                               "Everton" (r/atom "pickable")})
+          confirm-disabled (r/atom true)
+          _ (r/render (test-util/test-container [fixtures/table-and-confirm-button
+                                                 table-state
+                                                 {}
+                                                 confirm-disabled]) c)
           button (sel1 c [:.pick-button :button])]
       (is (= 0 (count (sel c [:.confirmed]))))
-      (click button)
-      (is (= 0 (count (sel c [:.confirmed]))))))
+      ;; "" is true
+      ;; nil is false
+      (is (= "" (dommy/attr button :disabled)))))
   (testing "Clicking confirm with something picked confirms it"
     (let [table-state (r/atom {"Tottenham" (r/atom "disabled")
                                "Morecambe" (r/atom "pickable")
                                "Leciester" (r/atom "disabled")
                                "Everton" (r/atom "picked")})
+          confirm-disabled (r/atom false)
           _ (r/render (test-util/test-container [fixtures/table-and-confirm-button
                                                  table-state
-                                                 {}]) c)
+                                                 {}
+                                                 confirm-disabled]) c)
           button (sel1 c [:.pick-button])]
       (is (= 0 (count (sel c [:.confirmed]))))
       (click button)
