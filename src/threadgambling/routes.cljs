@@ -13,13 +13,6 @@
   (:import goog.History))
 
 
-(defn timer-component []
-  (let [seconds-elapsed (:seconds @s/app-state)]
-    (fn []
-      (js/setTimeout #(swap! seconds-elapsed inc) 1000)
-      [:div
-       "Seconds elapsed: " @seconds-elapsed])))
-
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
   [f/fixtures-page])
