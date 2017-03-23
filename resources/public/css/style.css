@@ -378,6 +378,7 @@ input::-moz-focus-inner {
 }
 
 @media screen and (max-width: 400px) {
+
   h2 {
     font-size: 24px;
   }
@@ -388,28 +389,68 @@ input::-moz-focus-inner {
 
   .team-info {
     flex-direction: column;
-    align-items: flex-start;
+    margin: 1.5rem;
   }
 
   .home-container #pick-container {
-    order: 2;
+    order: 3;
+    padding-bottom: 2em;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .home-container .team-container {
     order: 1;
   }
 
+  .home-container .rank {
+    order: 2;
+    padding-bottom: 1em;
+  }
 
   #nav-links .pull-right {
     display: none;
   }
 
+  #footer {
+    justify-content: center;
+  }
+
+  .actions {
+    display: none;
+  }
+
+  #small-footer-nav {
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    position: relative;
+    z-index: 1000;
+    padding-left: 0.5em;
+  }
+
 }
 
 @media screen and (min-width: 400px) {
-body, html {
-  min-height: 100%;
+  #small-footer-nav {
+    display: none;
+  }
+
+  .app-container {
+    padding-top: 1em;
+    padding-bottom: 3em;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12);
+    z-index: 2000;
+  }
+  .app-container-inner {
+    margin: 1em;
+  }
+
+
+#pick-container {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
+
 
 .home-container .team-info {
   flex: 1;
@@ -422,6 +463,7 @@ body, html {
 
 h2 {
   font-size: 20px;
+  padding-bottom: 2em;
 }
 
 h3 {
@@ -495,11 +537,6 @@ td {
   margin-bottom: 1em;
 }
 
-#footer {
-  display: flex;
-  flex: 1;
-  background-color: #29002E;
-}
 
 .third {
   flex: 0 0 33.3333%;
@@ -573,11 +610,6 @@ a:hover {
 
 
 
-#pick-locked {
-  background: red;
-  color: white;
-  padding: 0.3em;
-}
 
 .home-container .home-nav {
   display: flex;
@@ -592,12 +624,6 @@ a:hover {
   flex: 0 0 33.3333%;
 }
 
-#sign-in-page {
-  display: flex;
-  justify-content: center;
-  padding-top: 5em;
-  padding-bottom: 5em;
-}
 
 #update-container {
   display: flex;
@@ -610,12 +636,16 @@ a:hover {
 }
 }
 
+body, html {
+  min-height: 100%;
+}
+
+
 h2 {
   font-family: Roboto, sans-serif;
   text-overflow: ellipsis;
   font-weight: 400;
   padding-left: 24px;
-  padding-bottom: 2em;
   color: #29002E;
   letter-spacing: 0;
 }
@@ -638,12 +668,37 @@ h3 {
 
 #pick-container {
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
   flex: 0 0 33.3333%;
 }
 
 .home-container .team-info {
   display: flex;
 }
+
+#pick-locked {
+  background: red;
+  color: white;
+  padding: 0.3em;
+}
+
+#footer {
+  display: flex;
+  flex: 1;
+  background-color: #29002E;
+}
+
+#sign-in-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 5em;
+  padding-bottom: 5em;
+}
+
+
+  .app-container {
+    padding-top: 1em;
+    padding-bottom: 3em;
+  }
+  .app-container-inner {
+    margin: 1em;
+  }

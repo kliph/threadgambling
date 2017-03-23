@@ -10,6 +10,26 @@
 
 (def by-id goog.dom.getElement)
 
+(defn small-footer-nav []
+  [:div#small-footer-nav
+   [:ul
+    [:li
+     [ui/flat-button
+      {:href "/#/fixtures"
+       :label "Fixtures"}]]
+    [:li
+     [ui/flat-button
+      {:href "/#/standings"
+       :label "Standings"}]]
+    [:li
+     [ui/flat-button
+      {:href "/#/update-account"
+       :label "Update Account"}]]
+    [:li
+     [ui/flat-button
+      {:href "/#/sign-out"
+       :label "Sign Out"}]]]])
+
 (defn footer []
   [:div#footer
    [:ul
@@ -55,14 +75,12 @@
     [rui/app-bar {:style {:background-color c/purp}
                   :show-menu-icon-button false
                   :title (r/as-element (nav-links))}]
-    [:div
-     {:style {:padding-top "1em"
-              :padding-bottom "3em"
-              :box-shadow "0 1px 6px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.12)"
-              :position "relative"
-              :z-index 1000}}
-     [:div {:style {:margin "1em"}}
+    [:div.app-container
+     {}
+     [:div.app-container-inner
+      {}
       [routes/current-page]]]
+    [small-footer-nav]
     [footer]]])
 
 (r/render-component [app-container] (by-id "app"))
