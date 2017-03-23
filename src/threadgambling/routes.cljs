@@ -16,8 +16,6 @@
 (defmulti current-page #(@s/app-state :page))
 (defmethod current-page :fixtures []
   [f/fixtures-page])
-(defmethod current-page :seconds []
-  [timer-component])
 (defmethod current-page :standings []
   [standings/standings-page])
 (defmethod current-page :team []
