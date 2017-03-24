@@ -427,6 +427,31 @@ input::-moz-focus-inner {
     padding-left: 0.5em;
   }
 
+  thead {
+    display: none;
+  }
+
+  td.vs {
+    display: none;
+  }
+
+  tr td {
+    display: block;
+  }
+
+  table.fixtures td:first-child:before {
+    content: "Home:";
+    font-weight: bold;
+    width: 5em;
+    display: inline-block;
+  }
+
+  table.fixtures td:last-child:before {
+    content: "Away:";
+    font-weight: bold;
+    width: 5em;
+    display: inline-block;
+  }
 }
 
 @media screen and (min-width: 400px) {
@@ -471,21 +496,6 @@ h3 {
 }
 
 
-table {
-  font-family: Roboto, sans-serif;
-  text-overflow: ellipsis;
-  margin: 0 auto;
-  color: #29002E;
-}
-
-th {
-  font-size: 18px;
-  font-weight: 500;
-  padding-bottom: 0.5em;
-  color: #29002E;
-  letter-spacing: 0;
-}
-
 #fixtures th {
   width: 33%;
   padding-bottom: 1em;
@@ -495,10 +505,6 @@ th {
   width: 16.6%;
 }
 
-.zebra:nth-child(even) {
-  background-color: rgba(41, 0, 46, 0.23);
-}
-
 td {
   text-align: center;
   padding: 0.5em;
@@ -506,23 +512,6 @@ td {
   border-style: inset;
 }
 
-#fixtures .disabled {
-  opacity: 0.54;
-}
-
-#fixtures .picked {
-  border: 2px solid #FB0049;
-  box-sizing: border-box;
-}
-
-#fixtures .confirmed {
-  border: 2px solid #00FF87;
-  box-sizing: border-box;
-}
-
-#fixtures .pickable:hover {
-  background-color: #FB0049;
-}
 
 #nav-links .pull-right {
   float: right;
@@ -532,11 +521,9 @@ td {
   margin-right: 0;
 }
 
-.pick-button {
-  margin-top: 1em;
-  margin-bottom: 1em;
+.zebra:nth-child(even) {
+  background-color: rgba(41, 0, 46, 0.23);
 }
-
 
 .third {
   flex: 0 0 33.3333%;
@@ -695,10 +682,48 @@ h3 {
 }
 
 
-  .app-container {
-    padding-top: 1em;
-    padding-bottom: 3em;
-  }
-  .app-container-inner {
-    margin: 1em;
-  }
+.app-container {
+  padding-top: 1em;
+  padding-bottom: 3em;
+}
+.app-container-inner {
+  margin: 1em;
+}
+
+th {
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 0.5em;
+  color: #29002E;
+  letter-spacing: 0;
+}
+
+table {
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  margin: 0 auto;
+  color: #29002E;
+}
+
+#fixtures .disabled {
+  opacity: 0.54;
+}
+
+#fixtures .picked {
+  border: 2px solid #FB0049;
+  box-sizing: border-box;
+}
+
+#fixtures .confirmed {
+  border: 2px solid #00FF87;
+  box-sizing: border-box;
+}
+
+#fixtures .pickable:hover {
+  background-color: #FB0049;
+}
+
+.pick-button {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
