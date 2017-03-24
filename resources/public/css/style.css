@@ -439,6 +439,12 @@ input::-moz-focus-inner {
     display: block;
   }
 
+  table.fixtures tr:after {
+    content: '';
+    padding-bottom: 1.5em;
+    display: block;
+  }
+
   table.fixtures td:first-child:before {
     content: "Home:";
     font-weight: bold;
@@ -504,14 +510,6 @@ h3 {
 #standings th {
   width: 16.6%;
 }
-
-td {
-  text-align: center;
-  padding: 0.5em;
-  border: 2px solid rgba(0, 0, 0, 0);
-  border-style: inset;
-}
-
 
 #nav-links .pull-right {
   float: right;
@@ -621,6 +619,10 @@ a:hover {
 .spacer {
   padding: 1em;
 }
+
+td {
+  text-align: center;
+}
 }
 
 body, html {
@@ -703,6 +705,13 @@ table {
   text-overflow: ellipsis;
   margin: 0 auto;
   color: #29002E;
+}
+
+td {
+  padding: 0.5em;
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-style: inset;
+  box-sizing: border-box;
 }
 
 #fixtures .disabled {
