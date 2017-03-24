@@ -11,24 +11,25 @@
 (def by-id goog.dom.getElement)
 
 (defn small-footer-nav []
-  [:div#small-footer-nav
-   [:ul
-    [:li
-     [ui/flat-button
-      {:href "/#/fixtures"
-       :label "Fixtures"}]]
-    [:li
-     [ui/flat-button
-      {:href "/#/standings"
-       :label "Standings"}]]
-    [:li
-     [ui/flat-button
-      {:href "/#/update-account"
-       :label "Update Account"}]]
-    [:li
-     [ui/flat-button
-      {:href "/#/sign-out"
-       :label "Sign Out"}]]]])
+  (if (:signed-in @s/app-state)
+    [:div#small-footer-nav
+     [:ul
+      [:li
+       [ui/flat-button
+        {:href "/#/fixtures"
+         :label "Fixtures"}]]
+      [:li
+       [ui/flat-button
+        {:href "/#/standings"
+         :label "Standings"}]]
+      [:li
+       [ui/flat-button
+        {:href "/#/update-account"
+         :label "Update Account"}]]
+      [:li
+       [ui/flat-button
+        {:href "/#/sign-out"
+         :label "Sign Out"}]]]]))
 
 (defn footer []
   [:div#footer
