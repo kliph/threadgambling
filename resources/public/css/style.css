@@ -420,22 +420,15 @@ input::-moz-focus-inner {
     display: none;
   }
 
-  #small-footer-nav {
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    position: relative;
-    z-index: 1000;
-    padding-left: 0.5em;
-  }
-
-  thead {
+  table.fixtures thead {
     display: none;
   }
 
-  td.vs {
+  table.fixtures td.vs {
     display: none;
   }
 
-  tr td {
+  table.fixtures tr td {
     display: block;
   }
 
@@ -458,12 +451,46 @@ input::-moz-focus-inner {
     width: 5em;
     display: inline-block;
   }
+
+  .standings th {
+    font-size: 12px;
+    position: relative;
+  }
+
+  .standings th:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: block;
+  }
+
+  .team-page th {
+    font-size: 12px;
+  }
 }
 
-@media screen and (min-width: 400px) {
+@media screen and (max-width: 530px) {
+  #small-footer-nav {
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    position: relative;
+    z-index: 1000;
+    padding-left: 0.5em;
+  }
+}
+
+@media screen and (min-width: 530px) {
   #small-footer-nav {
     display: none;
   }
+
+  .standings th:after {
+    display: none;
+  }
+
+
 
   .app-container {
     padding-top: 1em;
@@ -507,6 +534,9 @@ h3 {
   padding-bottom: 1em;
 }
 
+
+
+
 #standings th {
   width: 16.6%;
 }
@@ -519,9 +549,6 @@ h3 {
   margin-right: 0;
 }
 
-.zebra:nth-child(even) {
-  background-color: rgba(41, 0, 46, 0.23);
-}
 
 .third {
   flex: 0 0 33.3333%;
@@ -623,6 +650,11 @@ a:hover {
 td {
   text-align: center;
 }
+
+th {
+  font-size: 18px;
+
+}
 }
 
 body, html {
@@ -693,7 +725,6 @@ h3 {
 }
 
 th {
-  font-size: 18px;
   font-weight: 500;
   padding-bottom: 0.5em;
   color: #29002E;
@@ -735,4 +766,13 @@ td {
 .pick-button {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+
+.zebra:nth-child(even) {
+  background-color: rgba(41, 0, 46, 0.23);
+}
+
+
+.standings th:after {
+  content: attr(data-th);
 }

@@ -10,7 +10,7 @@
      [:td points]]))
 
 (defn team-page []
-  [:div
+  [:div.team-page
    [:h2 "South Philly Kittens"]
    [:table
     {:cell-spacing "0" :width "100%"}
