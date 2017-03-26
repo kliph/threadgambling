@@ -424,7 +424,7 @@ input::-moz-focus-inner {
     display: none;
   }
 
-  table.fixtures td.vs {
+  .vs {
     display: none;
   }
 
@@ -503,158 +503,158 @@ input::-moz-focus-inner {
   }
 
 
-#pick-container {
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
+  #pick-container {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
 
 
-.home-container .team-info {
-  flex: 1;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  align-content: stretch;
-}
+  .home-container .team-info {
+    flex: 1;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    align-content: stretch;
+  }
 
 
-h2 {
-  font-size: 20px;
-  padding-bottom: 2em;
-}
+  h2 {
+    font-size: 20px;
+    padding-bottom: 2em;
+  }
 
-h3 {
-  font-size: 16px;
-}
-
-
-#fixtures th {
-  width: 33%;
-  padding-bottom: 1em;
-}
+  h3 {
+    font-size: 16px;
+  }
 
 
-
-
-#standings th {
-  width: 16.6%;
-}
-
-#nav-links .pull-right {
-  float: right;
-}
-
-#nav-links a:last-child {
-  margin-right: 0;
-}
-
-
-.third {
-  flex: 0 0 33.3333%;
-}
-
-.quarter {
-  flex: 0 0 25%;
-}
-
-.actions {
-  display: flex;
-}
-
-.actions ul {
-  list-style: none;
-  padding-top: 1em;
-  padding-bottom: 2em;
-  display: flex;
-  justify-content: flex-start;
-  flex-flow: row wrap;
-  flex: 1;
-}
-
-
-.actions li {
-  flex: 0 0 50%;
-  display: flex;
-  justify-content: space-around;
-}
-
-#footer ul {
-  list-style: none;
-  padding-top: 1em;
-  padding-bottom: 2em;
-  display: flex;
-  justify-content: center;
-  flex: 1;
-}
-
-
-#footer li {
-  display: flex;
-  justify-content: center;
-  flex: 0 0 33.3333%;
-}
-
-a {
-  cursor: pointer;
-  color: blue;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.home-container {
-  display: flex;
-  flex-direction: column;
-}
-
-
-.home-container .team-info .team-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  padding: 1em;
-  flex: 0 0 33.3333%;
-}
+  #fixtures th {
+    width: 33%;
+    padding-bottom: 1em;
+  }
 
 
 
 
-.home-container .home-nav {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  flex: 1;
-}
+  #standings th {
+    width: 16.6%;
+  }
 
-.home-container .rank {
-  display: flex;
-  justify-content: center;
-  flex: 0 0 33.3333%;
-}
+  #nav-links .pull-right {
+    float: right;
+  }
+
+  #nav-links a:last-child {
+    margin-right: 0;
+  }
 
 
-#update-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .third {
+    flex: 0 0 33.3333%;
+  }
 
-.spacer {
-  padding: 1em;
-}
+  .quarter {
+    flex: 0 0 25%;
+  }
 
-td {
-  text-align: center;
-}
+  .actions {
+    display: flex;
+  }
 
-th {
-  font-size: 18px;
+  .actions ul {
+    list-style: none;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: row wrap;
+    flex: 1;
+  }
 
-}
+
+  .actions li {
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #footer ul {
+    list-style: none;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+  }
+
+
+  #footer li {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 33.3333%;
+  }
+
+  a {
+    cursor: pointer;
+    color: blue;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .home-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .home-container .team-info .team-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    padding: 1em;
+    flex: 0 0 33.3333%;
+  }
+
+
+
+
+  .home-container .home-nav {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex: 1;
+  }
+
+  .home-container .rank {
+    display: flex;
+    justify-content: center;
+    flex: 0 0 33.3333%;
+  }
+
+
+  #update-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .spacer {
+    padding: 1em;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  th {
+    font-size: 18px;
+
+  }
 }
 
 body, html {
