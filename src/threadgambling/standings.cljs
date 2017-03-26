@@ -18,11 +18,21 @@
     {:cell-spacing "0" :width "100%"}
     [:thead>tr
      [:th]
-     [:th "Team"]
-     [:th "User"]
-     [:th "Points"]
-     [:th "Streak of"]
-     [:th "Current Pick"]]
+     [:th
+      {:data-th "Team"}
+      "Team"]
+     [:th
+      {:data-th "User"}
+      "User"]
+     [:th
+      {:data-th "Pts"}
+      "Points"]
+     [:th
+      {:data-th "Strk of"}
+      "Streak of"]
+     [:th
+      {:data-th "Curr pk"}
+      "Current Pick"]]
     [:tbody
      (map (fn [x] ^{:key (str (:rank x) (:team x) (:user x))} [standings-row x])
           (sort-by :rank (@s/app-state :standings)))]]])

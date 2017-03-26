@@ -44,7 +44,7 @@
                                      :user "Cliff"
                                      :points "35"
                                      :streak "0"
-                                     :current-pick "Hull"}
+                                     :current-pick "Hull Football Club FC"}
                                     {:rank 2
                                      :team "WTFT"
                                      :user "Colin"

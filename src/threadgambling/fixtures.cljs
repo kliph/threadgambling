@@ -38,13 +38,14 @@
       (disable-other-pickable! @table-state)
       (reset! (val pick) "confirmed"))))
 
-(defn pick-item [props club table-state]
+(defn pick-item [props club type table-state]
   (let [{:keys [name]} club
         {:keys [confirm-disabled]} props
         td-state (get table-state name)]
     (fn []
       (if (#{"pickable" "picked"} @td-state)
         [:td {:class @td-state
+              :data-th type
               :on-click #(do
                            (reset-other-picked! table-state name)
                            (toggle-picked! td-state confirm-disabled))}
@@ -54,9 +55,9 @@
 (defn pick-row [props table-state]
   (let [{:keys [home-club away-club]} props]
     [:tr
-     [pick-item props home-club table-state]
-     [:td "vs"]
-     [pick-item props away-club table-state]]))
+     [pick-item props home-club "Home" table-state]
+     [:td.vs "vs"]
+     [pick-item props away-club "Away" table-state]]))
 
 (defn fetch-fixtures! [fixtures-atom]
   (go (let [response (<! (http/get "/fixtures"))
@@ -75,7 +76,7 @@
 
 (defn table-and-confirm-button [table-state sorted-fixtures confirm-disabled]
   [:div
-   [:table
+   [:table.fixtures
     [:thead>tr
      [:th "Home"]
      [:th]
