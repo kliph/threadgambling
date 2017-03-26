@@ -424,7 +424,7 @@ input::-moz-focus-inner {
     display: none;
   }
 
-  .vs {
+  table.fixtures td.vs {
     display: none;
   }
 
