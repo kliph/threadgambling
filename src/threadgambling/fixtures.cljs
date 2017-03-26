@@ -93,7 +93,7 @@
     {:on-click #(confirm-pick! table-state)
      :className "pick-button"}
     [ui/raised-button
-     {:label "Confirm"
+     {:label "Lock Pick"
       :disabled @confirm-disabled
       :full-width true}]]])
 
