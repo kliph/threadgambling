@@ -1,6 +1,7 @@
 (ns threadgambling.fixtures-test
   (:require [cljs.test :refer-macros [deftest testing is use-fixtures]]
             [cljs-react-test.utils :as tu]
+            [clojure.string]
             [dommy.core :as dommy :refer-macros [sel1 sel]]
             [reagent.core :as r]
             [threadgambling.test-util :as test-util]
@@ -12,14 +13,20 @@
 (use-fixtures :each (fn [test-fn]
                       (with-redefs [s/app-state
                                     (r/atom {:fixtures (r/atom {:fetched true
-                                                                :fixtures [{:home-club {:name "Tottenham"}
-                                                                            :away-club {:name "Everton"}
+                                                                :fixtures [{:home-club {:name "Tottenham"
+                                                                                        :goals 1}
+                                                                            :away-club {:name "Everton"
+                                                                                        :goals 1}
                                                                             :date "2017-Jan-1"}
-                                                                           {:home-club {:name "Morecambe"}
-                                                                            :away-club {:name "Handsome Pigeons"}
+                                                                           {:home-club {:name "Morecambe"
+                                                                                        :goals nil}
+                                                                            :away-club {:name "Handsome Pigeons"
+                                                                                        :goals nil}
                                                                             :date "2017-Jan-1"}
-                                                                           {:home-club {:name "Leicester"}
-                                                                            :away-club {:name "Man City"}
+                                                                           {:home-club {:name "Leicester"
+                                                                                        :goals 1}
+                                                                            :away-club {:name "Man City"
+                                                                                        :goals 0}
                                                                             :date "2017-Jan-1"}]})
                                              :account {:picked #{"Tottenham" "Leicester"}}})
                                     fixtures/fetch-fixtures! (fn [_])]
@@ -31,14 +38,12 @@
   (.click node)
   (r/flush))
 
-(deftest displays-fixtures-when-delay-fetching)
-
 (deftest picking-pickable-test
   (testing "Clicking pickable toggles to picked and back"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           pickable (sel1 c [:.pickable])]
       (is (= 0 (count (sel c [:.picked]))))
-      (is (= "Everton" (dommy/text pickable)))
+      (is (clojure.string/includes? (dommy/text pickable) "Everton"))
       (click pickable)
       (is (= "picked" (dommy/class pickable)))
       (is (= 1 (count (sel c [:.picked]))))
@@ -99,3 +104,10 @@
       (click button)
       (is (= "confirmed"
               @(get @table-state "Everton"))))))
+
+(deftest results-display
+  (testing "Handles null"
+    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
+          goals (sel c [:.goals])]
+      (println (dommy/text goals))
+      (is (= 4 (count goals))))))
