@@ -39,7 +39,7 @@
       (reset! (val pick) "confirmed"))))
 
 (defn pick-item [props club type table-state]
-  (let [{:keys [name]} club
+  (let [{:keys [name goals]} club
         {:keys [confirm-disabled]} props
         td-state (get table-state name)]
     (fn []
@@ -49,8 +49,13 @@
               :on-click #(do
                            (reset-other-picked! table-state name)
                            (toggle-picked! td-state confirm-disabled))}
-         name]
-        [:td {:class @td-state} name]))))
+         name
+         (when goals
+           [:span.goals goals])]
+        [:td {:class @td-state}
+         name
+         (when goals
+           [:span.goals goals])]))))
 
 (defn pick-row [props table-state]
   (let [{:keys [home-club away-club]} props]
@@ -63,8 +68,10 @@
   (go (let [response (<! (http/get "/fixtures"))
             transform-fn #(map
                            (fn [x]
-                             {:home-club {:name (get x :homeTeamName)}
-                              :away-club {:name (get x :awayTeamName)}
+                             {:home-club {:name (get x :homeTeamName)
+                                          :goals (get-in x [:result :goalsHomeTeam])}
+                              :away-club {:name (get x :awayTeamName)
+                                          :goals (get-in x [:result :goalsAwayTeam])}
                               :date (get x :date)})
                            (get % :fixtures []))
             fixtures (-> response
@@ -93,7 +100,7 @@
     {:on-click #(confirm-pick! table-state)
      :className "pick-button"}
     [ui/raised-button
-     {:label "Confirm"
+     {:label "Lock Pick"
       :disabled @confirm-disabled
       :full-width true}]]])
 

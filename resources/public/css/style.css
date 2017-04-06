@@ -430,6 +430,7 @@ input::-moz-focus-inner {
 
   table.fixtures tr td {
     display: block;
+    margin-bottom: 1em;
   }
 
   table.fixtures tr:after {
@@ -621,7 +622,9 @@ input::-moz-focus-inner {
   }
 
 
-
+  #fixtures .pickable:hover {
+    background-color: #FB0049;
+  }
 
   .home-container .home-nav {
     display: flex;
@@ -759,8 +762,10 @@ td {
   box-sizing: border-box;
 }
 
-#fixtures .pickable:hover {
-  background-color: #FB0049;
+table.fixtures span.goals {
+  float: right;
+  padding-left: 1em;
+  color: rgba(0, 0, 0, 0.57);
 }
 
 .pick-button {
