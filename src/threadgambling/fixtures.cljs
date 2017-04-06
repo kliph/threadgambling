@@ -71,7 +71,7 @@
                              {:home-club {:name (get x :homeTeamName)
                                           :goals (get-in x [:result :goalsHomeTeam])}
                               :away-club {:name (get x :awayTeamName)
-                                          :goals (get-in x [:result :goalsHomeTeam])}
+                                          :goals (get-in x [:result :goalsAwayTeam])}
                               :date (get x :date)})
                            (get % :fixtures []))
             fixtures (-> response
