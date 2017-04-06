@@ -1,5 +1,6 @@
 (ns threadgambling.home
   (:require [threadgambling.state :as s]
+            [threadgambling.color :as c]
             [cljs-react-material-ui.core :as ui]))
 
 (defn home-page []
@@ -7,7 +8,10 @@
    [:div.team-info
     [:div#pick-container
      [:span#pick-icon "[Icon]"]
-     [:div#pick-locked "LOCKED"]]
+     [ui/chip
+      {:id "pick-locked"
+       :background-color c/pank}
+      "LOCKED"]]
     [:div.team-container
      [:h3 (get-in @s/app-state [:account :name])]
      [:h2 {:style {:padding-left "0"}} (get-in @s/app-state [:account :team])]]
