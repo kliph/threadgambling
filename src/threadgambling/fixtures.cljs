@@ -76,13 +76,17 @@
                            (get % :fixtures []))
             fixtures (-> response
                          :body
-                         transform-fn)]
+                         transform-fn)
+            gameweek (get-in response [:body :fixtures 0 :matchday])]
         (swap! fixtures-atom assoc
                :fixtures fixtures
+               :gameweek gameweek
                :fetched true))))
 
-(defn table-and-confirm-button [table-state sorted-fixtures confirm-disabled]
+(defn table-and-confirm-button [table-state sorted-fixtures confirm-disabled gameweek]
   [:div
+   [:div.gameweek
+    [:h3 (str "Gameweek: " gameweek)]]
    [:table.fixtures
     [:thead>tr
      [:th "Home"]
@@ -109,6 +113,8 @@
     (fetch-fixtures! fixtures-atom)
     (fn []
       (let [sorted-fixtures (sort-by :date (:fixtures @fixtures-atom))
+            _ (js/console.log @fixtures-atom)
+            gameweek (:gameweek @fixtures-atom)
             table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
                            (into (map #(get-in % [:away-club :name]) sorted-fixtures)))
             table-vals  (map #(if (previously-picked? %)
@@ -119,4 +125,4 @@
             confirm-disabled (r/atom true)]
         [:div#fixtures
          [:h2 "Fixtures"]
-         [table-and-confirm-button table-state sorted-fixtures confirm-disabled]]))))
+         [table-and-confirm-button table-state sorted-fixtures confirm-disabled gameweek]]))))

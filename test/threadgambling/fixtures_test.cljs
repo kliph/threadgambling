@@ -13,6 +13,7 @@
 (use-fixtures :each (fn [test-fn]
                       (with-redefs [s/app-state
                                     (r/atom {:fixtures (r/atom {:fetched true
+                                                                :gameweek 28
                                                                 :fixtures [{:home-club {:name "Tottenham"
                                                                                         :goals 1}
                                                                             :away-club {:name "Everton"
@@ -105,9 +106,14 @@
       (is (= "confirmed"
               @(get @table-state "Everton"))))))
 
+(deftest gameweek-display
+  (testing "Displays the gameweek"
+    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
+          gameweek (sel1 c [:.gameweek])]
+      (is (clojure.string/includes? (dommy/text gameweek) (get-in @(@s/app-state :fixtures) [:gameweek]))))))
+
 (deftest results-display
   (testing "Handles null"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           goals (sel c [:.goals])]
-      (println (dommy/text goals))
       (is (= 4 (count goals))))))

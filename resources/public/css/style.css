@@ -522,7 +522,6 @@ input::-moz-focus-inner {
 
   h2 {
     font-size: 20px;
-    padding-bottom: 2em;
   }
 
   h3 {
@@ -678,7 +677,6 @@ h3 {
   font-family: Roboto, sans-serif;
   text-overflow: ellipsis;
   font-weight: 400;
-  padding-bottom: 0.5em;
   color: #29002E;
   letter-spacing: 0;
 }
@@ -774,4 +772,9 @@ table.fixtures span.goals {
 
 .standings th:after {
   content: attr(data-th);
+}
+
+.gameweek {
+  margin-left: 1.5em;
+  margin-bottom: 1.5em;
 }
