@@ -8,7 +8,7 @@
   :min-lein-version "2.5.3"
   :main threadgambling.web
   :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
-                 [org.clojure/clojurescript "1.9.229"]
+                 [org.clojure/clojurescript "1.9.456"]
                  [org.clojure/core.async "0.3.442"]
                  [com.cognitect/transit-cljs "0.8.239"]
                  [cljs-react-material-ui "0.2.38" :exclusions [cljsjs/material-ui]]
@@ -46,7 +46,7 @@
              :server-port 3450}
   :uberjar-name "threadgambling.jar"
   :profiles {:project/dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                          [figwheel-sidecar "0.5.7"]
+                                          [figwheel-sidecar "0.5.9"]
                                           [pjstadig/humane-test-output "0.8.1"]
                                           [binaryage/devtools "0.8.1"]]
                            :plugins [[com.jakemccrary/lein-test-refresh "0.19.0"]]
@@ -62,6 +62,7 @@
                                                             :output-to "resources/public/js/main.js"
                                                             :output-dir "resources/public/js/out"
                                                             :optimizations :none
+                                                            :infer-externs true
                                                             :recompile-dependents true
                                                             :source-map true}}
                                                 {:id "admin"

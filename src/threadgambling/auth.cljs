@@ -1,16 +1,19 @@
 (ns threadgambling.auth
   (:require [threadgambling.state :as s]))
 
-(defn onSignIn [google-user]
-  (let [profile (.getBasicProfile google-user)]
+(set! *warn-on-infer* true)
+
+(defn ^:export on-sign-in [^js/gapi.auth2.GoogleUser google-user]
+  (let [^js/gapi.auth2.BasicProfile profile (.getBasicProfile google-user)]
     (js/console.log (str "ID: " (.getId profile)))
     (js/console.log (str "Name: " (.getName profile)))
     (js/console.log (str "Email: " (.getEmail profile)))
     (js/console.log (str "Profile: " profile))))
 
 (defn onSignOut []
-  (let [auth2 (.getAuthInstance gapi/auth2)]
-    (.then (.signOut auth2)
+  (let [^js/gapi.auth2.GoogleAuth auth2 (.getAuthInstance js/gapi.auth2)
+        ^js/Promise sign-out (.signOut auth2)]
+    (.then sign-out
            (fn [] (js/console.log "User Signed out")))))
 
 (defn sign-in-page []

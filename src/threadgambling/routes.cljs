@@ -1,4 +1,4 @@
-(ns threadgambling.routes
+(ns ^:figwheel-no-load threadgambling.routes
   (:require [secretary.core :as secretary :refer [defroute]]
             [threadgambling.fixtures :as f]
             [threadgambling.standings :as standings]
