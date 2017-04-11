@@ -3,12 +3,23 @@
 
 (set! *warn-on-infer* true)
 
-(defn ^:export on-sign-in [^js/gapi.auth2.GoogleUser google-user]
+(defn on-sign-in [^js/gapi.auth2.GoogleUser google-user]
   (let [^js/gapi.auth2.BasicProfile profile (.getBasicProfile google-user)]
     (js/console.log (str "ID: " (.getId profile)))
     (js/console.log (str "Name: " (.getName profile)))
-    (js/console.log (str "Email: " (.getEmail profile)))
-    (js/console.log (str "Profile: " profile))))
+    (js/console.log (str "Email: " (.getEmail profile)))))
+
+
+(defn on-failure [error]
+  (js/console.log error))
+
+
+(defn ^:export render-button []
+  (.render js/gapi.signin2
+           "google-signin"
+           #js {"scope" "profile email"
+                "onsuccess" on-sign-in
+                "onfailure" on-failure}))
 
 (defn onSignOut []
   (let [^js/gapi.auth2.GoogleAuth auth2 (.getAuthInstance js/gapi.auth2)
@@ -22,6 +33,5 @@
    ;;                        :signed-in true)
    ;;      :href "/#/sign-in"}]
 
-   [:div {:className "g-signin2"
-          :data-onsuccess "onSignIn"}]
+   [:div {:id "google-signin"}]
    [:a {:on-click (fn [] (onSignOut))} "Sign out"]])
