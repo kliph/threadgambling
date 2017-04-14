@@ -14,12 +14,14 @@
   (js/console.log error))
 
 
-(defn ^:export render-button []
+(defn render-button []
   (.render js/gapi.signin2
            "google-signin"
            #js {"scope" "profile email"
                 "onsuccess" on-sign-in
                 "onfailure" on-failure}))
+
+(goog.exportSymbol "renderButton", render-button)
 
 (defn onSignOut []
   (let [^js/gapi.auth2.GoogleAuth auth2 (.getAuthInstance js/gapi.auth2)
