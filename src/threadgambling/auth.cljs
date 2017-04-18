@@ -20,6 +20,7 @@
   (.render js/gapi.signin2
            "google-signin"
            #js {"scope" "profile email"
+                "longtitle" true
                 "onsuccess" on-sign-in
                 "onfailure" on-failure}))
 
