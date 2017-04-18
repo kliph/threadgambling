@@ -96,8 +96,9 @@
 
 (deftest consumes-idtoken-form-param
   (let [token "12345"
-        req (web/handler (mock/request :post "/fixtures"
-                                       {:idtoken token}))]
+        req (web/handler (-> (mock/request :post "/tokensignin")
+                             (mock/content-type "application/x-www-form-urlencoded")
+                             (mock/body (str "idtoken=" token))))]
     (is (= 200 (-> req
                    :status)))
     (is (= token (-> req

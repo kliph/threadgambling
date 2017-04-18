@@ -1,5 +1,5 @@
 (ns threadgambling.web
-  (:require [compojure.core :refer [defroutes GET ANY]]
+  (:require [compojure.core :refer [defroutes GET ANY POST]]
             [compojure.handler :refer [site]]
             [compojure.route :as route]
             [clojure.java.io :as io]
@@ -47,6 +47,11 @@
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
+  (POST "/tokensignin" [request]
+        (let [form-params (:form-params request)]
+          {:status 200
+           :headers {}
+           :body "hello"}))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")
