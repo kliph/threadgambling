@@ -93,3 +93,12 @@
                                      nil)))
   (is (= true (web/fixtures-updated? sample-response
                                      {:body sample-response-with-changed-data}))))
+
+(deftest consumes-idtoken-form-param
+  (let [token "12345"
+        req (web/handler (mock/request :post "/fixtures"
+                                       {:idtoken token}))]
+    (is (= 200 (-> req
+                   :status)))
+    (is (= token (-> req
+                     :body)))))

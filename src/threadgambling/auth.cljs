@@ -4,11 +4,13 @@
 (set! *warn-on-infer* true)
 
 (defn on-sign-in [^js/gapi.auth2.GoogleUser google-user]
-  (let [^js/gapi.auth2.BasicProfile profile (.getBasicProfile google-user)]
+  (let [^js/gapi.auth2.BasicProfile profile (.getBasicProfile google-user)
+        ^js/gapi.auth2AuthResponse auth-response (.getAuthResponse google-user)
+        id-token (.-id-token auth-response) ]
+    (js/console.log (str "ID Token: " id-token))
     (js/console.log (str "ID: " (.getId profile)))
     (js/console.log (str "Name: " (.getName profile)))
     (js/console.log (str "Email: " (.getEmail profile)))))
-
 
 (defn on-failure [error]
   (js/console.log error))
