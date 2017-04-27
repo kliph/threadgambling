@@ -42,16 +42,24 @@
      :headers {"Content-Type" "application/json; charset=utf-8"}
      :body body}))
 
+;; (defn verify )
+(defn handle-token-signin! [client-id-token]
+  (let [client-id (env :google-oauth2-client-id)
+        _ (println client-id)
+        _ (println client-id-token)]
+    {:status 200
+     :headers {}
+     :body client-id-token}))
+
+;; (handle-token-signin! foo)
+
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
-  (POST "/tokensignin" [request]
-        (let [form-params (:form-params request)]
-          {:status 200
-           :headers {}
-           :body "hello"}))
+  (POST "/tokensignin" [idtoken]
+        (handle-token-signin! idtoken))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")

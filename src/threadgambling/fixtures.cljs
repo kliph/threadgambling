@@ -113,7 +113,6 @@
     (fetch-fixtures! fixtures-atom)
     (fn []
       (let [sorted-fixtures (sort-by :date (:fixtures @fixtures-atom))
-            _ (js/console.log @fixtures-atom)
             gameweek (:gameweek @fixtures-atom)
             table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
                            (into (map #(get-in % [:away-club :name]) sorted-fixtures)))
