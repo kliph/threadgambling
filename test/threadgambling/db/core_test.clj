@@ -41,6 +41,14 @@
                               record-without-team
                               {:connection t-conn})))
       (is (= 1
+             (db/delete-user! t-conn
+                              {:id (:id record-without-team)}
+                              {:connection t-conn})))
+      (is (= 0
+             (db/delete-user! t-conn
+                              {:id (:id record-without-team)}
+                              {:connection t-conn})))
+      (is (= 1
              (db/create-user! t-conn
                               record-with-team
                               {:connection t-conn})))
