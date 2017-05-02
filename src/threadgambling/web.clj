@@ -42,16 +42,30 @@
      :headers {"Content-Type" "application/json; charset=utf-8"}
      :body body}))
 
-;; (defn verify )
+(defn fetch-token-info [client-id-token]
+  (client/get "https://www.googleapis.com/oauth2/v3/tokeninfo"
+              {:query-params {"id_token" client-id-token}}))
+
+(defn aud-contains-client-id? [token-info client-id]
+  (let [aud-claim (get token-info "aud" "")]
+    (clojure.string/includes? aud-claim client-id)))
+
+(defn verify-token-info [token-info]
+  (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
+    {:status 200
+     :headers {}
+     :body client-id-token}
+    {:status 403
+     :headers {}
+     :body "Forbidden"}))
+
 (defn handle-token-signin! [client-id-token]
   (let [client-id (env :google-oauth2-client-id)
         _ (println client-id)
         _ (println client-id-token)]
-    {:status 200
-     :headers {}
-     :body client-id-token}))
-
-;; (handle-token-signin! foo)
+    (-> client-id-token
+        fetch-token-info
+        verify-token-info)))
 
 (defroutes app
   (GET "/" []

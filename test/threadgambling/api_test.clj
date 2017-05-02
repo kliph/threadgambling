@@ -110,7 +110,8 @@
     (is (= token (-> req
                      :body)))))
 
-#_(deftest validates-the-passed-idtoken)
+(deftest validates-the-passed-idtoken
+  (is (= true (aud-contains-client-id? {"aud" "abc123"} "abc123"))))
 
 ;;; It returns an error when aud is not our client id
 
