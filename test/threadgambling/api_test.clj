@@ -101,17 +101,47 @@
                                      {:body sample-response-with-changed-data}))))
 
 (deftest consumes-idtoken-form-param
-  (let [token "12345"
-        req (web/handler (-> (mock/request :post "/tokensignin")
-                             (mock/content-type "application/x-www-form-urlencoded")
-                             (mock/body (str "idtoken=" token))))]
-    (is (= 200 (-> req
-                   :status)))
-    (is (= token (-> req
-                     :body)))))
+  (with-stub web/fetch-token-info :returns {:status 200
+                                            :headers {}
+                                            :body {"sub" "456"}}
+    (with-stub web/aud-contains-client-id? :returns true
+      (let [token "12345"
+            sub "456"
+            req (web/handler (-> (mock/request :post "/tokensignin")
+                                 (mock/content-type "application/x-www-form-urlencoded")
+                                 (mock/body (str "idtoken=" token))))]
+        (is (= 200 (-> req
+                       :status)))
+        (is (= sub (-> req
+                       :body
+                       (get "sub"))))))))
+
+
 
 (deftest validates-the-passed-idtoken
-  (is (= true (aud-contains-client-id? {"aud" "abc123"} "abc123"))))
+  (is (= true
+         (web/aud-contains-client-id? {"aud" "abc123"}
+                                      "abc123"))))
+
+(deftest returns-error-status-when-aud-is-invalid
+  (with-stub web/aud-contains-client-id? :returns false
+    (let [invalid-token-info {"iss" "https://accounts.google.com"
+                              "sub" "110169484474386276334"
+                              "azp" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
+                              "aud" "invalid"
+                              "iat" "1433978353"
+                              "exp" "1433981953"
+                              "email" "testuser@gmail.com"
+                              "email_verified" "true"
+                              "name"  "Test User",
+                              "picture" "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
+                              "given_name" "Test"
+                              "family_name" "User"
+                              "locale" "en"}
+          invalid-token-info-response {:status 200
+                                       :body invalid-token-info}]
+      (is (= 403
+             (:status (web/verify-token-info invalid-token-info)))))))
 
 ;;; It returns an error when aud is not our client id
 

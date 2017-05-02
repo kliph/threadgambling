@@ -50,14 +50,15 @@
   (let [aud-claim (get token-info "aud" "")]
     (clojure.string/includes? aud-claim client-id)))
 
-(defn verify-token-info [token-info]
-  (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
-    {:status 200
-     :headers {}
-     :body client-id-token}
-    {:status 403
-     :headers {}
-     :body "Forbidden"}))
+(defn verify-token-info [token-info-response]
+  (let [token-info (:body token-info-response)]
+    (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
+      {:status 200
+       :headers {}
+       :body token-info}
+      {:status 403
+       :headers {}
+       :body "Forbidden"})))
 
 (defn handle-token-signin! [client-id-token]
   (let [client-id (env :google-oauth2-client-id)
