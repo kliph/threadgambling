@@ -3,6 +3,7 @@
             [threadgambling.web :as web]
             [stubadub.core :refer [with-stub calls-to]]
             [compojure.handler :refer [site]]
+            [clojure.data.json :as json]
             [clojure.string :as s]
             [environ.core :refer [env]]
             [clojure.java.jdbc :as jdbc]
@@ -108,11 +109,9 @@
     (with-stub web/create-user-from-token-info! :returns {:status 200
                                                           :headers {}
                                                           :body {:user user}}
-      (with-stub web/fetch-token-info :returns {:status 200
-                                                :headers {}
-                                                :body {"sub" (:id user)
-                                                       "name" (:name user)
-                                                       "email" (:email user)}}
+      (with-stub web/fetch-token-info :returns {:sub (:id user)
+                                                :name (:name user)
+                                                :email (:email user)}
         (with-stub web/aud-contains-client-id? :returns true
           (let [token "12345"
                 req (web/handler (-> (mock/request :post "/tokensignin")
@@ -129,28 +128,27 @@
 
 (deftest validates-the-passed-idtoken
   (is (= true
-         (web/aud-contains-client-id? {"aud" "abc123"}
+         (web/aud-contains-client-id? {:aud "abc123"}
                                       "abc123"))))
 
 (deftest returns-error-status-when-aud-is-invalid
   (with-stub web/aud-contains-client-id? :returns false
-    (let [invalid-token-info {"iss" "https://accounts.google.com"
-                              "sub" "110169484474386276334"
-                              "azp" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
-                              "aud" "invalid"
-                              "iat" "1433978353"
-                              "exp" "1433981953"
-                              "email" "testuser@gmail.com"
-                              "email_verified" "true"
-                              "name"  "Test User",
-                              "picture" "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
-                              "given_name" "Test"
-                              "family_name" "User"
-                              "locale" "en"}
-          invalid-token-info-response {:status 200
-                                       :body invalid-token-info}]
+    (let [invalid-token-info {:iss "https://accounts.google.com"
+                              :sub "110169484474386276334"
+                              :azp "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
+                              :aud "invalid"
+                              :iat "1433978353"
+                              :exp "1433981953"
+                              :email "testuser@gmail.com"
+                              :email_verified "true"
+                              :name  "Test User",
+                              :picture "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
+                              :given_name "Test"
+                              :family_name "User"
+                              :locale "en"}]
       (is (= 403
-             (:status (web/verify-token-info invalid-token-info)))))))
+             (:status
+              (web/verify-token-info invalid-token-info)))))))
 
 
 #_(deftest get-user-from-token-info
@@ -178,45 +176,3 @@
                        {:connection t-conn})
       (is (= user (-> (web/get-user-from-token-info token-info)
                       (select-keys [:id])))))))
-
-#_(deftest uses-sub-as-unique-id-to-create-user
-  (let [new-verified-id-token {
-                           ;; These six fields are included in all Google ID Tokens.
-                           "iss" "https://accounts.google.com"
-                           "sub" "110169484474386276334"
-                           "azp" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
-                           "aud" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
-                           "iat" "1433978353"
-                           "exp" "1433981953"
-
-                           ;; These seven fields are only included when the user has granted the "profile" and
-                           ;; "email" OAuth scopes to the application.
-                           "email" "testuser@gmail.com"
-                           "email_verified" "true"
-                           "name"  "Test User",
-                           "picture" "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
-                           "given_name" "Test"
-                           "family_name" "User"
-                           "locale" "en"}
-        (web/handle-verified-google-user new-verified-id-token)]))
-
-#_(deftest uses-sub-as-unique-id-to-fetch-existing-user-data
-  (let [existing-verified-id-token {
-                               ;; These six fields are included in all Google ID Tokens.
-                               "iss" "https://accounts.google.com"
-                               "sub" "110169484474386276334"
-                               "azp" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
-                               "aud" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
-                               "iat" "1433978353"
-                               "exp" "1433981953"
-
-                               ;; These seven fields are only included when the user has granted the "profile" and
-                               ;; "email" OAuth scopes to the application.
-                               "email" "testuser@gmail.com"
-                               "email_verified" "true"
-                               "name"  "Test User",
-                               "picture" "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
-                               "given_name" "Test"
-                               "family_name" "User"
-                               "locale" "en"}
-        (web/handle-verified-google-user existing-verified-id-token)]))

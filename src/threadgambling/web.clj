@@ -43,22 +43,35 @@
      :body body}))
 
 (defn fetch-token-info [client-id-token]
-  (client/get "https://www.googleapis.com/oauth2/v3/tokeninfo"
-              {:query-params {"id_token" client-id-token}}))
+  (-> (client/get "https://www.googleapis.com/oauth2/v3/tokeninfo"
+                  {:query-params {"id_token" client-id-token}})
+      :body
+      (json/read-str :key-fn keyword)))
 
 (defn aud-contains-client-id? [token-info client-id]
-  (let [aud-claim (get token-info "aud" "")]
+  (let [aud-claim (get token-info :aud "")
+        _ (println "AUD CONTAINS CLIENT ID?")
+        _ (println (type token-info))
+        _ (println token-info)
+        _ (println aud-claim)
+        _ (println (type aud-claim))
+        _ (println "CLIENT ID PASSED IN")
+        _ (println client-id)
+        _ (println (type client-id))
+        _ (println "CLIENT ID FROM ENV")
+        _ (println (env :google-oauth2-client-id))
+        _ (println (clojure.string/includes? aud-claim client-id))]
     (clojure.string/includes? aud-claim client-id)))
 
 (defn get-user-from-token-info [token-info]
-  (let [sub (get token-info "sub" "")
+  (let [sub (get token-info :sub "")
         user (db/get-user {:id sub})]
     user))
 
 (defn create-user-from-token-info! [token-info]
-  (let [user-to-be-created {:id (get token-info "sub")
-                            :name (get token-info "name" "")
-                            :email (get token-info "email" "")
+  (let [user-to-be-created {:id (get token-info :sub)
+                            :name (get token-info :name "")
+                            :email (get token-info :email "")
                             :team ""}
         _ (db/create-user! user-to-be-created)
         user (db/get-user {:id (:id user-to-be-created)})]
@@ -73,8 +86,9 @@
      :body {:user user}}
     (create-user-from-token-info! token-info)))
 
-(defn verify-token-info [token-info-response]
-  (let [token-info (:body token-info-response)]
+(defn verify-token-info [token-info]
+  (let [_ (println "VERIFYING TOKEN INFO DOGG")
+        _ (println "token info u gave me: " token-info)]
     (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
       (log-in-or-create-user! token-info)
       {:status 403
