@@ -101,20 +101,29 @@
                                      {:body sample-response-with-changed-data}))))
 
 (deftest consumes-idtoken-form-param
-  (with-stub web/fetch-token-info :returns {:status 200
-                                            :headers {}
-                                            :body {"sub" "456"}}
-    (with-stub web/aud-contains-client-id? :returns true
-      (let [token "12345"
-            sub "456"
-            req (web/handler (-> (mock/request :post "/tokensignin")
-                                 (mock/content-type "application/x-www-form-urlencoded")
-                                 (mock/body (str "idtoken=" token))))]
-        (is (= 200 (-> req
-                       :status)))
-        (is (= sub (-> req
-                       :body
-                       (get "sub"))))))))
+  (let [user {:id "187"
+              :name "Test User"
+              :email "foo@example.com"
+              :team ""}]
+    (with-stub web/create-user-from-token-info! :returns {:status 200
+                                                          :headers {}
+                                                          :body {:user user}}
+      (with-stub web/fetch-token-info :returns {:status 200
+                                                :headers {}
+                                                :body {"sub" (:id user)
+                                                       "name" (:name user)
+                                                       "email" (:email user)}}
+        (with-stub web/aud-contains-client-id? :returns true
+          (let [token "12345"
+                req (web/handler (-> (mock/request :post "/tokensignin")
+                                     (mock/content-type "application/x-www-form-urlencoded")
+                                     (mock/body (str "idtoken=" token))))]
+            (is (= 200 (-> req
+                           :status)))
+            (is (= user (-> req
+                            :body
+                            :user
+                            (select-keys [:id :name :team :email]))))))))))
 
 
 
@@ -143,7 +152,32 @@
       (is (= 403
              (:status (web/verify-token-info invalid-token-info)))))))
 
-;;; It returns an error when aud is not our client id
+
+#_(deftest get-user-from-token-info
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [token-info {"iss" "https://accounts.google.com"
+                      "sub" "110169484474386276334"
+                      "azp" "1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com"
+                      "aud" "valid"
+                      "iat" "1433978353"
+                      "exp" "1433981953"
+                      "email" "testuser@gmail.com"
+                      "email_verified" "true"
+                      "name"  "Test User",
+                      "picture" "https://lh4.googleusercontent.com/-kYgzyAWpZzJ/ABCDEFGHI/AAAJKLMNOP/tIXL9Ir44LE/s99-c/photo.jpg"
+                      "given_name" "Test"
+                      "family_name" "User"
+                      "locale" "en"}
+          user {:id (get token-info "sub")}]
+      (db/create-user! t-conn
+                       (-> user
+                           (assoc :email "foo@example.com")
+                           (assoc :name "Test User")
+                           (assoc :team "South Philly Kittens"))
+                       {:connection t-conn})
+      (is (= user (-> (web/get-user-from-token-info token-info)
+                      (select-keys [:id])))))))
 
 #_(deftest uses-sub-as-unique-id-to-create-user
   (let [new-verified-id-token {

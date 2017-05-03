@@ -50,12 +50,33 @@
   (let [aud-claim (get token-info "aud" "")]
     (clojure.string/includes? aud-claim client-id)))
 
+(defn get-user-from-token-info [token-info]
+  (let [sub (get token-info "sub" "")
+        user (db/get-user {:id sub})]
+    user))
+
+(defn create-user-from-token-info! [token-info]
+  (let [user-to-be-created {:id (get token-info "sub")
+                            :name (get token-info "name" "")
+                            :email (get token-info "email" "")
+                            :team ""}
+        _ (db/create-user! user-to-be-created)
+        user (db/get-user {:id (:id user-to-be-created)})]
+    {:status 200
+     :headers {}
+     :body {:user user}}))
+
+(defn log-in-or-create-user! [token-info]
+  (if-let [user (get-user-from-token-info token-info)]
+    {:status 200
+     :headers {}
+     :body {:user user}}
+    (create-user-from-token-info! token-info)))
+
 (defn verify-token-info [token-info-response]
   (let [token-info (:body token-info-response)]
     (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
-      {:status 200
-       :headers {}
-       :body token-info}
+      (log-in-or-create-user! token-info)
       {:status 403
        :headers {}
        :body "Forbidden"})))

@@ -36,6 +36,8 @@
                             :email "testuser@example.com"
                             :name "Test User"
                             :team "South Philly Kittens"}]
+      (is (= nil
+             (db/get-user t-conn {:id (:id "nonexistant")})))
       (is (= 1
              (db/create-user! t-conn
                               record-without-team
