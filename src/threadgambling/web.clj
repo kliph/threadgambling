@@ -68,6 +68,11 @@
         user (db/get-user {:id sub})]
     user))
 
+(defn respond-success-with-user [user]
+  {:status 200
+   :headers {}
+   :body (json/write-str {:user (select-keys user [:id :name :team :email])})})
+
 (defn create-user-from-token-info! [token-info]
   (let [user-to-be-created {:id (get token-info :sub)
                             :name (get token-info :name "")
@@ -75,15 +80,11 @@
                             :team ""}
         _ (db/create-user! user-to-be-created)
         user (db/get-user {:id (:id user-to-be-created)})]
-    {:status 200
-     :headers {}
-     :body {:user user}}))
+    (respond-success-with-user user)))
 
 (defn log-in-or-create-user! [token-info]
   (if-let [user (get-user-from-token-info token-info)]
-    {:status 200
-     :headers {}
-     :body {:user user}}
+    (respond-success-with-user user)
     (create-user-from-token-info! token-info)))
 
 (defn verify-token-info [token-info]

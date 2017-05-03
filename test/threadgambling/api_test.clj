@@ -150,6 +150,23 @@
              (:status
               (web/verify-token-info invalid-token-info)))))))
 
+(deftest respond-success-with-user
+  (let [user {:id "187"
+              :name "Test User"
+              :email "foo@example.com"
+              :last_login (java.sql.Timestamp. 1000)
+              :created_at (java.sql.Timestamp. 1000)
+              :team ""}
+        json-body (json/write-str
+                   {:user
+                    (select-keys user
+                                 [:id :name :email :team])})]
+    (is (= 200
+           (:status (web/respond-success-with-user user))))
+    (is (= (json/read-str json-body)
+           (json/read-str
+            (:body (web/respond-success-with-user user)))))))
+
 
 #_(deftest get-user-from-token-info
   (jdbc/with-db-transaction [t-conn *db*]
