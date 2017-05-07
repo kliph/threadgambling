@@ -122,7 +122,6 @@
                                 (r/atom "pickable"))
                              table-keys)
             table-state (r/atom (zipmap table-keys table-vals))
-            _ (js/console.log @table-state)
             confirm-disabled (r/atom true)]
         [:div#fixtures
          [:h2 "Fixtures"]

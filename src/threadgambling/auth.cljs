@@ -47,14 +47,12 @@
 (goog.exportSymbol "renderButton", render-button)
 
 (defn onSignOut []
-  (js/console.log "trying to log out")
   (try
     (let [^js/gapi.auth2.GoogleAuth auth2 (.getAuthInstance js/gapi.auth2)
           ^js/Promise sign-out (.signOut auth2)]
       (.then sign-out
              (fn []
                (swap! s/app-state assoc :page :sign-in)
-               (js/console.log (session/get :user))
                (session/remove! :user)
                (js/console.log "User Signed out"))))
     (catch js/TypeError _)))

@@ -49,18 +49,7 @@
       (json/read-str :key-fn keyword)))
 
 (defn aud-contains-client-id? [token-info client-id]
-  (let [aud-claim (get token-info :aud "")
-        _ (println "AUD CONTAINS CLIENT ID?")
-        _ (println (type token-info))
-        _ (println token-info)
-        _ (println aud-claim)
-        _ (println (type aud-claim))
-        _ (println "CLIENT ID PASSED IN")
-        _ (println client-id)
-        _ (println (type client-id))
-        _ (println "CLIENT ID FROM ENV")
-        _ (println (env :google-oauth2-client-id))
-        _ (println (clojure.string/includes? aud-claim client-id))]
+  (let [aud-claim (get token-info :aud "")]
     (clojure.string/includes? aud-claim client-id)))
 
 (defn get-user-from-token-info [token-info]
@@ -88,18 +77,14 @@
     (create-user-from-token-info! token-info)))
 
 (defn verify-token-info [token-info]
-  (let [_ (println "VERIFYING TOKEN INFO DOGG")
-        _ (println "token info u gave me: " token-info)]
-    (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
-      (log-in-or-create-user! token-info)
-      {:status 403
-       :headers {}
-       :body "Forbidden"})))
+  (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
+    (log-in-or-create-user! token-info)
+    {:status 403
+     :headers {}
+     :body "Forbidden"}))
 
 (defn handle-token-signin! [client-id-token]
-  (let [client-id (env :google-oauth2-client-id)
-        _ (println client-id)
-        _ (println client-id-token)]
+  (let [client-id (env :google-oauth2-client-id)]
     (-> client-id-token
         fetch-token-info
         verify-token-info)))
