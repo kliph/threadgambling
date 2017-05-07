@@ -56,7 +56,3 @@ Connect to a repl using =C-c M-j=.  Run =(figwheel-up)=
 * To switch builds
 Switch builds by using =(switch-to-build :id)= from a figwheel cljs
 repl
-* To create a new migration
-#+BEGIN_SRC sh
-  lein migratus create <name>
-#+END_SRC

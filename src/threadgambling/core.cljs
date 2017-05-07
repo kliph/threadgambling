@@ -6,7 +6,6 @@
             [threadgambling.routes :as routes]
             [threadgambling.state :as s]
             [threadgambling.color :as c]
-            [threadgambling.auth :as auth]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -66,11 +65,8 @@
         :style {:color c/white}
         :label "Standings"}]
       [ui/flat-button
-       {:href "/#/"
+       {:href "/#/sign-out"
         :style {:color c/white}
-        :on-click (fn []
-                    (swap! s/app-state assoc :page :sign-in :signed-in false)
-                    (auth/onSignOut))
         :label "Sign Out"}]])])
 
 (defn app-container []

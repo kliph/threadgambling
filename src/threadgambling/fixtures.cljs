@@ -7,9 +7,8 @@
             [cljs.core.async :refer [<!]]
             [cljs-react-material-ui.core :as ui]))
 
-(defn previously-picked? [x]
-  (let [previously-picked-set  (get-in @s/app-state [:account :picked] #{})]
-    (previously-picked-set x)))
+(def previously-picked?
+  (get-in @s/app-state [:account :picked] #{}))
 
 (defn toggle-picked! [a confirm-disabled]
   (if (= @a "picked")
@@ -114,6 +113,7 @@
     (fetch-fixtures! fixtures-atom)
     (fn []
       (let [sorted-fixtures (sort-by :date (:fixtures @fixtures-atom))
+            _ (js/console.log @fixtures-atom)
             gameweek (:gameweek @fixtures-atom)
             table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
                            (into (map #(get-in % [:away-club :name]) sorted-fixtures)))
