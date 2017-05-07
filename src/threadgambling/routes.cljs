@@ -26,6 +26,8 @@
   [account/update-page])
 (defmethod current-page :sign-in []
   [auth/sign-in-page])
+(defmethod current-page :sign-out []
+  [auth/sign-in-page])
 
 (secretary/set-config! :prefix "#")
 
@@ -58,9 +60,6 @@
 
 (defroute sign-in-path "/sign-in" []
   (swap! s/app-state assoc :page :home))
-
-(defroute sign-out-path "/sign-out" []
-  (swap! s/app-state assoc :page :sign-in :signed-in false))
 
 (let [h (History.)]
   (goog.events/listen h EventType/NAVIGATE #(secretary/dispatch! (.-token %)))

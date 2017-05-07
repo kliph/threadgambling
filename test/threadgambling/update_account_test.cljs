@@ -3,6 +3,7 @@
             [cljs-react-test.utils :as tu]
             [dommy.core :as dommy :refer-macros [sel1 sel]]
             [reagent.core :as r]
+            [reagent.session :as session]
             [threadgambling.account :as account]
             [threadgambling.test-util :as test-util]
             [threadgambling.state :as s]))
@@ -10,15 +11,13 @@
 (def ^:dynamic c)
 
 (use-fixtures :each (fn [test-fn]
-                      (with-redefs
-                        [s/app-state
-                         (r/atom {:account {:name "Colin Smith"
-                                            :team "South Philly Kittens"
-                                            :email "foo@example.com"}})]
-
-                        (binding [c (tu/new-container!)]
-                          (test-fn)
-                          (tu/unmount! c)))))
+                      (session/clear!)
+                      (session/put! :user {:name "Colin Smith"
+                                           :team "South Philly Kittens"
+                                           :email "foo@example.com"})
+                      (binding [c (tu/new-container!)]
+                        (test-fn)
+                        (tu/unmount! c))))
 
 (defn change-input! [input text]
   (dommy/set-value! input text)
@@ -34,23 +33,11 @@
                                           :account
                                           :name)))
       (change-input! name-input "test")
+      (is (= "Colin Smith" (session/get-in [:user :name])))
       (is (= (dommy/value name-input) "test"))
       (is (= (-> @s/app-state
                  :account
                  :name) "test")))))
-
-(deftest change-email
-  (testing "Changing email updates the state"
-    (let [_ (r/render (test-util/test-container [account/update-page]) c)
-          email-input (sel1 "input[name=\"Email\"]")]
-      (is (= (dommy/value email-input) (-> @s/app-state
-                                          :account
-                                          :email)))
-      (change-input! email-input "test")
-      (is (= (dommy/value email-input) "test"))
-      (is (= (-> @s/app-state
-                 :account
-                 :email) "test")))))
 
 (deftest change-team-name
   (testing "Changing team name updates the state"

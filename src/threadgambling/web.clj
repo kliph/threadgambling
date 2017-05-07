@@ -70,7 +70,7 @@
 
 (defn respond-success-with-user [user]
   {:status 200
-   :headers {}
+   :headers {"Content-Type" "application/json"}
    :body (json/write-str {:user (select-keys user [:id :name :team :email])})})
 
 (defn create-user-from-token-info! [token-info]

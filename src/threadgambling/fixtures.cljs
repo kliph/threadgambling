@@ -7,8 +7,9 @@
             [cljs.core.async :refer [<!]]
             [cljs-react-material-ui.core :as ui]))
 
-(def previously-picked?
-  (get-in @s/app-state [:account :picked] #{}))
+(defn previously-picked? [x]
+  (let [previously-picked-set  (get-in @s/app-state [:account :picked] #{})]
+    (previously-picked-set x)))
 
 (defn toggle-picked! [a confirm-disabled]
   (if (= @a "picked")
@@ -121,6 +122,7 @@
                                 (r/atom "pickable"))
                              table-keys)
             table-state (r/atom (zipmap table-keys table-vals))
+            _ (js/console.log @table-state)
             confirm-disabled (r/atom true)]
         [:div#fixtures
          [:h2 "Fixtures"]
