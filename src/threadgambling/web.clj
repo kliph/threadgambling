@@ -1,5 +1,5 @@
 (ns threadgambling.web
-  (:require [compojure.core :refer [defroutes GET ANY]]
+  (:require [compojure.core :refer [defroutes GET ANY POST]]
             [compojure.handler :refer [site]]
             [compojure.route :as route]
             [clojure.java.io :as io]
@@ -42,11 +42,60 @@
      :headers {"Content-Type" "application/json; charset=utf-8"}
      :body body}))
 
+(defn fetch-token-info [client-id-token]
+  (-> (client/get "https://www.googleapis.com/oauth2/v3/tokeninfo"
+                  {:query-params {"id_token" client-id-token}})
+      :body
+      (json/read-str :key-fn keyword)))
+
+(defn aud-contains-client-id? [token-info client-id]
+  (let [aud-claim (get token-info :aud "")]
+    (clojure.string/includes? aud-claim client-id)))
+
+(defn get-user-from-token-info [token-info]
+  (let [sub (get token-info :sub "")
+        user (db/get-user {:id sub})]
+    user))
+
+(defn respond-success-with-user [user]
+  {:status 200
+   :headers {"Content-Type" "application/json"}
+   :body (json/write-str {:user (select-keys user [:id :name :team :email])})})
+
+(defn create-user-from-token-info! [token-info]
+  (let [user-to-be-created {:id (get token-info :sub)
+                            :name (get token-info :name "")
+                            :email (get token-info :email "")
+                            :team ""}
+        _ (db/create-user! user-to-be-created)
+        user (db/get-user {:id (:id user-to-be-created)})]
+    (respond-success-with-user user)))
+
+(defn log-in-or-create-user! [token-info]
+  (if-let [user (get-user-from-token-info token-info)]
+    (respond-success-with-user user)
+    (create-user-from-token-info! token-info)))
+
+(defn verify-token-info [token-info]
+  (if (aud-contains-client-id? token-info (env :google-oauth2-client-id))
+    (log-in-or-create-user! token-info)
+    {:status 403
+     :headers {}
+     :body "Forbidden"}))
+
+(defn handle-token-signin! [client-id-token]
+  (let [client-id (env :google-oauth2-client-id)]
+    (-> client-id-token
+        fetch-token-info
+        verify-token-info)))
+
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
+  (POST "/tokensignin" [idtoken]
+        (handle-token-signin! idtoken))
   (GET "/admin" []
        (slurp (io/resource "public/admin.html")))
   (route/resources "/")
