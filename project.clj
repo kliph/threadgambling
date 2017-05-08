@@ -7,12 +7,12 @@
   :repl-options {:init-ns dev.repl}
   :min-lein-version "2.5.3"
   :main threadgambling.web
-  :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
-                 [org.clojure/clojurescript "1.9.229"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
+                 [org.clojure/clojurescript "1.9.521"]
                  [org.clojure/core.async "0.3.442"]
-                 [com.cognitect/transit-cljs "0.8.239"]
                  [cljs-react-material-ui "0.2.38" :exclusions [cljsjs/material-ui]]
                  [cljsjs/material-ui "0.17.0-0" :exclusions [cljsjs/react]]
+                 [reagent-utils "0.2.1"]
                  [reagent "0.6.0" :exclusions [org.clojure/tools.reader cljsjs/react cljsjs/react-dom]]
                  [cljs-react-test "0.1.4-SNAPSHOT" :exclusions [cljsjs/react-with-addons]]
                  [prismatic/dommy "1.1.0"]
@@ -46,9 +46,9 @@
              :server-port 3450}
   :uberjar-name "threadgambling.jar"
   :profiles {:project/dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
-                                          [figwheel-sidecar "0.5.7"]
+                                          [figwheel-sidecar "0.5.9"]
                                           [pjstadig/humane-test-output "0.8.1"]
-                                          [binaryage/devtools "0.8.1"]]
+                                          [binaryage/devtools "0.9.4"]]
                            :plugins [[com.jakemccrary/lein-test-refresh "0.19.0"]]
                            :injections [(require 'pjstadig.humane-test-output)
                                         (pjstadig.humane-test-output/activate!)]
@@ -61,9 +61,15 @@
                                                             :asset-path "js/out"
                                                             :output-to "resources/public/js/main.js"
                                                             :output-dir "resources/public/js/out"
-                                                            :optimizations :none
+                                                            :optimizations :advanced
+                                                            :externs ["resources/public/js/out/inferred-externs.js"]
+                                                            :foreign-libs
+                                                            [{:file "gapi/platform.js"
+                                                              :provides ["com.google.api"]}]
+                                                            :infer-externs true
                                                             :recompile-dependents true
-                                                            :source-map true}}
+                                                            ;; :source-map true
+}}
                                                 {:id "admin"
                                                  :source-paths ["src"]
                                                  :figwheel true
@@ -74,7 +80,8 @@
                                                             :output-dir "resources/public/js/admin/out"
                                                             :optimizations :none
                                                             :recompile-dependents true
-                                                            :source-map true}}
+                                                            :source-map true
+}}
                                                 {:id "test"
                                                  :source-paths ["src" "test"]
                                                  :compiler {:output-to "resources/public/js/test.js"
@@ -96,15 +103,24 @@
                                                         :asset-path "js/out"
                                                         :output-to "resources/public/js/main.js"
                                                         :output-dir "resources/public/js/out"
+                                                        :infer-externs true
+                                                        :externs ["resources/public/js/out/inferred-externs.js"]
+                                                        :foreign-libs
+                                                        [{:file "gapi/platform.js"
+                                                          :provides ["com.google.api"]}]
                                                         :optimizations :advanced
                                                         :pretty-print false}}
                                             {:id "admin"
                                              :source-paths ["src"]
                                              :jar true
                                              :compiler {:main "threadgambling.admin"
-                                                        :preloads [devtools.preload]
                                                         :asset-path "js/admin/out"
                                                         :output-to "resources/public/js/admin.js"
                                                         :output-dir "resources/public/js/admin/out"
+                                                        :infer-externs true
+                                                        :externs ["resources/public/js/out/inferred-externs.js"]
+                                                        :foreign-libs
+                                                        [{:file "gapi/platform.js"
+                                                          :provides ["com.google.api"]}]
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}})
