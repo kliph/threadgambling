@@ -37,7 +37,6 @@
 
 
 (defn render-button []
-  (console.log "Trying to render")
   (.render js/gapi.signin2
            "google-signin"
            #js {"scope" "profile email"

@@ -7,9 +7,6 @@
 
 (defn home-page []
   (fn []
-    (js/console.log @s/app-state)
-    (js/console.log @session/state)
-    (js/console.log (session/get :user))
     [:div.home-container
      [:div.team-info
       [:div#pick-container
