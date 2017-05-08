@@ -26,9 +26,9 @@
         (when success?
           (sign-in-session! (:user response-body))))))
 
-(defn on-sign-in [^gapi.auth2.GoogleUser google-user]
-  (let [^gapi.auth2.BasicProfile profile (.getBasicProfile google-user)
-        ^gapi.auth2AuthResponse auth-response (.getAuthResponse google-user)
+(defn on-sign-in [^js/gapi.auth2.GoogleUser google-user]
+  (let [^js/gapi.auth2.BasicProfile profile (.getBasicProfile google-user)
+        ^js/gapi.auth2AuthResponse auth-response (.getAuthResponse google-user)
         id-token (.-id-token auth-response)]
     (post-sign-in-id-token! id-token)))
 
@@ -38,7 +38,7 @@
 
 (defn render-button []
   (console.log "Trying to render")
-  (.render gapi.signin2
+  (.render js/gapi.signin2
            "google-signin"
            #js {"scope" "profile email"
                 "longtitle" true
@@ -49,7 +49,7 @@
 
 (defn onSignOut []
   (try
-    (let [^gapi.auth2.GoogleAuth auth2 (.getAuthInstance gapi.auth2)
+    (let [^js/gapi.auth2.GoogleAuth auth2 (.getAuthInstance js/gapi.auth2)
           ^js/Promise sign-out (.signOut auth2)]
       (.then sign-out
              (fn []

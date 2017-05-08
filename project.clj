@@ -61,10 +61,15 @@
                                                             :asset-path "js/out"
                                                             :output-to "resources/public/js/main.js"
                                                             :output-dir "resources/public/js/out"
-                                                            :optimizations :none
+                                                            :optimizations :advanced
+                                                            :externs ["resources/public/js/out/inferred-externs.js"]
+                                                            :foreign-libs
+                                                            [{:file "gapi/platform.js"
+                                                              :provides ["com.google.api"]}]
                                                             :infer-externs true
                                                             :recompile-dependents true
-                                                            :source-map true}}
+                                                            ;; :source-map true
+}}
                                                 {:id "admin"
                                                  :source-paths ["src"]
                                                  :figwheel true
@@ -75,7 +80,8 @@
                                                             :output-dir "resources/public/js/admin/out"
                                                             :optimizations :none
                                                             :recompile-dependents true
-                                                            :source-map true}}
+                                                            :source-map true
+}}
                                                 {:id "test"
                                                  :source-paths ["src" "test"]
                                                  :compiler {:output-to "resources/public/js/test.js"
@@ -97,15 +103,24 @@
                                                         :asset-path "js/out"
                                                         :output-to "resources/public/js/main.js"
                                                         :output-dir "resources/public/js/out"
+                                                        :infer-externs true
+                                                        :externs ["resources/public/js/out/inferred-externs.js"]
+                                                        :foreign-libs
+                                                        [{:file "gapi/platform.js"
+                                                          :provides ["com.google.api"]}]
                                                         :optimizations :advanced
                                                         :pretty-print false}}
                                             {:id "admin"
                                              :source-paths ["src"]
                                              :jar true
                                              :compiler {:main "threadgambling.admin"
-                                                        :preloads [devtools.preload]
                                                         :asset-path "js/admin/out"
                                                         :output-to "resources/public/js/admin.js"
                                                         :output-dir "resources/public/js/admin/out"
+                                                        :infer-externs true
+                                                        :externs ["resources/public/js/out/inferred-externs.js"]
+                                                        :foreign-libs
+                                                        [{:file "gapi/platform.js"
+                                                          :provides ["com.google.api"]}]
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}})
