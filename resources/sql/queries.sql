@@ -16,6 +16,14 @@ INSERT INTO users
 (id, name, team, email)
 VALUES (:id, :name, :team, :email)
 
+-- :name update-user! :! :n
+-- :doc updates a user record
+update users
+set name = :name,
+    team = :team
+where id = :id
+
+
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
 SELECT * FROM users

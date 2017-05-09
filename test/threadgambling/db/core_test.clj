@@ -7,6 +7,15 @@
             [threadgambling.api-test :refer [sample-response]]
             [mount.core :as mount]))
 
+(defmacro debug [& body]
+  `(try
+     ~@body
+     (catch Exception e#
+       (-> e#
+           .getNextException
+           .getMessage
+           println))))
+
 (use-fixtures :once
   (fn [f]
     (mount/start
@@ -56,4 +65,28 @@
                               {:connection t-conn})))
       (is (= record-with-team
              (-> (db/get-user t-conn {:id (:id record-with-team)})
+                 (select-keys [:id :email :name :team])))))))
+
+(deftest updates-users
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [user {:id "187"
+                :name "Test User"
+                :email "foo@example.com"
+                :team ""}
+          updated-user {:id "187"
+                        :name "Leroy Brown"
+                        :team "South Philly Kittens"}]
+      (is (= 1
+             (db/create-user! t-conn
+                              user
+                              {:connection t-conn})))
+
+      (db/update-user! t-conn
+                       updated-user
+                       {:connection t-conn})
+      (is (= (merge
+              user
+              updated-user)
+             (-> (db/get-user t-conn {:id (:id user)})
                  (select-keys [:id :email :name :team])))))))

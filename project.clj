@@ -61,15 +61,14 @@
                                                             :asset-path "js/out"
                                                             :output-to "resources/public/js/main.js"
                                                             :output-dir "resources/public/js/out"
-                                                            :optimizations :advanced
+                                                            :optimizations :none
                                                             :externs ["resources/public/js/out/inferred-externs.js"]
                                                             :foreign-libs
                                                             [{:file "gapi/platform.js"
                                                               :provides ["com.google.api"]}]
                                                             :infer-externs true
                                                             :recompile-dependents true
-                                                            ;; :source-map true
-}}
+                                                            :source-map true}}
                                                 {:id "admin"
                                                  :source-paths ["src"]
                                                  :figwheel true
@@ -80,8 +79,7 @@
                                                             :output-dir "resources/public/js/admin/out"
                                                             :optimizations :none
                                                             :recompile-dependents true
-                                                            :source-map true
-}}
+                                                            :source-map true}}
                                                 {:id "test"
                                                  :source-paths ["src" "test"]
                                                  :compiler {:output-to "resources/public/js/test.js"
