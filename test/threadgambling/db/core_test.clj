@@ -81,7 +81,6 @@
              (db/create-user! t-conn
                               user
                               {:connection t-conn})))
-
       (db/update-user! t-conn
                        updated-user
                        {:connection t-conn})

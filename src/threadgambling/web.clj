@@ -89,11 +89,22 @@
         fetch-token-info
         verify-token-info)))
 
+(defn update-user! [updated-map]
+  (db/update-user! updated-map)
+  {:status 200
+   :headers {"Content-Type" "application/json"}
+   :body (json/write-str {:user (select-keys updated-map [:id :name :email])})})
+
+
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
+  (POST "/account" [id name team]
+        (update-user! {:id id
+                       :name name
+                       :team team}))
   (POST "/tokensignin" [idtoken]
         (handle-token-signin! idtoken))
   (GET "/admin" []

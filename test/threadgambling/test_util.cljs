@@ -6,3 +6,7 @@
   [rui/mui-theme-provider
    {:mui-theme (ui/get-mui-theme)}
    component])
+
+(defn click [node]
+  (.click node)
+  (r/flush))

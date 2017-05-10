@@ -35,20 +35,16 @@
                           (test-fn)
                           (tu/unmount! c)))))
 
-(defn click [node]
-  (.click node)
-  (r/flush))
-
 (deftest picking-pickable-test
   (testing "Clicking pickable toggles to picked and back"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           pickable (sel1 c [:.pickable])]
       (is (= 0 (count (sel c [:.picked]))))
       (is (clojure.string/includes? (dommy/text pickable) "Everton"))
-      (click pickable)
+      (test-util/click pickable)
       (is (= "picked" (dommy/class pickable)))
       (is (= 1 (count (sel c [:.picked]))))
-      (click pickable)
+      (test-util/click pickable)
       (is (= "pickable" (dommy/class pickable))))))
 
 (deftest picking-other-pickable
@@ -58,9 +54,9 @@
           pickable (first pickables)
           other-pickable (second pickables)]
       (is (= 0 (count (sel c [:.picked]))))
-      (click pickable)
+      (test-util/click pickable)
       (is (= "picked" (dommy/class pickable)))
-      (click other-pickable)
+      (test-util/click other-pickable)
       (is (= "picked" (dommy/class other-pickable)))
       (is (= "pickable" (dommy/class pickable)))
       (is (= 1 (count (sel c [:.picked])))))))
@@ -69,7 +65,7 @@
   (testing "Clicking disabled does nothing"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           disabled (sel1 c [:.disabled])]
-      (click disabled)
+      (test-util/click disabled)
       (is (= 2 (count (sel c [:.disabled]))))
       (is (= "disabled" (dommy/class disabled)))
       (is (= 0 (count (sel c [:.picked])))))))
@@ -102,7 +98,7 @@
                                                  confirm-disabled]) c)
           button (sel1 c [:.pick-button])]
       (is (= 0 (count (sel c [:.confirmed]))))
-      (click button)
+      (test-util/click button)
       (is (= "confirmed"
               @(get @table-state "Everton"))))))
 

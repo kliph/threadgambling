@@ -18,9 +18,9 @@
 
 (defn post-sign-in-id-token!
   [^String id-token]
-  (go (let [response  (<!  (http/post "/tokensignin"
-                                      {:headers {"Accept" "application/json"}
-                                       :form-params {:idtoken id-token}}))
+  (go (let [response  (<! (http/post "/tokensignin"
+                                     {:headers {"Accept" "application/json"}
+                                      :form-params {:idtoken id-token}}))
             success? (= 200 (:status response))
             response-body (:body response)]
         (when success?

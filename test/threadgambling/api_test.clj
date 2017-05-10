@@ -61,6 +61,16 @@
     (is (= "<h1>404 Not found</h1>" (-> req
                                         :body)))))
 
+(deftest updates-user-account-details
+  (with-stub db/update-user! :returns 1
+    (let [name "Foo"
+          team "South Philly Kittens"
+          req (web/handler (mock/request :post "/account"
+                                         {:headers {"Accept" "application/json"}
+                                          :form-params {:name name
+                                                        :team team}}))]
+      (is (= 1 (count (calls-to db/update-user!)))))))
+
 (deftest stores-fetched-fixtures-in-database
   (jdbc/with-db-transaction [t-conn *db*]
     (jdbc/db-set-rollback-only! t-conn)
@@ -82,8 +92,6 @@
                   :gameweek 28}
                  (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
                      (select-keys [:body :gameweek])))))))))
-
-
 
 (deftest returns-json-fixture-response
   (with-stub clj-http.client/get :returns {:body sample-response}
