@@ -51,3 +51,11 @@
       (is (= (-> @s/app-state
                  :account
                  :team) "test")))))
+
+(deftest clicking-update-button
+  (let [_ (r/render (test-util/test-container [account/update-page]) c)
+        team-input (sel1 "input[name=\"Team Name\"]")
+        name-input (sel1 "input[name=\"Name\"]")
+        update-button (sel1 "div.update-button")]
+    (change-input! team-input "test-team")
+    (change-input! name-input "test-name")))

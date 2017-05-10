@@ -1,5 +1,8 @@
 (ns threadgambling.account
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [threadgambling.state :as s]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]
             [reagent.session :as session]
             [threadgambling.color :as c]
             [cljs-react-material-ui.core :as ui]))
@@ -19,6 +22,26 @@
                                        (-> %
                                            .-target
                                            .-value))}]))
+(defn post-update!
+  [user-params]
+  (go (let [response  (<! (http/post "/account"
+                                     {:headers {"Accept" "application/json"}
+                                      :form-params user-params}))])))
+
+
+(defn handle-update! []
+  (let [id (-> (session/get :user)
+               :id)
+        name (-> @s/app-state
+                 :account
+                 :name)
+        team (-> @s/app-state
+                 :account
+                 :team)
+        user-params {:id id
+                     :name name
+                     :team team}]
+    (post-update! user-params)))
 
 (defn update-page []
   (fn []
@@ -35,5 +58,6 @@
      [ui/raised-button
       {:label "Save changes"
        :href "/#/"
+       :on-click handle-update!
        :full-width true
        :className "update-button"}]]))
