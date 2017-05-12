@@ -89,11 +89,12 @@
         fetch-token-info
         verify-token-info)))
 
-(defn update-user! [updated-map]
-  (db/update-user! updated-map)
-  {:status 200
-   :headers {"Content-Type" "application/json"}
-   :body (json/write-str {:user (select-keys updated-map [:id :name :email])})})
+(defn update-user! [{:keys [id] :as updated-map}]
+  (let [_ (db/update-user! updated-map)
+        updated-user (db/get-user {:id id})]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (json/write-str {:user (select-keys updated-user [:id :name :email :team])})}))
 
 
 (defroutes app

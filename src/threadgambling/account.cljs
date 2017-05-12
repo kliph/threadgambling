@@ -26,8 +26,11 @@
   [user-params]
   (go (let [response  (<! (http/post "/account"
                                      {:headers {"Accept" "application/json"}
-                                      :form-params user-params}))])))
-
+                                      :form-params user-params}))
+            updated-user (-> response
+                             :body
+                             :user)]
+        (session/put! :user updated-user))))
 
 (defn handle-update! []
   (let [id (-> (session/get :user)
