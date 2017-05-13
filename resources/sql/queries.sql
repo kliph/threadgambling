@@ -18,11 +18,16 @@ VALUES (:id, :name, :team, :email)
 
 -- :name update-user! :! :n
 -- :doc updates a user record
-update users
-set name = :name,
+UPDATE users
+SET name = :name,
     team = :team
-where id = :id
+WHERE id = :id
 
+-- :name update-picks! :! :n
+-- :doc updates a user's picks
+UPDATE users
+SET picks = :picks
+WHERE id = :id
 
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.

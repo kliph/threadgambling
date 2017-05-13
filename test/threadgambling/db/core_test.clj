@@ -89,3 +89,35 @@
               updated-user)
              (-> (db/get-user t-conn {:id (:id user)})
                  (select-keys [:id :email :name :team])))))))
+
+(deftest updates-users
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [user {:id "187"
+                :name "Test User"
+                :email "foo@example.com"
+                :team ""}
+          user-pick-1 {:id "187"
+                       :pick "Tottenham"}
+          user-pick-2 {:id "187"
+                       :pick "Everton"}
+          expected-picks #{"Tottenham" "Everton"}]
+      (db/create-user! t-conn
+                       user
+                       {:connection t-conn})
+      (is (= #{}
+             (db/get-picks-set {:id "187"}
+                               t-conn)))
+      (db/add-pick! user-pick-1
+                    t-conn)
+      (is (= #{"Tottenham"}
+             (db/get-picks-set {:id "187"}
+                               t-conn)))
+      (is (not (= #{"Everton"}
+                  (db/get-picks-set {:id "187"}
+                                    t-conn))))
+      (db/add-pick! user-pick-2
+                    t-conn)
+      (is (= expected-picks
+             (db/get-picks-set {:id "187"}
+                               t-conn))))))
