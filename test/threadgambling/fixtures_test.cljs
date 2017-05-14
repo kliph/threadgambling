@@ -61,6 +61,18 @@
       (is (= "pickable" (dommy/class pickable)))
       (is (= 1 (count (sel c [:.picked])))))))
 
+(deftest picking-disabled-if-finished-test
+  (let [_ (swap! (:fixtures @s/app-state) assoc-in [:fixtures 0 :status] "FINISHED")
+        _ (r/render (test-util/test-container [fixtures/fixtures-page]) c)]
+    (is (= 0 (count (sel c [:.picked]))))
+    (is (= 0 (count (sel c [:.pickable]))))))
+
+(deftest picking-disabled-if-in-play-test
+  (let [_ (swap! (:fixtures @s/app-state) assoc-in [:fixtures 0 :status] "IN_PLAY")
+        _ (r/render (test-util/test-container [fixtures/fixtures-page]) c)]
+    (is (= 0 (count (sel c [:.picked]))))
+    (is (= 0 (count (sel c [:.pickable]))))))
+
 (deftest clicking-disabled
   (testing "Clicking disabled does nothing"
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)

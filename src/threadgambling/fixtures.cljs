@@ -73,6 +73,7 @@
                                           :goals (get-in x [:result :goalsHomeTeam])}
                               :away-club {:name (get x :awayTeamName)
                                           :goals (get-in x [:result :goalsAwayTeam])}
+                              :status (get x :status)
                               :date (get x :date)})
                            (get % :fixtures []))
             fixtures (-> response
@@ -109,6 +110,12 @@
       :disabled @confirm-disabled
       :full-width true}]]])
 
+(defn some-finished-or-in-play? [fixtures]
+  (let [statuses (map :status fixtures)]
+    (some #(or (= % "IN_PLAY")
+               (= % "FINISHED"))
+          statuses)))
+
 (defn fixtures-page []
   (let [fixtures-atom (@s/app-state :fixtures)]
     (fetch-fixtures! fixtures-atom)
@@ -117,10 +124,13 @@
             gameweek (:gameweek @fixtures-atom)
             table-keys (-> (into [] (map #(get-in % [:home-club :name]) sorted-fixtures))
                            (into (map #(get-in % [:away-club :name]) sorted-fixtures)))
-            table-vals  (map #(if (previously-picked? %)
-                                (r/atom "disabled")
-                                (r/atom "pickable"))
-                             table-keys)
+            table-vals  (->> table-keys
+                             (map #(if (previously-picked? %)
+                                     (r/atom "disabled")
+                                     (r/atom "pickable")))
+                             (map #(if (some-finished-or-in-play? sorted-fixtures)
+                                     (r/atom "disabled")
+                                     %)))
             table-state (r/atom (zipmap table-keys table-vals))
             confirm-disabled (r/atom true)]
         [:div#fixtures
