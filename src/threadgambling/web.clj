@@ -33,7 +33,7 @@
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
-                             {:query-params {"matchday" "28"}
+                             {:query-params {"matchday" "38"}
                               :headers {"X-Response-Control" "minified"
                                         "X-Auth-Token" (env :auth-token)}})
                  :body
