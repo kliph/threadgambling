@@ -29,6 +29,13 @@ UPDATE users
 SET picks = :picks
 WHERE id = :id
 
+-- :name update-current-pick! :! :n
+-- :doc updates a user's picks
+UPDATE users
+set current_pick = :current_pick
+WHERE id = :id
+
+
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
 SELECT * FROM users

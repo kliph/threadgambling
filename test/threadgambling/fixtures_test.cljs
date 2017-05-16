@@ -28,8 +28,7 @@
                                                                                         :goals 1}
                                                                             :away-club {:name "Man City"
                                                                                         :goals 0}
-                                                                            :date "2017-Jan-1"}]})
-                                             :account {:picked #{"Tottenham" "Leicester"}}})
+                                                                            :date "2017-Jan-1"}]})})
                                     fixtures/fetch-fixtures! (fn [_])]
                         (binding [c (tu/new-container!)]
                           (test-fn)
@@ -40,7 +39,7 @@
     (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           pickable (sel1 c [:.pickable])]
       (is (= 0 (count (sel c [:.picked]))))
-      (is (clojure.string/includes? (dommy/text pickable) "Everton"))
+      (is (clojure.string/includes? (dommy/text pickable) "Tottenham"))
       (test-util/click pickable)
       (is (= "picked" (dommy/class pickable)))
       (is (= 1 (count (sel c [:.picked]))))
@@ -75,10 +74,10 @@
 
 (deftest clicking-disabled
   (testing "Clicking disabled does nothing"
-    (let [_ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
+    (let [_ (swap! (:fixtures @s/app-state) assoc-in [:fixtures 0 :status] "IN_PLAY")
+          _ (r/render (test-util/test-container [fixtures/fixtures-page]) c)
           disabled (sel1 c [:.disabled])]
       (test-util/click disabled)
-      (is (= 2 (count (sel c [:.disabled]))))
       (is (= "disabled" (dommy/class disabled)))
       (is (= 0 (count (sel c [:.picked])))))))
 

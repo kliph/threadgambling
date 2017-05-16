@@ -691,6 +691,9 @@ h3 {
 #pick-container {
   display: flex;
   flex: 0 0 33.3333%;
+  font-family: Roboto, sans-serif;
+  text-overflow: ellipsis;
+  font-weight: 400;
 }
 
 .home-container .team-info {

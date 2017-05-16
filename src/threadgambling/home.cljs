@@ -10,11 +10,13 @@
     [:div.home-container
      [:div.team-info
       [:div#pick-container
-       [:span#pick-icon "[Icon]"]
-       [ui/chip
-        {:id "pick-locked"
-         :background-color c/pank}
-        "LOCKED"]]
+       (when (string? (session/get-in [:user :current_pick]))
+         [:div
+          [:span (session/get-in [:user :current_pick])]
+          [ui/chip
+           {:id "pick-locked"
+            :background-color c/pank}
+           "LOCKED"]])]
       [:div.team-container
        [:h3 (session/get-in [:user :name])]
        [:h2 {:style {:padding-left "0"}} (session/get-in [:user :team])]]

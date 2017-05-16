@@ -4,11 +4,15 @@
             [threadgambling.state :as s]
             [cognitect.transit :as t]
             [cljs-http.client :as http]
+            [reagent.session :as session]
             [cljs.core.async :refer [<!]]
             [cljs-react-material-ui.core :as ui]))
 
+(defn pick-locked? []
+  ((complement nil?) (session/get-in [:user :current_pick])))
+
 (defn previously-picked? [x]
-  (let [previously-picked-set  (get-in @s/app-state [:account :picked] #{})]
+  (let [previously-picked-set (session/get-in [:user :picks] #{})]
     (previously-picked-set x)))
 
 (defn toggle-picked! [a confirm-disabled]
@@ -32,10 +36,23 @@
       (compare-and-set! (val x) "pickable" ""))
     table-state)))
 
+(defn post-pick!
+  [id pick]
+  (go (let [response  (<! (http/post "/pick"
+                                     {:headers {"Accept" "application/json"}
+                                      :form-params {:id id
+                                                    :current_pick pick}}))]
+        (when (:success response)
+          (session/assoc-in! [:user :current_pick] pick)))))
+
 (defn confirm-pick! [table-state]
-  (let [pick (first (filter #(= (deref (val %)) "picked")  @table-state))]
+  (let [pick (first (filter #(= (deref (val %)) "picked")  @table-state))
+        pick-name (key pick)
+        id (-> (session/get :user)
+               :id)]
     (when pick
-      (js/console.log (str "Picked " (key pick)))
+      (js/console.log (str "Picked " pick-name))
+      (post-pick! id pick-name)
       (disable-other-pickable! @table-state)
       (reset! (val pick) "confirmed"))))
 
@@ -110,11 +127,12 @@
       :disabled @confirm-disabled
       :full-width true}]]])
 
-(defn some-finished-or-in-play? [fixtures]
+(defn some-locked-finished-or-in-play? [fixtures]
   (let [statuses (map :status fixtures)]
-    (some #(or (= % "IN_PLAY")
-               (= % "FINISHED"))
-          statuses)))
+    (or (some #(or (= % "IN_PLAY")
+                   (= % "FINISHED"))
+              statuses)
+        (pick-locked?))))
 
 (defn fixtures-page []
   (let [fixtures-atom (@s/app-state :fixtures)]
@@ -128,10 +146,12 @@
                              (map #(if (previously-picked? %)
                                      (r/atom "disabled")
                                      (r/atom "pickable")))
-                             (map #(if (some-finished-or-in-play? sorted-fixtures)
+                             (map #(if (some-locked-finished-or-in-play? sorted-fixtures)
                                      (r/atom "disabled")
                                      %)))
             table-state (r/atom (zipmap table-keys table-vals))
+            _ (when (pick-locked?)
+                (swap! table-state assoc (session/get-in [:user :current_pick]) (r/atom "confirmed")))
             confirm-disabled (r/atom true)]
         [:div#fixtures
          [:h2 "Fixtures"]

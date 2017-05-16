@@ -60,7 +60,7 @@
 (defn respond-success-with-user [user]
   {:status 200
    :headers {"Content-Type" "application/json"}
-   :body (json/write-str {:user (select-keys user [:id :name :team :email])})})
+   :body (json/write-str {:user (select-keys user [:id :name :team :email :current_pick :picks])})})
 
 (defn create-user-from-token-info! [token-info]
   (let [user-to-be-created {:id (get token-info :sub)
@@ -96,12 +96,20 @@
      :headers {"Content-Type" "application/json"}
      :body (json/write-str {:user (select-keys updated-user [:id :name :email :team])})}))
 
+(defn update-current-pick! [{:keys [id] :as updated-map}]
+  (let [_ (db/update-current-pick! updated-map)
+        updated-user (db/get-user {:id id})]
+    {:status 200
+     :headers {"Content-Type" "application/json"}}))
 
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
+  (POST "/pick" [id current_pick]
+        (update-current-pick! {:id id
+                               :current_pick current_pick}))
   (POST "/account" [id name team]
         (update-user! {:id id
                        :name name

@@ -121,3 +121,25 @@
       (is (= expected-picks
              (db/get-picks-set {:id "187"}
                                t-conn))))))
+
+(deftest updates-current-pick
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [user {:id "187"
+                :name "Test User"
+                :email "foo@example.com"
+                :team ""}
+          pick "Tottenham"
+          user-pick-1 {:id "187"
+                       :current_pick pick}]
+      (db/create-user! t-conn
+                       user
+                       {:connection t-conn})
+      (db/update-current-pick! t-conn
+                               user-pick-1
+                               {:connection t-conn})
+      (is (= pick
+             ((db/get-user t-conn
+                              {:id "187"}
+                              {:connection t-conn})
+              :current_pick))))))
