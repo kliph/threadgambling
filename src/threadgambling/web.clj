@@ -25,15 +25,15 @@
 
 (defn save-fixtures! [body]
   (when (fixtures-updated? body
-                           (-> (db/get-fixtures-by-gameweek {:gameweek 28})
+                           (-> (db/get-fixtures-by-gameweek {:gameweek (:gameweek (db/get-gameweek {:id 1}))})
                                (select-keys [:body])))
-    (db/save-fixtures! {:gameweek 28
+    (db/save-fixtures! {:gameweek (:gameweek (db/get-gameweek {:id 1}))
                         :body body}))
   body)
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
-                             {:query-params {"matchday" "38"}
+                             {:query-params {"matchday" (str (:gameweek (db/get-gameweek {:id 1})))}
                               :headers {"X-Response-Control" "minified"
                                         "X-Auth-Token" (env :auth-token)}})
                  :body

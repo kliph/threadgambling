@@ -35,7 +35,6 @@ UPDATE users
 set current_pick = :current_pick
 WHERE id = :id
 
-
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
 SELECT * FROM users
@@ -44,4 +43,15 @@ WHERE id = :id
 -- :name delete-user! :! :n
 -- :doc delete a user given the id
 DELETE FROM users
+WHERE id = :id
+
+-- :name get-gameweek :? :1
+-- :doc retrieve the current gameweek
+SELECT * FROM gameweeks
+WHERE id = :id
+
+-- :name update-gameweek! :! :n
+-- :doc retrieve the current gameweek
+UPDATE gameweeks
+set gameweek = :gameweek
 WHERE id = :id

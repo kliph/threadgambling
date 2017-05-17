@@ -143,3 +143,24 @@
                               {:id "187"}
                               {:connection t-conn})
               :current_pick))))))
+
+(deftest get-and-update-gameweek
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [gameweek {:id 1
+                    :gameweek 38}
+          updated-gameweek (-> gameweek
+                               (assoc :gameweek 39))]
+      (is (= gameweek
+             (select-keys  (db/get-gameweek t-conn
+                                            {:id 1}
+                                            {:connection t-conn})
+                           [:id :gameweek])))
+      (db/update-gameweek! t-conn
+                           updated-gameweek
+                           {:connection t-conn})
+      (is (= updated-gameweek
+             (select-keys  (db/get-gameweek t-conn
+                                            {:id 1}
+                                            {:connection t-conn})
+                           [:id :gameweek]))))))

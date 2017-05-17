@@ -74,24 +74,25 @@
 (deftest stores-fetched-fixtures-in-database
   (jdbc/with-db-transaction [t-conn *db*]
     (jdbc/db-set-rollback-only! t-conn)
-    (testing "storing"
-      (with-stub clj-http.client/get :returns {:body sample-response}
-        (with-stub web/save-fixtures! :returns {:body sample-response}
+    (with-stub db/get-gameweek :returns {:gameweek 28}
+      (testing "storing"
+        (with-stub clj-http.client/get :returns {:body sample-response}
+          (with-stub web/save-fixtures! :returns {:body sample-response}
+            (let [req (web/handler (mock/request :get "/fixtures"))]
+              (is (= 1 (count (calls-to web/save-fixtures!))))))))
+      (testing "updates fixtures when it is changed"
+        (db/save-fixtures! t-conn {:body sample-response
+                                   :gameweek 28})
+        (is (= {:body sample-response
+                :gameweek 28}
+               (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
+                   (select-keys [:body :gameweek]))))
+        (with-stub clj-http.client/get :returns {:body sample-response-with-changed-data}
           (let [req (web/handler (mock/request :get "/fixtures"))]
-            (is (= 1 (count (calls-to web/save-fixtures!))))))))
-    (testing "updates fixtures when it is changed"
-      (db/save-fixtures! t-conn {:body sample-response
-                                 :gameweek 28})
-      (is (= {:body sample-response
-              :gameweek 28}
-             (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
-                 (select-keys [:body :gameweek]))))
-      (with-stub clj-http.client/get :returns {:body sample-response-with-changed-data}
-        (let [req (web/handler (mock/request :get "/fixtures"))]
-          (is (= {:body sample-response-with-changed-data
-                  :gameweek 28}
-                 (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
-                     (select-keys [:body :gameweek])))))))))
+            (is (= {:body sample-response-with-changed-data
+                    :gameweek 28}
+                   (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
+                       (select-keys [:body :gameweek]))))))))))
 
 (deftest returns-json-fixture-response
   (with-stub clj-http.client/get :returns {:body sample-response}
