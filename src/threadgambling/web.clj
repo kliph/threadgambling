@@ -109,11 +109,19 @@
     {:status 200
      :headers {"Content-Type" "application/json"}}))
 
+(defn fetch-standings []
+  (let [standings (db/get-standings)]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (json/write-str {:standings standings})}))
+
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
   (GET "/fixtures" []
        (fetch-fixtures!))
+  (GET "/standings" []
+       (fetch-standings))
   (POST "/pick" [id current_pick]
         (update-current-pick! {:id id
                                :current_pick current_pick}))
