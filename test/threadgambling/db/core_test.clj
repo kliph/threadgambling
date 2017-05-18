@@ -65,7 +65,11 @@
                               {:connection t-conn})))
       (is (= record-with-team
              (-> (db/get-user t-conn {:id (:id record-with-team)})
-                 (select-keys [:id :email :name :team])))))))
+                 (select-keys [:id :email :name :team]))))
+      (is (= {:current_streak 0
+              :points 0}
+             (-> (db/get-user t-conn {:id (:id record-with-team)})
+                 (select-keys [:current_streak :points])))))))
 
 (deftest updates-users
   (jdbc/with-db-transaction [t-conn *db*]
@@ -164,3 +168,56 @@
                                             {:id 1}
                                             {:connection t-conn})
                            [:id :gameweek]))))))
+
+(deftest get-standings
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [user-1 {:id "187"
+                  :name "Test User"
+                  :email "foo@example.com"
+                  :team "Chickens"
+                  :current_pick "Tottenham"
+                  :points 3
+                  :current_streak 1}
+          user-2 {:id "1878"
+                  :name "Test User"
+                  :email "bar@example.com"
+                  :team "Tacos"
+                  :current_pick "Chelsea"
+                  :points 4
+                  :current_streak 0}]
+      (db/create-user! t-conn
+                       user-1
+                       {:connection t-conn})
+      (db/create-user! t-conn
+                       user-2
+                       {:connection t-conn})
+      (db/update-current-pick! t-conn
+                               (select-keys user-1
+                                            [:id :current_pick])
+                               {:connection t-conn})
+      (db/update-points! t-conn
+                         (select-keys user-1
+                                      [:id :points])
+                         {:connection t-conn})
+      (db/update-current-streak! t-conn
+                                 (select-keys user-1
+                                              [:id :current_streak])
+                                 {:connection t-conn})
+      (db/update-current-pick! t-conn
+                               (select-keys user-2
+                                            [:id :current_pick])
+                               {:connection t-conn})
+      (db/update-points! t-conn
+                         (select-keys user-2
+                                      [:id :points])
+                         {:connection t-conn})
+      (db/update-current-streak! t-conn
+                                 (select-keys user-2
+                                              [:id :current_streak])
+                                 {:connection t-conn})
+
+      (is (= (map #(select-keys % [:name :team :points :current_streak :current_pick])
+              [user-2 user-1])
+             (db/get-standings t-conn
+                               {:connection t-conn}))))))

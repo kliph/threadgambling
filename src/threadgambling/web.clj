@@ -60,7 +60,14 @@
 (defn respond-success-with-user [user]
   {:status 200
    :headers {"Content-Type" "application/json"}
-   :body (json/write-str {:user (select-keys user [:id :name :team :email :current_pick :picks])})})
+   :body (json/write-str {:user (select-keys user [:id
+                                                   :name
+                                                   :team
+                                                   :email
+                                                   :current_pick
+                                                   :picks
+                                                   :current_streak
+                                                   :points])})})
 
 (defn create-user-from-token-info! [token-info]
   (let [user-to-be-created {:id (get token-info :sub)

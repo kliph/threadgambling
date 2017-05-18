@@ -74,6 +74,7 @@
 (deftest stores-fetched-fixtures-in-database
   (jdbc/with-db-transaction [t-conn *db*]
     (jdbc/db-set-rollback-only! t-conn)
+    (db/clear-fixtures! t-conn)
     (with-stub db/get-gameweek :returns {:gameweek 28}
       (testing "storing"
         (with-stub clj-http.client/get :returns {:body sample-response}
@@ -92,7 +93,8 @@
             (is (= {:body sample-response-with-changed-data
                     :gameweek 28}
                    (-> (db/get-fixtures-by-gameweek t-conn {:gameweek 28})
-                       (select-keys [:body :gameweek]))))))))))
+                       (select-keys [:body :gameweek]))))))))
+    (db/clear-fixtures! t-conn)))
 
 (deftest returns-json-fixture-response
   (with-stub clj-http.client/get :returns {:body sample-response}
