@@ -77,3 +77,14 @@ WHERE id = :id
 SELECT name, team, points, current_streak, current_pick
 FROM users
 ORDER BY points DESC;
+
+-- :name get-all-current-picks :? :*
+-- :doc retrieve all of the current picks
+SELECT id, current_pick, current_streak
+FROM users;
+
+-- :name create-result! :! :n
+-- :doc creates a scored result
+INSERT INTO results
+(user_id, pick, gameweek, date, points)
+VALUES (:user_id, :pick, :gameweek, :date, :points);

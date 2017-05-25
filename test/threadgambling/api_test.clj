@@ -24,6 +24,11 @@
 
 (def sample-response-with-changed-data "{\"count\":10,\"fixtures\":[{\"id\":150572,\"competitionId\":426,\"date\":\"2017-03-08T19:45:00Z\",\"status\":\"FINISHED\",\"matchday\":28,\"homeTeamName\":\"Manchester City FC\",\"homeTeamId\":65,\"awayTeamName\":\"Stoke City FC\",\"awayTeamId\":70,\"result\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":0},\"odds\":{\"homeWin\":1.22,\"draw\":6.5,\"awayWin\":15.0}},{\"id\":150565,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"FINISHED\",\"matchday\":28,\"homeTeamName\":\"AFC Bournemouth\",\"homeTeamId\":1044,\"awayTeamName\":\"West Ham United FC\",\"awayTeamId\":563,\"result\":{\"goalsHomeTeam\":3,\"goalsAwayTeam\":2},\"odds\":{\"homeWin\":2.5,\"draw\":3.4,\"awayWin\":2.9}},{\"id\":150568,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"POSTPONED\",\"matchday\":28,\"homeTeamName\":\"Chelsea FC\",\"homeTeamId\":61,\"awayTeamName\":\"Watford FC\",\"awayTeamId\":346,\"result\":{\"goalsHomeTeam\":null,\"goalsAwayTeam\":null},\"odds\":null},{\"id\":150569,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"POSTPONED\",\"matchday\":28,\"homeTeamName\":\"Crystal Palace FC\",\"homeTeamId\":354,\"awayTeamName\":\"Tottenham Hotspur FC\",\"awayTeamId\":73,\"result\":{\"goalsHomeTeam\":null,\"goalsAwayTeam\":null},\"odds\":null},{\"id\":150570,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"FINISHED\",\"matchday\":28,\"homeTeamName\":\"Everton FC\",\"homeTeamId\":62,\"awayTeamName\":\"West Bromwich Albion FC\",\"awayTeamId\":74,\"result\":{\"goalsHomeTeam\":3,\"goalsAwayTeam\":0},\"odds\":{\"homeWin\":1.7,\"draw\":3.8,\"awayWin\":5.5}},{\"id\":150571,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"FINISHED\",\"matchday\":28,\"homeTeamName\":\"Hull City FC\",\"homeTeamId\":322,\"awayTeamName\":\"Swansea City FC\",\"awayTeamId\":72,\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":1},\"odds\":{\"homeWin\":2.4,\"draw\":3.4,\"awayWin\":3.0}},{\"id\":150573,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"POSTPONED\",\"matchday\":28,\"homeTeamName\":\"Middlesbrough FC\",\"homeTeamId\":343,\"awayTeamName\":\"Sunderland AFC\",\"awayTeamId\":71,\"result\":{\"goalsHomeTeam\":null,\"goalsAwayTeam\":null},\"odds\":null},{\"id\":150574,\"competitionId\":426,\"date\":\"2017-03-11T15:00:00Z\",\"status\":\"POSTPONED\",\"matchday\":28,\"homeTeamName\":\"Southampton FC\",\"homeTeamId\":340,\"awayTeamName\":\"Manchester United FC\",\"awayTeamId\":66,\"result\":{\"goalsHomeTeam\":null,\"goalsAwayTeam\":null},\"odds\":null},{\"id\":150566,\"competitionId\":426,\"date\":\"2017-03-11T17:30:00Z\",\"status\":\"POSTPONED\",\"matchday\":28,\"homeTeamName\":\"Arsenal FC\",\"homeTeamId\":57,\"awayTeamName\":\"Leicester City FC\",\"awayTeamId\":338,\"result\":{\"goalsHomeTeam\":null,\"goalsAwayTeam\":null},\"odds\":null},{\"id\":150826,\"competitionId\":426,\"date\":\"2017-03-12T16:00:00Z\",\"status\":\"FINISHED\",\"matchday\":28,\"homeTeamName\":\"Liverpool FC\",\"homeTeamId\":64,\"awayTeamName\":\"Burnley FC\",\"awayTeamId\":328,\"result\":{\"goalsHomeTeam\":3,\"goalsAwayTeam\":1},\"odds\":{\"homeWin\":1.25,\"draw\":6.5,\"awayWin\":13.0}}]}")
 
+(def sample-finished-response
+"{\"count\":10,\"fixtures\":[{\"id\":150466,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Burnley FC\",\"homeTeamId\":328,\"awayTeamName\":\"West Ham United FC\",\"awayTeamId\":563,\"result\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":2,\"halfTime\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":1}},\"odds\":{\"homeWin\":2.2,\"draw\":3.3,\"awayWin\":3.5}},{\"id\":150467,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Chelsea FC\",\"homeTeamId\":61,\"awayTeamName\":\"Sunderland AFC\",\"awayTeamId\":71,\"result\":{\"goalsHomeTeam\":5,\"goalsAwayTeam\":1,\"halfTime\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":1}},\"odds\":{\"homeWin\":1.12,\"draw\":7.5,\"awayWin\":26.0}},{\"id\":150468,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Hull City FC\",\"homeTeamId\":322,\"awayTeamName\":\"Tottenham Hotspur FC\",\"awayTeamId\":73,\"result\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":7,\"halfTime\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":3}},\"odds\":{\"homeWin\":5.5,\"draw\":4.0,\"awayWin\":1.61}},{\"id\":150469,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Leicester City FC\",\"homeTeamId\":338,\"awayTeamName\":\"AFC Bournemouth\",\"awayTeamId\":1044,\"result\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":1,\"halfTime\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":1}},\"odds\":{\"homeWin\":1.83,\"draw\":3.5,\"awayWin\":4.5}},{\"id\":150470,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Liverpool FC\",\"homeTeamId\":64,\"awayTeamName\":\"Middlesbrough FC\",\"awayTeamId\":343,\"result\":{\"goalsHomeTeam\":3,\"goalsAwayTeam\":0,\"halfTime\":{\"goalsHomeTeam\":1,\"goalsAwayTeam\":0}},\"odds\":{\"homeWin\":1.25,\"draw\":5.5,\"awayWin\":13.0}},{\"id\":150472,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Southampton FC\",\"homeTeamId\":340,\"awayTeamName\":\"Stoke City FC\",\"awayTeamId\":70,\"result\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":1,\"halfTime\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":0}},\"odds\":{\"homeWin\":1.72,\"draw\":3.5,\"awayWin\":5.0}},{\"id\":150473,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Swansea City FC\",\"homeTeamId\":72,\"awayTeamName\":\"West Bromwich Albion FC\",\"awayTeamId\":74,\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":1,\"halfTime\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":1}},\"odds\":{\"homeWin\":1.72,\"draw\":3.6,\"awayWin\":4.5}},{\"id\":150474,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Watford FC\",\"homeTeamId\":346,\"awayTeamName\":\"Manchester City FC\",\"awayTeamId\":65,\"result\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":5,\"halfTime\":{\"goalsHomeTeam\":0,\"goalsAwayTeam\":4}},\"odds\":{\"homeWin\":9.0,\"draw\":4.5,\"awayWin\":1.36}},{\"id\":150465,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Arsenal FC\",\"homeTeamId\":57,\"awayTeamName\":\"Everton FC\",\"awayTeamId\":62,\"result\":{\"goalsHomeTeam\":3,\"goalsAwayTeam\":1,\"halfTime\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":0}},\"odds\":{\"homeWin\":1.61,\"draw\":3.75,\"awayWin\":5.5}},{\"id\":150471,\"competitionId\":426,\"date\":\"2017-05-21T14:00:00Z\",\"status\":\"FINISHED\",\"matchday\":38,\"homeTeamName\":\"Manchester United FC\",\"homeTeamId\":66,\"awayTeamName\":\"Crystal Palace FC\",\"awayTeamId\":354,\"result\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":0,\"halfTime\":{\"goalsHomeTeam\":2,\"goalsAwayTeam\":0}},\"odds\":{\"homeWin\":1.53,\"draw\":4.0,\"awayWin\":6.0}}]}"
+
+)
+
 (deftest renders-index
   (with-stub slurp :returns "stub"
     (let [req (web/handler (mock/request :get "/"))]
@@ -160,6 +165,48 @@
       (is (= 403
              (:status
               (web/verify-token-info invalid-token-info)))))))
+
+(deftest all-fixtures-finished?
+  (let [finished-fixtures [{:status "FINISHED"}
+                           {:status "FINISHED"}]
+        unfinished-fixtures [{:status "FINISHED"}
+                             {:status "IN-PLAY"}]]
+    (is (= true
+           (web/all-finished? finished-fixtures)))
+    (is (= false
+           (web/all-finished? unfinished-fixtures)))))
+
+(deftest score-finished-week
+  (let [expected-scores [{:date "2017-05-21T14:00:00Z"
+                          :gameweek 38
+                          :user_id "1234"
+                          :pick "Tottenham Hotspur FC"
+                          :points 1}
+                         {:date "2017-05-21T14:00:00Z"
+                          :gameweek 38
+                          :user_id "456"
+                          :pick "Leicester City FC"
+                          :points 0}
+                         {:date "2017-05-21T14:00:00Z"
+                          :gameweek 38
+                          :user_id "789"
+                          :pick "Chelsea FC"
+                          :points 3}]]
+    (with-stub db/get-gameweek :returns {:gameweek 38}
+      (with-stub db/get-all-current-picks :returns [{:id "1234"
+                                                     :current_pick "Tottenham Hotspur FC"
+                                                     :current_streak 0}
+                                                    {:id "456"
+                                                     :current_pick "Leicester City FC"
+                                                     :current_streak 0}
+                                                    {:id "789"
+                                                     :current_pick "Chelsea FC"
+                                                     :current_streak 2}]
+        (with-stub db/create-result! :returns 3
+          (web/score-finished-week! sample-finished-response)
+          (is (= expected-scores
+                 (map first (calls-to db/create-result!))))))
+      )))
 
 (deftest respond-success-with-user
   (let [user {:id "187"

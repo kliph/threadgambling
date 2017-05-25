@@ -13,31 +13,86 @@
             [cljs.build.api :as cljs-build])
   (:gen-class))
 
+(defn parse-fixtures [body]
+  (-> body
+      (json/read-str :key-fn keyword)
+      :fixtures))
+
 (defn fixtures-updated? [response-body record]
-  (let [parse-fn #(-> %
-                      (json/read-str :key-fn keyword)
-                      :fixtures)
-        parsed-response-fixtures (parse-fn response-body)
-        parsed-record-fixtures (parse-fn (get record :body "{}"))]
+  (let [parsed-response-fixtures (parse-fixtures response-body)
+        parsed-record-fixtures (parse-fixtures (get record :body "{}"))]
     (not= parsed-response-fixtures
           parsed-record-fixtures)))
 
 
 (defn save-fixtures! [body]
-  (when (fixtures-updated? body
-                           (-> (db/get-fixtures-by-gameweek {:gameweek (:gameweek (db/get-gameweek {:id 1}))})
-                               (select-keys [:body])))
+  (when (fixtures-updated?
+         body
+         (-> (db/get-fixtures-by-gameweek {:gameweek (:gameweek (db/get-gameweek {:id 1}))})
+             (select-keys [:body])))
     (db/save-fixtures! {:gameweek (:gameweek (db/get-gameweek {:id 1}))
-                        :body body}))
-  body)
+                        :body body})))
+
+(defn all-finished? [fixtures]
+  (every? #(= "FINISHED" %)
+          (map :status fixtures)))
+
+(defn score-finished-week! [body]
+  (when (all-finished? (parse-fixtures body))
+    (let [gameweek (:gameweek (db/get-gameweek {:id 1}))
+          parsed-fixtures (parse-fixtures body)
+          date (-> parsed-fixtures
+                   first
+                   :date)
+          goals (-> parsed-fixtures
+                    first
+                    :result
+                    :goalsAwayTeam)
+          game (-> parsed-fixtures
+                   first)
+          winner-keys (map (fn [fixture]
+                             (let [home-goals (get-in fixture [:result :goalsHomeTeam])
+                                   away-goals (get-in fixture [:result :goalsAwayTeam])
+                                   winner-key (cond (> home-goals away-goals) :homeTeamName
+                                                    (> away-goals home-goals) :awayTeamName
+                                                    :else :draw)]
+                               winner-key))
+                           parsed-fixtures)
+          winners-set  (->> (map (fn [fixture]
+                                   (let [home-goals (get-in fixture [:result :goalsHomeTeam])
+                                         away-goals (get-in fixture [:result :goalsAwayTeam])
+                                         winner-key (cond (> home-goals away-goals) :homeTeamName
+                                                          (> away-goals home-goals) :awayTeamName
+                                                          :else :draw)
+                                         winner (get fixture winner-key)]
+                                     winner))
+                                 parsed-fixtures)
+                            (filter (complement nil?))
+                            (into #{}))
+          current-picks (->> (db/get-all-current-picks)
+                             (map #(-> %
+                                       (assoc :date date)
+                                       (assoc :gameweek gameweek)
+                                       (assoc :user_id (:id %))
+                                       (assoc :pick (:current_pick %))
+                                       (dissoc :current_pick)
+                                       (dissoc :id))))
+          scored-user-results (map (fn [user-pick]
+                                     (-> (if (winners-set (:pick user-pick))
+                                           (assoc user-pick :points (inc (:current_streak user-pick)))
+                                           (assoc user-pick :points 0))
+                                         (dissoc :current_streak)))
+                                   current-picks)]
+      (mapv db/create-result! scored-user-results))))
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
                              {:query-params {"matchday" (str (:gameweek (db/get-gameweek {:id 1})))}
                               :headers {"X-Response-Control" "minified"
                                         "X-Auth-Token" (env :auth-token)}})
-                 :body
-                 save-fixtures!)]
+                 :body)
+        _ (save-fixtures! body)
+        _ (score-finished-week! body)]
     {:status 200
      :headers {"Content-Type" "application/json; charset=utf-8"}
      :body body}))

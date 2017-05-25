@@ -1,5 +1,17 @@
 (ns dev.repl
-  (:require [figwheel-sidecar.repl-api :as repl-api]))
+  (:require [figwheel-sidecar.repl-api :as repl-api]
+            [mount.core :as mount]
+            threadgambling.web))
+
+(defn start []
+  (mount/start))
+
+(defn stop []
+  (mount/stop))
+
+(defn restart []
+  (stop)
+  (start))
 
 (defn figwheel-up []
   (do (repl-api/start-figwheel!)
