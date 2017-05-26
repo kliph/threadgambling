@@ -169,6 +169,55 @@
                                             {:connection t-conn})
                            [:id :gameweek]))))))
 
+(deftest get-results
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let  [result-1 {:user_id "1234"
+                     :pick "Tottenham Hotspur FC"
+                     :gameweek 28
+                     :date (java.sql.Timestamp. 0)
+                     :points 1}
+           result-2 {:user_id "1234"
+                     :pick "Chelsea FC"
+                     :gameweek 29
+                     :date (java.sql.Timestamp. 0)
+                     :points 2}
+           user {:id "1234"
+                 :email "blah@example.com"
+                 :team "Test"
+                 :name "Bob Test"}]
+      (db/create-user! t-conn
+                       user
+                       {:connection t-conn})
+      (db/create-result! t-conn
+                         result-1
+                         {:connection t-conn})
+      (db/create-result! t-conn
+                         result-2
+                         {:connection t-conn})
+      (is (= (->> [result-1 result-2]
+                  (map #(dissoc % :date))
+                  (map #(dissoc % :user_id))
+                  (map #(assoc % :team (:team user))))
+             (->> (db/get-results t-conn
+                                              {:id (:id user)}
+                                              {:connection t-conn})
+                  (map #(dissoc % :date)))))
+      #_(is (= (mapv #(-> %
+                          (dissoc :date)
+                          (dissoc :user_id)
+                          (assoc :team (:team user)))
+                     [result-1 result-2])
+               (mapv
+                #(-> %
+                     (dissoc :date))
+                (db/get-results t-conn
+                                {:id (:id user)}
+                                {:connection t-conn})
+                )
+               ))
+      )))
+
 (deftest get-standings
   (jdbc/with-db-transaction [t-conn *db*]
     (jdbc/db-set-rollback-only! t-conn)

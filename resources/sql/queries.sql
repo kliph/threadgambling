@@ -88,3 +88,8 @@ FROM users;
 INSERT INTO results
 (user_id, pick, gameweek, date, points)
 VALUES (:user_id, :pick, :gameweek, :date, :points);
+
+-- :name get-results :? :*
+SELECT results.pick, results.gameweek, results.date, results.points, users.team
+FROM results, users
+WHERE results.user_id = users.id;
