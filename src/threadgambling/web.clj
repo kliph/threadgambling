@@ -3,6 +3,8 @@
             [compojure.handler :refer [site]]
             [compojure.route :as route]
             [clojure.java.io :as io]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [ring.adapter.jetty :as jetty]
@@ -43,7 +45,9 @@
           parsed-fixtures (parse-fixtures body)
           date (-> parsed-fixtures
                    first
-                   :date)
+                   :date
+                   f/parse
+                   c/to-sql-time)
           goals (-> parsed-fixtures
                     first
                     :result
@@ -170,6 +174,14 @@
      :headers {"Content-Type" "application/json"}
      :body (json/write-str {:standings standings})}))
 
+(defn fetch-results []
+  (let [results (-> (db/get-results)
+                    (update-in [:date] #(->> (c/from-sql-time %)
+                                             (f/unparse (f/formatters :year-month-day)))))]
+    {:status 200
+     :headers {"Content-Type" "application/json"}
+     :body (json/write-str {:results results})}))
+
 (defroutes app
   (GET "/" []
        (slurp (io/resource "public/index.html")))
@@ -177,6 +189,8 @@
        (fetch-fixtures!))
   (GET "/standings" []
        (fetch-standings))
+  (GET "/results" []
+       (fetch-results))
   (POST "/pick" [id current_pick]
         (update-current-pick! {:id id
                                :current_pick current_pick}))

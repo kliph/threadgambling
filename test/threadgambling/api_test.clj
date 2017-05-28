@@ -5,6 +5,8 @@
             [compojure.handler :refer [site]]
             [clojure.data.json :as json]
             [clojure.string :as s]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c]
             [environ.core :refer [env]]
             [clojure.java.jdbc :as jdbc]
             [mount.core :as mount]
@@ -204,8 +206,12 @@
                                                      :current_streak 2}]
         (with-stub db/create-result! :returns 3
           (web/score-finished-week! sample-finished-response)
-          (is (= expected-scores
-                 (map first (calls-to db/create-result!))))))
+          (is (= (->>  expected-scores
+                       (mapv #(update-in % [:date] (fn [d]
+                                                       (f/unparse (f/formatters :year-month-day) (f/parse d))))))
+                 (->> (map first (calls-to db/create-result!))
+                      (mapv #(update-in % [:date] (fn [d]
+                                                    (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))))))
       )))
 
 (deftest respond-success-with-user

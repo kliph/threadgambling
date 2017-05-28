@@ -3,6 +3,8 @@
             [luminus-migrations.core :as migrations]
             [clojure.test :refer [deftest testing is use-fixtures]]
             [clojure.java.jdbc :as jdbc]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c]
             [environ.core :refer [env]]
             [threadgambling.api-test :refer [sample-response]]
             [mount.core :as mount]))
@@ -175,12 +177,12 @@
     (let  [result-1 {:user_id "1234"
                      :pick "Tottenham Hotspur FC"
                      :gameweek 28
-                     :date (java.sql.Timestamp. 0)
+                     :date (c/to-sql-time (f/parse "2017-05-21T14:00:00Z"))
                      :points 1}
            result-2 {:user_id "1234"
                      :pick "Chelsea FC"
                      :gameweek 29
-                     :date (java.sql.Timestamp. 0)
+                     :date (c/to-sql-time (f/parse "2017-05-21T14:00:00Z"))
                      :points 2}
            user {:id "1234"
                  :email "blah@example.com"
@@ -196,27 +198,15 @@
                          result-2
                          {:connection t-conn})
       (is (= (->> [result-1 result-2]
-                  (map #(dissoc % :date))
-                  (map #(dissoc % :user_id))
-                  (map #(assoc % :team (:team user))))
+                  (mapv #(dissoc % :user_id))
+                  (mapv #(assoc % :team (:team user)))
+                  (mapv #(update-in % [:date] (fn [d]
+                                                (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))
              (->> (db/get-results t-conn
-                                              {:id (:id user)}
-                                              {:connection t-conn})
-                  (map #(dissoc % :date)))))
-      #_(is (= (mapv #(-> %
-                          (dissoc :date)
-                          (dissoc :user_id)
-                          (assoc :team (:team user)))
-                     [result-1 result-2])
-               (mapv
-                #(-> %
-                     (dissoc :date))
-                (db/get-results t-conn
-                                {:id (:id user)}
-                                {:connection t-conn})
-                )
-               ))
-      )))
+                                  {:id (:id user)}
+                                  {:connection t-conn})
+                  (mapv #(update-in % [:date] (fn [d]
+                                               (f/unparse (f/formatters :year-month-day) (c/from-date d)))))))))))
 
 (deftest get-standings
   (jdbc/with-db-transaction [t-conn *db*]

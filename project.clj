@@ -32,6 +32,7 @@
                  [conman "0.6.3"]
                  [mount "0.1.11"]
                  [environ "1.0.0"]
+                 [clj-time "0.13.0"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.slf4j/slf4j-log4j12 "1.7.12"]
                  [log4j/log4j "1.2.17"]]
