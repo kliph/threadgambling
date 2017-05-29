@@ -14,10 +14,10 @@
      [:td pick]
      [:td points]]))
 
-(defn fetch-results! []
+(defn fetch-results! [team-user-id]
   (go (let [response (<! (http/get "/results"
                                    {:headers {"Accept" "application/json"}
-                                    :query-params {:id (session/get-in [:user :id])}}))
+                                    :query-params {:id team-user-id}}))
             results (-> response
                         :body
                         :results)
@@ -25,7 +25,7 @@
         (swap! s/app-state assoc :results results))))
 
 (defn team-page []
-  (fetch-results!)
+  (fetch-results! (@s/app-state :team-user-id))
   (fn []
     [:div.team-page
      [:h2 (get-in @s/app-state [:results 0 :team])]

@@ -53,9 +53,9 @@
     (swap! s/app-state assoc :page :update-account)
     (swap! s/app-state assoc :page :sign-in)))
 
-(defroute team-path "/team" []
+(defroute team-path "/team/:team-user-id" [team-user-id]
   (if (:signed-in @s/app-state)
-    (swap! s/app-state assoc :page :team)
+    (swap! s/app-state assoc :page :team :team-user-id team-user-id)
     (swap! s/app-state assoc :page :sign-in)))
 
 (defroute sign-in-path "/sign-in" []

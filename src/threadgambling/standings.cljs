@@ -10,16 +10,15 @@
                            (map-indexed (fn [idx x]
                                           (assoc x :rank (inc idx)))))]
         (swap! s/app-state assoc
-               :standings standings)
-        (js/console.log (:standings @s/app-state)))))
+               :standings standings))))
 
 (defn standings-row [props]
-  (let [{:keys [rank team name points]} props
+  (let [{:keys [rank team name points id]} props
         current-streak (:current_streak props)
         current-pick (:current_pick props)]
     [:tr.zebra
      [:td rank]
-     [:td [:a {:href "/#/team"} team]]
+     [:td [:a {:href (str "/#/team/" id)} team]]
      [:td name]
      [:td points]
      [:td current-streak]

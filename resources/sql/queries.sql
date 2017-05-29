@@ -74,7 +74,7 @@ WHERE id = :id
 
 -- :name get-standings :? :*
 -- :doc retrieve listing of standings
-SELECT name, team, points, current_streak, current_pick
+SELECT name, team, points, current_streak, current_pick, id
 FROM users
 ORDER BY points DESC;
 

@@ -259,7 +259,7 @@
                                               [:id :current_streak])
                                  {:connection t-conn})
 
-      (is (= (map #(select-keys % [:name :team :points :current_streak :current_pick])
+      (is (= (map #(select-keys % [:name :id :team :points :current_streak :current_pick])
               [user-2 user-1])
              (db/get-standings t-conn
                                {:connection t-conn}))))))
