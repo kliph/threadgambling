@@ -81,13 +81,18 @@
                                        (assoc :pick (:current_pick %))
                                        (dissoc :current_pick)
                                        (dissoc :id))))
-          scored-user-results (map (fn [user-pick]
-                                     (-> (if (winners-set (:pick user-pick))
-                                           (assoc user-pick :points (inc (:current_streak user-pick)))
-                                           (assoc user-pick :points 0))
-                                         (dissoc :current_streak)))
-                                   current-picks)]
-      (mapv db/create-result! scored-user-results))))
+          previously-scored-set (into #{}
+                                      (map :user_id
+                                           (db/get-gameweek-results {:gameweek gameweek})))
+          scored-user-results (->> (map (fn [user-pick]
+                                         (-> (if (winners-set (:pick user-pick))
+                                               (assoc user-pick :points (inc (:current_streak user-pick)))
+                                               (assoc user-pick :points 0))
+                                             (dissoc :current_streak)))
+                                       current-picks)
+                                  (remove #(previously-scored-set (:user_id %))))]
+      (when-not (empty? scored-user-results)
+        (mapv db/create-result! scored-user-results)))))
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
@@ -174,10 +179,13 @@
      :headers {"Content-Type" "application/json"}
      :body (json/write-str {:standings standings})}))
 
-(defn fetch-results []
-  (let [results (-> (db/get-results)
-                    (update-in [:date] #(->> (c/from-sql-time %)
-                                             (f/unparse (f/formatters :year-month-day)))))]
+(defn fetch-results [id]
+  (let [dbresults (db/get-results {:id id})
+        results (->> dbresults
+                    (mapv (fn [r]
+                            (update-in r [:date]
+                                       #(->> (c/from-date %)
+                                             (f/unparse (f/formatters :year-month-day)))))))]
     {:status 200
      :headers {"Content-Type" "application/json"}
      :body (json/write-str {:results results})}))
@@ -189,8 +197,8 @@
        (fetch-fixtures!))
   (GET "/standings" []
        (fetch-standings))
-  (GET "/results" []
-       (fetch-results))
+  (GET "/results" [id]
+       (fetch-results id))
   (POST "/pick" [id current_pick]
         (update-current-pick! {:id id
                                :current_pick current_pick}))

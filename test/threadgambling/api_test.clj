@@ -181,11 +181,6 @@
 (deftest score-finished-week
   (let [expected-scores [{:date "2017-05-21T14:00:00Z"
                           :gameweek 38
-                          :user_id "1234"
-                          :pick "Tottenham Hotspur FC"
-                          :points 1}
-                         {:date "2017-05-21T14:00:00Z"
-                          :gameweek 38
                           :user_id "456"
                           :pick "Leicester City FC"
                           :points 0}
@@ -204,15 +199,20 @@
                                                     {:id "789"
                                                      :current_pick "Chelsea FC"
                                                      :current_streak 2}]
-        (with-stub db/create-result! :returns 3
-          (web/score-finished-week! sample-finished-response)
-          (is (= (->>  expected-scores
-                       (mapv #(update-in % [:date] (fn [d]
+        ;; Simulate having previously scored results.  We shouldn't
+        ;; see half-scored weeks in practice, but this makes sure we
+        ;; don't end up with multiple rows corresponding to the same
+        ;; unique gameweek and user id
+        (with-stub db/get-gameweek-results :returns [{:user_id "1234"}]
+          (with-stub db/create-result! :returns 2
+            (web/score-finished-week! sample-finished-response)
+            (is (= (->>  expected-scores
+                         (mapv #(update-in % [:date] (fn [d]
                                                        (f/unparse (f/formatters :year-month-day) (f/parse d))))))
-                 (->> (map first (calls-to db/create-result!))
-                      (mapv #(update-in % [:date] (fn [d]
-                                                    (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))))))
-      )))
+
+                   (->> (map first (calls-to db/create-result!))
+                        (mapv #(update-in % [:date] (fn [d]
+                                                      (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))))))))))
 
 (deftest respond-success-with-user
   (let [user {:id "187"

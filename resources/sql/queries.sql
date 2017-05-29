@@ -91,5 +91,10 @@ VALUES (:user_id, :pick, :gameweek, :date, :points);
 
 -- :name get-results :? :*
 SELECT results.pick, results.gameweek, results.date, results.points, users.team
-FROM results, users
-WHERE results.user_id = users.id;
+FROM results JOIN users ON users.id = results.user_id
+WHERE results.user_id = :id;
+
+-- :name get-gameweek-results :? :*
+SELECT user_id
+FROM results
+WHERE gameweek = :gameweek;

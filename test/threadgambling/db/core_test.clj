@@ -197,16 +197,19 @@
       (db/create-result! t-conn
                          result-2
                          {:connection t-conn})
-      (is (= (->> [result-1 result-2]
-                  (mapv #(dissoc % :user_id))
-                  (mapv #(assoc % :team (:team user)))
-                  (mapv #(update-in % [:date] (fn [d]
-                                                (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))
-             (->> (db/get-results t-conn
-                                  {:id (:id user)}
-                                  {:connection t-conn})
-                  (mapv #(update-in % [:date] (fn [d]
-                                               (f/unparse (f/formatters :year-month-day) (c/from-date d)))))))))))
+      (is (=
+           (->> [result-1 result-2]
+                (mapv #(dissoc % :user_id))
+                (mapv #(assoc % :team (:team user)))
+                (mapv #(update-in % [:date] (fn [d]
+                                              (f/unparse (f/formatters :year-month-day) (c/from-sql-time d)))))
+                (into #{}))
+           (->> (db/get-results t-conn
+                                {:id (:id user)}
+                                {:connection t-conn})
+                (mapv #(update-in % [:date] (fn [d]
+                                              (f/unparse (f/formatters :year-month-day) (c/from-date d)))))
+                (into #{})))))))
 
 (deftest get-standings
   (jdbc/with-db-transaction [t-conn *db*]

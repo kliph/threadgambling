@@ -1,24 +1,41 @@
 (ns threadgambling.team
-  (:require [threadgambling.state :as s]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [threadgambling.state :as s]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]
+            [reagent.session :as session]
+             ))
 
 (defn results-row [props]
-  (let [{:keys [date round team points]} props]
+  (let [{:keys [date gameweek pick points]} props]
     [:tr.zebra
      [:td date]
-     [:td round]
-     [:td team]
+     [:td gameweek]
+     [:td pick]
      [:td points]]))
 
+(defn fetch-results! []
+  (go (let [response (<! (http/get "/results"
+                                   {:headers {"Accept" "application/json"}
+                                    :query-params {:id (session/get-in [:user :id])}}))
+            results (-> response
+                        :body
+                        :results)
+            _ (js/console.log results)]
+        (swap! s/app-state assoc :results results))))
+
 (defn team-page []
-  [:div.team-page
-   [:h2 "South Philly Kittens"]
-   [:table
-    {:cell-spacing "0" :width "100%"}
-    [:thead>tr
-     [:th "Dates"]
-     [:th "Week"]
-     [:th "Team"]
-     [:th "Points"]]
-    [:tbody
-     (map (fn [x] ^{:key (str (:date x) (:team x))} [results-row x])
-          (sort-by :week (@s/app-state :results)))]]])
+  (fetch-results!)
+  (fn []
+    [:div.team-page
+     [:h2 (get-in @s/app-state [:results 0 :team])]
+     [:table
+      {:cell-spacing "0" :width "100%"}
+      [:thead>tr
+       [:th "Dates"]
+       [:th "Week"]
+       [:th "Team"]
+       [:th "Points"]]
+      [:tbody
+       (map (fn [x] ^{:key (str (:date x) (:team x))} [results-row x])
+            (sort-by :week (@s/app-state :results)))]]]))
