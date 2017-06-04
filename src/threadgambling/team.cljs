@@ -20,8 +20,7 @@
                                     :query-params {:id team-user-id}}))
             results (-> response
                         :body
-                        :results)
-            _ (js/console.log results)]
+                        :results)]
         (swap! s/app-state assoc :results results))))
 
 (defn team-page []

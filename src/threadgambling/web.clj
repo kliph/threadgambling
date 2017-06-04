@@ -39,6 +39,17 @@
   (every? #(= "FINISHED" %)
           (map :status fixtures)))
 
+(defn create-result-and-update-point-total! [scored-result]
+  (let [user (db/get-user {:id (:user_id scored-result)})
+        updated-user-points {:id (:id user)
+                             :points (+ (:points user)
+                                        (:points scored-result))}
+        updated-user-streak {:id (:id user)
+                             :current_streak (inc (:current_streak user))}]
+    (db/update-points! updated-user-points)
+    (db/update-current-streak! updated-user-streak)
+    (db/create-result! scored-result)))
+
 (defn score-finished-week! [body]
   (when (all-finished? (parse-fixtures body))
     (let [gameweek (:gameweek (db/get-gameweek {:id 1}))
@@ -92,7 +103,7 @@
                                        current-picks)
                                   (remove #(previously-scored-set (:user_id %))))]
       (when-not (empty? scored-user-results)
-        (mapv db/create-result! scored-user-results)))))
+        (mapv create-result-and-update-point-total! scored-user-results)))))
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"

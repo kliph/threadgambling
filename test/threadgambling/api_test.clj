@@ -189,30 +189,38 @@
                           :user_id "789"
                           :pick "Chelsea FC"
                           :points 3}]]
-    (with-stub db/get-gameweek :returns {:gameweek 38}
-      (with-stub db/get-all-current-picks :returns [{:id "1234"
-                                                     :current_pick "Tottenham Hotspur FC"
-                                                     :current_streak 0}
-                                                    {:id "456"
-                                                     :current_pick "Leicester City FC"
-                                                     :current_streak 0}
-                                                    {:id "789"
-                                                     :current_pick "Chelsea FC"
-                                                     :current_streak 2}]
-        ;; Simulate having previously scored results.  We shouldn't
-        ;; see half-scored weeks in practice, but this makes sure we
-        ;; don't end up with multiple rows corresponding to the same
-        ;; unique gameweek and user id
-        (with-stub db/get-gameweek-results :returns [{:user_id "1234"}]
-          (with-stub db/create-result! :returns 2
-            (web/score-finished-week! sample-finished-response)
-            (is (= (->>  expected-scores
-                         (mapv #(update-in % [:date] (fn [d]
-                                                       (f/unparse (f/formatters :year-month-day) (f/parse d))))))
+    (with-stub db/update-current-streak! :returns 1
+      (with-stub db/update-points! :returns 1
+        (with-stub db/get-user :returns {:points 2
+                                         :current_streak 2}
+          (with-stub db/get-gameweek :returns {:gameweek 38}
+            (with-stub db/get-all-current-picks :returns [{:id "1234"
+                                                           :current_pick "Tottenham Hotspur FC"
+                                                           :current_streak 0}
+                                                          {:id "456"
+                                                           :current_pick "Leicester City FC"
+                                                           :current_streak 0}
+                                                          {:id "789"
+                                                           :current_pick "Chelsea FC"
+                                                           :current_streak 2}]
+              ;; Simulate having previously scored results.  We shouldn't
+              ;; see half-scored weeks in practice, but this makes sure we
+              ;; don't end up with multiple rows corresponding to the same
+              ;; unique gameweek and user id
+              (with-stub db/get-gameweek-results :returns [{:user_id "1234"}]
+                (with-stub db/create-result! :returns 2
+                  (web/score-finished-week! sample-finished-response)
+                  (is (= (count (calls-to db/update-points!))
+                         2))
+                  (is (= (count (calls-to db/update-current-streak!))
+                         2))
+                  (is (= (->>  expected-scores
+                               (mapv #(update-in % [:date] (fn [d]
+                                                             (f/unparse (f/formatters :year-month-day) (f/parse d))))))
 
-                   (->> (map first (calls-to db/create-result!))
-                        (mapv #(update-in % [:date] (fn [d]
-                                                      (f/unparse (f/formatters :year-month-day) (c/from-sql-time d))))))))))))))
+                         (->> (map first (calls-to db/create-result!))
+                              (mapv #(update-in % [:date] (fn [d]
+                                                            (f/unparse (f/formatters :year-month-day) (c/from-sql-time d)))))))))))))))))
 
 (deftest respond-success-with-user
   (let [user {:id "187"
