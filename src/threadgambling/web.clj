@@ -45,7 +45,7 @@
                              :points (+ (:points user)
                                         (:points scored-result))}
         updated-user-streak {:id (:id user)
-                             :current_streak (inc (:current_streak user))}]
+                             :current_streak (:current_streak scored-result)}]
     (db/update-points! updated-user-points)
     (db/update-current-streak! updated-user-streak)
     (db/create-result! scored-result)))
@@ -97,9 +97,8 @@
                                            (db/get-gameweek-results {:gameweek gameweek})))
           scored-user-results (->> (map (fn [user-pick]
                                          (-> (if (winners-set (:pick user-pick))
-                                               (assoc user-pick :points (inc (:current_streak user-pick)))
-                                               (assoc user-pick :points 0))
-                                             (dissoc :current_streak)))
+                                               (assoc user-pick :points (inc (:current_streak user-pick)) :current_streak (inc (:current_streak user-pick)))
+                                               (assoc user-pick :points 0 :current_streak 0))))
                                        current-picks)
                                   (remove #(previously-scored-set (:user_id %))))]
       (when-not (empty? scored-user-results)

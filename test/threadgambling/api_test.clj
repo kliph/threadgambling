@@ -183,11 +183,13 @@
                           :gameweek 38
                           :user_id "456"
                           :pick "Leicester City FC"
+                          :current_streak 0
                           :points 0}
                          {:date "2017-05-21T14:00:00Z"
                           :gameweek 38
                           :user_id "789"
                           :pick "Chelsea FC"
+                          :current_streak 3
                           :points 3}]]
     (with-stub db/update-current-streak! :returns 1
       (with-stub db/update-points! :returns 1
