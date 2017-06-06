@@ -39,15 +39,28 @@
   (every? #(= "FINISHED" %)
           (map :status fixtures)))
 
-(defn create-result-and-update-point-total! [scored-result]
+(defn create-result-update-gameweek-and-user-fields! [scored-result]
   (let [user (db/get-user {:id (:user_id scored-result)})
+        current-user-pick {:pick (:pick scored-result)
+                           :id (:id user)}
+        current-gameweek (db/get-gameweek {:id 1})
+        updated-gameweek {:id (:id current-gameweek)
+                          :gameweek (inc (:gameweek current-gameweek))}
         updated-user-points {:id (:id user)
                              :points (+ (:points user)
                                         (:points scored-result))}
+        updated-user-current-pick {:id (:id user)
+                                   :current_pick nil}
         updated-user-streak {:id (:id user)
                              :current_streak (:current_streak scored-result)}]
+    (if (= 0 (:points scored-result))
+      (db/update-picks! {:id (:id user)
+                         :picks ""})
+      (db/add-pick! current-user-pick))
     (db/update-points! updated-user-points)
     (db/update-current-streak! updated-user-streak)
+    (db/update-current-pick! updated-user-current-pick)
+    (db/update-gameweek! updated-gameweek)
     (db/create-result! scored-result)))
 
 (defn score-finished-week! [body]
@@ -102,7 +115,7 @@
                                        current-picks)
                                   (remove #(previously-scored-set (:user_id %))))]
       (when-not (empty? scored-user-results)
-        (mapv create-result-and-update-point-total! scored-user-results)))))
+        (mapv create-result-update-gameweek-and-user-fields! scored-user-results)))))
 
 (defn fetch-fixtures! []
   (let [body (-> (client/get "http://api.football-data.org/v1/competitions/426/fixtures"
