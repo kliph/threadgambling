@@ -1,4 +1,4 @@
-(defproject threadgambling "0.1.0-SNAPSHOT"
+(defproject threadgambling "1.0.0-SNAPSHOT"
   :description ""
   :url "https://threadgambling.herokuapp.com"
   :license  {:name "CC BY-NC-SA 4.0"
