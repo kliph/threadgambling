@@ -36,8 +36,9 @@
                         :body body})))
 
 (defn all-finished? [fixtures]
-  (every? #(= "FINISHED" %)
-          (map :status fixtures)))
+  (and (seq fixtures)
+       (every? #(= "FINISHED" %)
+               (map :status fixtures))))
 
 (defn create-result-update-gameweek-and-user-fields! [scored-result]
   (let [user (db/get-user {:id (:user_id scored-result)})
