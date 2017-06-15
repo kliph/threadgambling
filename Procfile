@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/threadgambling.jar clojure.main -m threadgambling.web
+web: java $JVM_OPTS -cp target/threadstreaks.jar clojure.main -m threadstreaks.web
