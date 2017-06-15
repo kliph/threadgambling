@@ -1,7 +1,7 @@
 (ns dev.repl
   (:require [figwheel-sidecar.repl-api :as repl-api]
             [mount.core :as mount]
-            threadgambling.web))
+            threadstreaks.web))
 
 (defn start []
   (mount/start))

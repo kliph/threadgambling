@@ -1,10 +1,10 @@
-(ns threadgambling.account
+(ns threadstreaks.account
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [threadgambling.state :as s]
+  (:require [threadstreaks.state :as s]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
             [reagent.session :as session]
-            [threadgambling.color :as c]
+            [threadstreaks.color :as c]
             [cljs-react-material-ui.core :as ui]))
 
 (defn atom-input [props]

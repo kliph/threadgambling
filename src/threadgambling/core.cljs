@@ -1,12 +1,12 @@
-(ns threadgambling.core
+(ns threadstreaks.core
   (:require [cljs-react-material-ui.core :as ui]
             [cljs-react-material-ui.icons :as ic]
             [cljs-react-material-ui.reagent :as rui]
             [reagent.core :as r]
-            [threadgambling.routes :as routes]
-            [threadgambling.state :as s]
-            [threadgambling.color :as c]
-            [threadgambling.auth :as auth]
+            [threadstreaks.routes :as routes]
+            [threadstreaks.state :as s]
+            [threadstreaks.color :as c]
+            [threadstreaks.auth :as auth]
             [goog.dom]))
 
 (def by-id goog.dom.getElement)
@@ -54,7 +54,7 @@
 (defn nav-links []
   [:div#nav-links
    [:span
-    [:a {:href "/#/"} "threadgambling"]]
+    [:a {:href "/#/"} "threadstreaks"]]
    (if (:signed-in @s/app-state)
      [:span.pull-right
       [ui/flat-button

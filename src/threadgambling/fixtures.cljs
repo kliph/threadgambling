@@ -1,7 +1,7 @@
-(ns threadgambling.fixtures
+(ns threadstreaks.fixtures
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as r]
-            [threadgambling.state :as s]
+            [threadstreaks.state :as s]
             [cognitect.transit :as t]
             [cljs-http.client :as http]
             [reagent.session :as session]

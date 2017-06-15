@@ -1,12 +1,12 @@
-(ns ^:figwheel-no-load threadgambling.routes
+(ns ^:figwheel-no-load threadstreaks.routes
   (:require [secretary.core :as secretary :refer [defroute]]
-            [threadgambling.fixtures :as f]
-            [threadgambling.standings :as standings]
-            [threadgambling.team :as team]
-            [threadgambling.home :as home]
-            [threadgambling.account :as account]
-            [threadgambling.auth :as auth]
-            [threadgambling.state :as s]
+            [threadstreaks.fixtures :as f]
+            [threadstreaks.standings :as standings]
+            [threadstreaks.team :as team]
+            [threadstreaks.home :as home]
+            [threadstreaks.account :as account]
+            [threadstreaks.auth :as auth]
+            [threadstreaks.state :as s]
             [goog.events :as events]
             [reagent.core :as r]
             [goog.history.EventType :as EventType])

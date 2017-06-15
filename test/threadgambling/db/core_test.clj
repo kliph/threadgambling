@@ -1,12 +1,12 @@
-(ns threadgambling.db.core-test
-  (:require [threadgambling.db.core :refer [*db*] :as db]
+(ns threadstreaks.db.core-test
+  (:require [threadstreaks.db.core :refer [*db*] :as db]
             [luminus-migrations.core :as migrations]
             [clojure.test :refer [deftest testing is use-fixtures]]
             [clojure.java.jdbc :as jdbc]
             [clj-time.format :as f]
             [clj-time.coerce :as c]
             [environ.core :refer [env]]
-            [threadgambling.api-test :refer [sample-response]]
+            [threadstreaks.api-test :refer [sample-response]]
             [mount.core :as mount]))
 
 (defmacro debug [& body]
@@ -21,7 +21,7 @@
 (use-fixtures :once
   (fn [f]
     (mount/start
-     #'threadgambling.db.core/*db*)
+     #'threadstreaks.db.core/*db*)
     (migrations/migrate ["migrate"] {:database-url (env :database-url)})
     (f)))
 

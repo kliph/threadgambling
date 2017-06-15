@@ -1,6 +1,6 @@
-(ns threadgambling.api-test
+(ns threadstreaks.api-test
   (:require [clojure.test :refer [deftest testing is use-fixtures]]
-            [threadgambling.web :as web]
+            [threadstreaks.web :as web]
             [stubadub.core :refer [with-stub calls-to]]
             [compojure.handler :refer [site]]
             [clojure.data.json :as json]
@@ -11,13 +11,13 @@
             [clojure.java.jdbc :as jdbc]
             [mount.core :as mount]
             [luminus-migrations.core :as migrations]
-            [threadgambling.db.core :refer [*db*] :as db]
+            [threadstreaks.db.core :refer [*db*] :as db]
             [ring.mock.request :as mock]))
 
 (use-fixtures :once
   (fn [f]
     (mount/start
-     #'threadgambling.db.core/*db*)
+     #'threadstreaks.db.core/*db*)
     (migrations/migrate ["migrate"] {:database-url (env :database-url)})
     (f)))
 

@@ -1,4 +1,4 @@
-(ns threadgambling.admin
+(ns threadstreaks.admin
   (:require [reagent.core :as r]
             [goog.dom]))
 

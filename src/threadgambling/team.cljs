@@ -1,6 +1,6 @@
-(ns threadgambling.team
+(ns threadstreaks.team
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [threadgambling.state :as s]
+  (:require [threadstreaks.state :as s]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
             [reagent.session :as session]

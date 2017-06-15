@@ -1,12 +1,12 @@
-(ns threadgambling.fixtures-test
+(ns threadstreaks.fixtures-test
   (:require [cljs.test :refer-macros [deftest testing is use-fixtures]]
             [cljs-react-test.utils :as tu]
             [clojure.string]
             [dommy.core :as dommy :refer-macros [sel1 sel]]
             [reagent.core :as r]
-            [threadgambling.test-util :as test-util]
-            [threadgambling.fixtures :as fixtures]
-            [threadgambling.state :as s]))
+            [threadstreaks.test-util :as test-util]
+            [threadstreaks.fixtures :as fixtures]
+            [threadstreaks.state :as s]))
 
 (def ^:dynamic c)
 

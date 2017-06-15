@@ -1,12 +1,12 @@
-(ns threadgambling.update-account-test
+(ns threadstreaks.update-account-test
   (:require [cljs.test :refer-macros [deftest testing is use-fixtures]]
             [cljs-react-test.utils :as tu]
             [dommy.core :as dommy :refer-macros [sel1 sel]]
             [reagent.core :as r]
             [reagent.session :as session]
-            [threadgambling.account :as account]
-            [threadgambling.test-util :as test-util]
-            [threadgambling.state :as s]))
+            [threadstreaks.account :as account]
+            [threadstreaks.test-util :as test-util]
+            [threadstreaks.state :as s]))
 
 (def ^:dynamic c)
 

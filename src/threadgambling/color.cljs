@@ -1,4 +1,4 @@
-(ns threadgambling.color)
+(ns threadstreaks.color)
 
 (def pank "#FB0049")
 (def purp "#29002E")

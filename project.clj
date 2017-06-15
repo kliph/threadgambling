@@ -1,12 +1,12 @@
-(defproject threadgambling "1.0.0-SNAPSHOT"
+(defproject threadstreaks "1.0.0-SNAPSHOT"
   :description ""
-  :url "https://threadgambling.herokuapp.com"
+  :url "https://threadstreaks.herokuapp.com"
   :license  {:name "CC BY-NC-SA 4.0"
              :url "https://creativecommons.org/licenses/by-nc-sa/4.0/"}
   :clean-targets ^{:protect false} [:target-path "out" "resources/public/js"]
   :repl-options {:init-ns dev.repl}
   :min-lein-version "2.5.3"
-  :main threadgambling.web
+  :main threadstreaks.web
   :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
                  [org.clojure/clojurescript "1.9.521"]
                  [org.clojure/core.async "0.3.442"]
@@ -45,7 +45,7 @@
   :hooks [environ.leiningen.hooks]
   :figwheel {:css-dirs ["resources/public/css"]
              :server-port 3450}
-  :uberjar-name "threadgambling.jar"
+  :uberjar-name "threadstreaks.jar"
   :profiles {:project/dev {:dependencies [[com.cemerick/piggieback "0.2.1"]
                                           [figwheel-sidecar "0.5.9"]
                                           [pjstadig/humane-test-output "0.8.1"]
@@ -57,7 +57,7 @@
                            :cljsbuild {:builds [{:id "dev"
                                                  :source-paths ["src"]
                                                  :figwheel true
-                                                 :compiler {:main "threadgambling.core"
+                                                 :compiler {:main "threadstreaks.core"
                                                             :preloads [devtools.preload]
                                                             :asset-path "js/out"
                                                             :output-to "resources/public/js/main.js"
@@ -73,7 +73,7 @@
                                                 {:id "admin"
                                                  :source-paths ["src"]
                                                  :figwheel true
-                                                 :compiler {:main "threadgambling.admin"
+                                                 :compiler {:main "threadstreaks.admin"
                                                             :preloads [devtools.preload]
                                                             :asset-path "js/admin/out"
                                                             :output-to "resources/public/js/admin.js"
@@ -86,7 +86,7 @@
                                                  :compiler {:output-to "resources/public/js/test.js"
                                                             :asset-path "js/test/out"
                                                             :output-dir "resources/public/js/test/out"
-                                                            :main "threadgambling.runner"
+                                                            :main "threadstreaks.runner"
                                                             :optimizations :simple}}]}}
              :profiles/test {}
              :proflies/dev {}
@@ -98,7 +98,7 @@
                        :cljsbuild {:builds [{:id "production"
                                              :source-paths ["src"]
                                              :jar true
-                                             :compiler {:main "threadgambling.core"
+                                             :compiler {:main "threadstreaks.core"
                                                         :asset-path "js/out"
                                                         :output-to "resources/public/js/main.js"
                                                         :output-dir "resources/public/js/out"
@@ -112,7 +112,7 @@
                                             {:id "admin"
                                              :source-paths ["src"]
                                              :jar true
-                                             :compiler {:main "threadgambling.admin"
+                                             :compiler {:main "threadstreaks.admin"
                                                         :asset-path "js/admin/out"
                                                         :output-to "resources/public/js/admin.js"
                                                         :output-dir "resources/public/js/admin/out"

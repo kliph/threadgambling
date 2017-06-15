@@ -1,4 +1,4 @@
-(ns threadgambling.test-util
+(ns threadstreaks.test-util
   (:require [cljs-react-material-ui.reagent :as rui]
             [reagent.core :as r]
             [cljs-react-material-ui.core :as ui]))

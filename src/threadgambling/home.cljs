@@ -1,7 +1,7 @@
-(ns threadgambling.home
-  (:require [threadgambling.state :as s]
-            [threadgambling.color :as c]
-            [threadgambling.auth :as auth]
+(ns threadstreaks.home
+  (:require [threadstreaks.state :as s]
+            [threadstreaks.color :as c]
+            [threadstreaks.auth :as auth]
             [reagent.session :as session]
             [cljs-react-material-ui.core :as ui]))
 

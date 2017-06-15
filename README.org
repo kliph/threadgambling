@@ -1,15 +1,15 @@
-* Threadgambling
+* Threadstreaks
 Streak with the thread.
 * Initial setup
 #+BEGIN_SRC sh :tangle script/bootstrap :shebang "#!/bin/bash"
   lein deps
 
-  if psql -lqt | cut -d \| -f 1 | grep -q threadgambling-dev; then
+  if psql -lqt | cut -d \| -f 1 | grep -q threadstreaks-dev; then
       echo "🌯  DB exists"
   else
       echo "🌯  Creating DB"
-      createdb threadgambling-dev
-      createdb threadgambling-test
+      createdb threadstreaks-dev
+      createdb threadstreaks-test
   fi
   echo "🌯  DB is good to go"
 
@@ -43,7 +43,7 @@ script/bootstrap
   echo "🌯  Starting server..."
   echo "🌯  You'll need to manually start a figwheel repl (See README.org for details)..."
 
-  lein run -m threadgambling.web
+  lein run -m threadstreaks.web
 #+END_SRC
 
 * To start a server with figwheel

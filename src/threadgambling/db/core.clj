@@ -1,4 +1,4 @@
-(ns threadgambling.db.core
+(ns threadstreaks.db.core
   (:require [conman.core :as conman]
             [environ.core :refer [env]]
             [mount.core :refer [defstate]]))
