@@ -4,4 +4,4 @@ script/update
 echo "🌯  Starting server..."
 echo "🌯  You'll need to manually start a figwheel repl (See README.org for details)..."
 
-lein run -m threadgambling.web
+lein run -m threadstreaks.web
