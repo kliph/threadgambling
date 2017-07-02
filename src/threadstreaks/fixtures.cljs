@@ -13,7 +13,7 @@
 
 (defn previously-picked? [x]
   (let [previously-picked-set (session/get-in [:user :picks] #{})]
-    (previously-picked-set x)))
+    (get previously-picked-set x)))
 
 (defn toggle-picked! [a confirm-disabled]
   (if (= @a "picked")
