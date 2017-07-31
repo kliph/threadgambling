@@ -37,7 +37,7 @@
 
 (defn all-finished? [fixtures]
   (and (seq fixtures)
-       (every? #(= "FINISHED" %)
+       (every? #(#{"FINISHED" "CANCELED" "POSTPONED"} %)
                (map :status fixtures))))
 
 (defn create-result-update-gameweek-and-user-fields! [scored-result]
