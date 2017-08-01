@@ -89,7 +89,13 @@
                            parsed-fixtures)
           winners-set  (->> (map (fn [fixture]
                                    (let [home-goals (get-in fixture [:result :goalsHomeTeam])
+                                         home-goals (if (nil? home-goals)
+                                                      0
+                                                      home-goals)
                                          away-goals (get-in fixture [:result :goalsAwayTeam])
+                                         away-goals (if (nil? away-goals)
+                                                      0
+                                                      away-goals)
                                          winner-key (cond (> home-goals away-goals) :homeTeamName
                                                           (> away-goals home-goals) :awayTeamName
                                                           :else :draw)
@@ -110,11 +116,11 @@
                                       (map :user_id
                                            (db/get-gameweek-results {:gameweek gameweek})))
           scored-user-results (->> (map (fn [user-pick]
-                                         (-> (if (winners-set (:pick user-pick))
-                                               (assoc user-pick :points (inc (:current_streak user-pick)) :current_streak (inc (:current_streak user-pick)))
-                                               (assoc user-pick :points 0 :current_streak 0))))
-                                       current-picks)
-                                  (remove #(previously-scored-set (:user_id %))))]
+                                          (-> (if (winners-set (:pick user-pick))
+                                                (assoc user-pick :points (inc (:current_streak user-pick)) :current_streak (inc (:current_streak user-pick)))
+                                                (assoc user-pick :points 0 :current_streak 0))))
+                                        current-picks)
+                                   (remove #(previously-scored-set (:user_id %))))]
       (when-not (empty? scored-user-results)
         (mapv create-result-update-gameweek-and-user-fields! scored-user-results)))))
 
