@@ -12,7 +12,12 @@
   ((complement nil?) (session/get-in [:user :current_pick])))
 
 (defn previously-picked? [x]
-  (let [previously-picked-set (session/get-in [:user :picks] #{})]
+  (let [previously-picked-string (session/get-in [:user :picks] "")
+        previously-picked-set (if (clojure.string/includes? previously-picked-string ",")
+                                (into #{} (clojure.string/split
+                                           previously-picked-string
+                                           #","))
+                                #{})]
     (get previously-picked-set x)))
 
 (defn toggle-picked! [a confirm-disabled]
