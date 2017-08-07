@@ -127,7 +127,7 @@
         (mapv create-result-update-gameweek-and-user-fields! scored-user-results)))))
 
 (defn fetch-fixtures! []
-  (let [body (-> (client/get "http://api.football-data.org/v1/competitions/453/fixtures"
+  (let [body (-> (client/get "http://api.football-data.org/v1/competitions/445/fixtures"
                              {:query-params {"matchday" (str (:gameweek (db/get-gameweek {:id 1})))}
                               :headers {"X-Response-Control" "minified"
                                         "X-Auth-Token" (env :auth-token)}})
