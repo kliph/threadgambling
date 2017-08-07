@@ -47,6 +47,8 @@
         current-gameweek (db/get-gameweek {:id 1})
         updated-gameweek {:id (:id current-gameweek)
                           :gameweek (inc (:gameweek current-gameweek))}
+        _ (println "UPDATING GAMEWEEK")
+        _ (println updated-gameweek)
         updated-user-points {:id (:id user)
                              :points (+ (:points user)
                                         (:points scored-result))}
