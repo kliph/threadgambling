@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [threadstreaks.state :as s]
             [cljs-http.client :as http]
+            [threadstreaks.fixtures :refer [pick-locked?]]
             [cljs.core.async :refer [<!]]))
 
 (defn fetch-standings! []
@@ -22,7 +23,9 @@
      [:td name]
      [:td points]
      [:td current-streak]
-     [:td current-pick]]))
+     (if (pick-locked?)
+       [:td current-pick]
+       [:td])]))
 
 (defn standings-page []
   (fetch-standings!)
