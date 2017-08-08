@@ -6,4 +6,4 @@ CREATE TABLE gameweeks (
 --;
 INSERT INTO gameweeks
 (id, gameweek)
-VALUES (1, 38);
+VALUES (1, 1);

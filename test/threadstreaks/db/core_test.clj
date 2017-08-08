@@ -154,7 +154,7 @@
   (jdbc/with-db-transaction [t-conn *db*]
     (jdbc/db-set-rollback-only! t-conn)
     (let [gameweek {:id 1
-                    :gameweek 38}
+                    :gameweek 1}
           updated-gameweek (-> gameweek
                                (assoc :gameweek 39))]
       (is (= gameweek
