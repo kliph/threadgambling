@@ -453,6 +453,10 @@ input::-moz-focus-inner {
     display: inline-block;
   }
 
+  .standings table {
+    table-layout: auto;
+  }
+
   .standings th {
     font-size: 12px;
     position: relative;
@@ -466,6 +470,10 @@ input::-moz-focus-inner {
     height: 100%;
     background: #fff;
     display: block;
+  }
+
+  .standings td {
+    font-size: 12px;
   }
 
   .team-page th {
