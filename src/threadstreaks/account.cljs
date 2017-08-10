@@ -27,9 +27,12 @@
   (go (let [response  (<! (http/post "/account"
                                      {:headers {"Accept" "application/json"}
                                       :form-params user-params}))
-            updated-user (-> response
-                             :body
-                             :user)]
+            user (session/get :user)
+            updated-user (merge
+                          user
+                          (-> response
+                              :body
+                              :user))]
         (session/put! :user updated-user))))
 
 (defn handle-update! []
