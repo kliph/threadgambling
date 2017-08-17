@@ -44,11 +44,6 @@
   (let [user (db/get-user {:id (:user_id scored-result)})
         current-user-pick {:pick (:pick scored-result)
                            :id (:id user)}
-        current-gameweek (db/get-gameweek {:id 1})
-        updated-gameweek {:id (:id current-gameweek)
-                          :gameweek (inc (:gameweek current-gameweek))}
-        _ (println "UPDATING GAMEWEEK")
-        _ (println updated-gameweek)
         updated-user-points {:id (:id user)
                              :points (+ (:points user)
                                         (:points scored-result))}
@@ -63,7 +58,6 @@
     (db/update-points! updated-user-points)
     (db/update-current-streak! updated-user-streak)
     (db/update-current-pick! updated-user-current-pick)
-    (db/update-gameweek! updated-gameweek)
     (db/create-result! scored-result)))
 
 (defn score-finished-week! [body]
@@ -117,6 +111,11 @@
           previously-scored-set (into #{}
                                       (map :user_id
                                            (db/get-gameweek-results {:gameweek gameweek})))
+          current-gameweek (db/get-gameweek {:id 1})
+          updated-gameweek {:id (:id current-gameweek)
+                            :gameweek (inc (:gameweek current-gameweek))}
+          _ (println "UPDATING GAMEWEEK")
+          _ (println updated-gameweek)
           scored-user-results (->> (map (fn [user-pick]
                                           (-> (if (winners-set (:pick user-pick))
                                                 (assoc user-pick :points (inc (:current_streak user-pick)) :current_streak (inc (:current_streak user-pick)))
@@ -124,6 +123,7 @@
                                         current-picks)
                                    (remove #(previously-scored-set (:user_id %))))]
       (when-not (empty? scored-user-results)
+        (db/update-gameweek! updated-gameweek)
         (mapv create-result-update-gameweek-and-user-fields! scored-user-results)))))
 
 (defn fetch-fixtures! []
