@@ -5,6 +5,7 @@
              :url "https://creativecommons.org/licenses/by-nc-sa/4.0/"}
   :clean-targets ^{:protect false} [:target-path "out" "resources/public/js"]
   :repl-options {:init-ns dev.repl}
+  :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :min-lein-version "2.5.3"
   :main threadstreaks.web
   :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
