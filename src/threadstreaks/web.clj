@@ -69,10 +69,6 @@
                    :date
                    f/parse
                    c/to-sql-time)
-          goals (-> parsed-fixtures
-                    first
-                    :result
-                    :goalsAwayTeam)
           game (-> parsed-fixtures
                    first)
           winner-keys (map (fn [fixture]
