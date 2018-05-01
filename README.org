@@ -60,3 +60,26 @@ repl
 #+BEGIN_SRC sh
   lein migratus create <name>
 #+END_SRC
+* To manually score a gameweek
+#+BEGIN_SRC sh
+  heroku run lein trampoline repl
+#+END_SRC
+
+#+BEGIN_SRC clojure
+  (load "web")
+  (in-ns 'threadstreaks.web)
+
+  (require 'mount.core)
+
+  (mount.core/start)
+
+  (db/get-gameweek {:id 1})
+
+  ;;; Fetch the body, and edit it so the problematic games are finished as 0 0 draws
+
+  (def body "the edited json")
+
+  (save-fixtures! body)
+
+  (score-finished-week! body)
+#+END_SRC
