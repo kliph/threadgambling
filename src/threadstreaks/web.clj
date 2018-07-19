@@ -18,7 +18,7 @@
 (defn parse-fixtures [body]
   (-> body
       (json/read-str :key-fn keyword)
-      :fixtures))
+      :matches))
 
 (defn fixtures-updated? [response-body record]
   (let [parsed-response-fixtures (parse-fixtures response-body)
@@ -71,18 +71,18 @@
           game (-> parsed-fixtures
                    first)
           winners-set  (->> (map (fn [fixture]
-                                   (let [home-goals (get-in fixture [:result :goalsHomeTeam])
+                                   (let [home-goals (get-in fixture [:score :fullTime :homeTeam])
                                          home-goals (if (nil? home-goals)
                                                       0
                                                       home-goals)
-                                         away-goals (get-in fixture [:result :goalsAwayTeam])
+                                         away-goals (get-in fixture [:score :fullTime :awayTeam])
                                          away-goals (if (nil? away-goals)
                                                       0
                                                       away-goals)
-                                         winner-key (cond (> home-goals away-goals) :homeTeamName
-                                                          (> away-goals home-goals) :awayTeamName
-                                                          :else :draw)
-                                         winner (get fixture winner-key)]
+                                         winner-key-path (cond (> home-goals away-goals) [:homeTeam :name]
+                                                               (> away-goals home-goals) [:awayTeam :name]
+                                                               :else [:draw])
+                                         winner (get-in fixture winner-key-path :draw)]
                                      winner))
                                  parsed-fixtures)
                             (filter (complement nil?))
