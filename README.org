@@ -53,6 +53,11 @@ Connect to a repl using =C-c M-j=.  Run =(figwheel-up)=
 #+BEGIN_SRC sh :tangle script/migrate-production :shebang "#!/bin/bash"
   heroku run lein run migrate
 #+END_SRC
+
+* To run the tests automatically
+#+BEGIN_SRC sh
+  lein test-refresh
+#+END_SRC
 * To switch builds
 Switch builds by using =(switch-to-build :id)= from a figwheel cljs
 repl
