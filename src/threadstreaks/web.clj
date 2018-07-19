@@ -26,7 +26,6 @@
     (not= parsed-response-fixtures
           parsed-record-fixtures)))
 
-
 (defn save-fixtures! [body]
   (when (fixtures-updated?
          body
@@ -71,14 +70,6 @@
                    c/to-sql-time)
           game (-> parsed-fixtures
                    first)
-          winner-keys (map (fn [fixture]
-                             (let [home-goals (get-in fixture [:result :goalsHomeTeam])
-                                   away-goals (get-in fixture [:result :goalsAwayTeam])
-                                   winner-key (cond (> home-goals away-goals) :homeTeamName
-                                                    (> away-goals home-goals) :awayTeamName
-                                                    :else :draw)]
-                               winner-key))
-                           parsed-fixtures)
           winners-set  (->> (map (fn [fixture]
                                    (let [home-goals (get-in fixture [:result :goalsHomeTeam])
                                          home-goals (if (nil? home-goals)
