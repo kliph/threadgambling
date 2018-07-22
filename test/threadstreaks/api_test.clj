@@ -184,13 +184,13 @@
            (web/all-finished? unfinished-fixtures)))))
 
 (deftest score-finished-week
-  (let [expected-scores [{:date "2018-07-19T14:00:00Z"
+  (let [expected-scores [{:date "2017-08-19T14:00:00Z"
                           :gameweek 1
                           :user_id "456"
                           :pick "FC Crotone"
                           :current_streak 0
                           :points 0}
-                         {:date "2018-07-19T14:00:00Z"
+                         {:date "2017-08-19T14:00:00Z"
                           :gameweek 1
                           :user_id "789"
                           :pick "AC Milan"
