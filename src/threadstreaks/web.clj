@@ -65,7 +65,7 @@
           parsed-fixtures (parse-fixtures body)
           date (-> parsed-fixtures
                    first
-                   :date
+                   :utcDate
                    f/parse
                    c/to-sql-time)
           game (-> parsed-fixtures

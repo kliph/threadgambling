@@ -87,21 +87,25 @@
      [:td.vs "vs"]
      [pick-item props away-club "Away" table-state]]))
 
+(defn api-fixture->fixture [x]
+  {:home-club {:name (get-in x [:homeTeam :name])
+               :goals (get-in x [:score :fullTime :homeTeam])}
+   :away-club {:name (get-in x [:awayTeam :name])
+               :goals (get-in x [:score :fullTime :awayTeam])}
+   :status (get x :status)
+   :date (get x :utcDate)})
+
+(def fixtures-key :matches)
+
 (defn fetch-fixtures! [fixtures-atom]
   (go (let [response (<! (http/get "/fixtures"))
             transform-fn #(map
-                           (fn [x]
-                             {:home-club {:name (get x :homeTeamName)
-                                          :goals (get-in x [:result :goalsHomeTeam])}
-                              :away-club {:name (get x :awayTeamName)
-                                          :goals (get-in x [:result :goalsAwayTeam])}
-                              :status (get x :status)
-                              :date (get x :date)})
-                           (get % :fixtures []))
+                           api-fixture->fixture
+                           (get % fixtures-key []))
             fixtures (-> response
                          :body
                          transform-fn)
-            gameweek (get-in response [:body :fixtures 0 :matchday])]
+            gameweek (get-in response [:body fixtures-key 0 :matchday])]
         (swap! fixtures-atom assoc
                :fixtures fixtures
                :gameweek gameweek
