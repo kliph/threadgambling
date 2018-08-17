@@ -98,3 +98,16 @@ WHERE results.user_id = :id;
 SELECT user_id
 FROM results
 WHERE gameweek = :gameweek;
+
+-- :name get-all-ranks :? :*
+-- :doc retrieve all of the current ranks
+SELECT *, rank() OVER (ORDER BY points DESC)
+FROM users;
+
+-- :name get-rank :? :*
+WITH ranks AS (
+     SELECT *, rank() OVER (ORDER BY points DESC)
+     FROM users
+)
+SELECT * FROM ranks
+where id = :id;
