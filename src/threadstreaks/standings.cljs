@@ -7,9 +7,7 @@
 
 (defn fetch-standings! []
   (go (let [response (<! (http/get "/standings" {:headers {"Content-Type" "application/json"}}))
-            standings (->> (get-in response [:body :standings])
-                           (map-indexed (fn [idx x]
-                                          (assoc x :rank (inc idx)))))]
+            standings (->> (get-in response [:body :standings]))]
         (swap! s/app-state assoc
                :standings standings))))
 
@@ -52,5 +50,5 @@
         {:data-th "Curr pk"}
         "Current Pick"]]
       [:tbody
-       (map (fn [x] ^{:key (str (:rank x) (:team x) (:user x))} [standings-row x])
+       (map (fn [x] ^{:key (str (:rank x) (:team x) (:id x))} [standings-row x])
             (@s/app-state :standings))]]]))

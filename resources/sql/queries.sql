@@ -78,8 +78,12 @@ WHERE id = :id
 
 -- :name get-standings :? :*
 -- :doc retrieve listing of standings
-SELECT name, team, points, current_streak, current_pick, id
-FROM users
+WITH ranks AS (
+     SELECT *, rank() OVER (ORDER BY points DESC)
+     FROM users
+)
+SELECT name, team, points, current_streak, current_pick, id, rank
+FROM ranks
 ORDER BY points DESC;
 
 -- :name get-all-current-picks :? :*
@@ -102,16 +106,3 @@ WHERE results.user_id = :id;
 SELECT user_id
 FROM results
 WHERE gameweek = :gameweek;
-
--- :name get-all-ranks :? :*
--- :doc retrieve all of the current ranks
-SELECT *, rank() OVER (ORDER BY points DESC)
-FROM users;
-
--- :name get-rank :? :*
-WITH ranks AS (
-     SELECT *, rank() OVER (ORDER BY points DESC)
-     FROM users
-)
-SELECT * FROM ranks
-where id = :id;
