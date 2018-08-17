@@ -220,6 +220,7 @@
                   :team "Chickens"
                   :current_pick "Tottenham"
                   :points 3
+                  :rank 2
                   :current_streak 1}
           user-2 {:id "1878"
                   :name "Test User"
@@ -227,6 +228,7 @@
                   :team "Tacos"
                   :current_pick "Chelsea"
                   :points 4
+                  :rank 1
                   :current_streak 0}]
       (db/create-user! t-conn
                        user-1
@@ -259,7 +261,7 @@
                                               [:id :current_streak])
                                  {:connection t-conn})
 
-      (is (= (map #(select-keys % [:name :id :team :points :current_streak :current_pick])
+      (is (= (map #(select-keys % [:name :id :team :points :current_streak :current_pick :rank])
               [user-2 user-1])
              (db/get-standings t-conn
                                {:connection t-conn}))))))

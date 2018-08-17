@@ -53,7 +53,11 @@ WHERE id = :id
 
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
-SELECT * FROM users
+WITH ranks AS (
+     SELECT *, rank() OVER (ORDER BY points DESC)
+     FROM users
+)
+SELECT * FROM ranks
 WHERE id = :id
 
 -- :name delete-user! :! :n

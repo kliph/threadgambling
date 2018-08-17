@@ -149,6 +149,7 @@
                                                    :email
                                                    :current_pick
                                                    :picks
+                                                   :rank
                                                    :current_streak
                                                    :points])})})
 

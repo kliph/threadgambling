@@ -5,6 +5,13 @@
             [reagent.session :as session]
             [cljs-react-material-ui.core :as ui]))
 
+(defn rank-to-nth [n]
+  (cond
+    (= n 1) (str n "st")
+    (= n 2) (str n "nd")
+    (= n 3) (str n "rd")
+    :else (str n "th")))
+
 (defn home-page []
   (fn []
     [:div.home-container
@@ -21,7 +28,10 @@
        [:h3 (session/get-in [:user :name])]
        [:h2 {:style {:padding-left "0"}} (session/get-in [:user :team])]]
       [:div.rank
-       [:span "1th Place"]]]
+       [:span
+        (-> (session/get-in [:user :rank])
+            rank-to-nth)
+        " place"]]]
      [:div.actions
       [:div.quarter]
       [:ul
