@@ -88,20 +88,25 @@
      [pick-item props away-club "Away" table-state]]))
 
 (defn api-fixture->fixture [x]
-  {:home-club {:name (get-in x [:homeTeam :name])
-               :goals (get-in x [:score :fullTime :homeTeam])}
-   :away-club {:name (get-in x [:awayTeam :name])
-               :goals (get-in x [:score :fullTime :awayTeam])}
-   :status (get x :status)
-   :date (get x :utcDate)})
+  (let [home-team  (get-in x [:homeTeam :name])
+        away-team (get-in x [:awayTeam :name])]
+    (if (= home-team "Everton FC")
+      nil
+      {:home-club {:name home-team
+                   :goals (get-in x [:score :fullTime :homeTeam])}
+       :away-club {:name away-team
+                   :goals (get-in x [:score :fullTime :awayTeam])}
+       :status (get x :status)
+       :date (get x :utcDate)})))
 
 (def fixtures-key :matches)
 
 (defn fetch-fixtures! [fixtures-atom]
   (go (let [response (<! (http/get "/fixtures"))
-            transform-fn #(map
-                           api-fixture->fixture
-                           (get % fixtures-key []))
+            transform-fn #(->> (map
+                                api-fixture->fixture
+                                (get % fixtures-key []))
+                               (remove nil?))
             fixtures (-> response
                          :body
                          transform-fn)
