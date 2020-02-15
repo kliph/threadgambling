@@ -256,15 +256,15 @@
 		       \"endDate\":\"2020-05-17\",
 		       \"currentMatchday\":26},
 	     \"utcDate\":\"2020-02-14T20:00:00Z\",
-	     \"status\":\"SCHEDULED\",
+	     \"status\":\"FINISHED\",
 	     \"matchday\":26,
 	     \"stage\":\"REGULAR_SEASON\",
 	     \"group\":\"Regular Season\",
 	     \"lastUpdated\":\"2019-12-21T18:35:13Z\",
-	     \"score\":{\"winner\":null,
+	     \"score\":{\"winner\":\"DRAW\",
 		      \"duration\":\"REGULAR\",
-		      \"fullTime\":{\"homeTeam\":null,
-				  \"awayTeam\":null},
+		      \"fullTime\":{\"homeTeam\":0,
+				  \"awayTeam\":0},
 		      \"halfTime\":{\"homeTeam\":null,
 				  \"awayTeam\":null},
 		      \"extraTime\":{\"homeTeam\":null,
@@ -432,8 +432,6 @@
 	     \"awayTeam\":{\"id\":563,
 			 \"name\":\"West Ham United FC\"},
 	     \"referees\":[]}]}"
-
-
 
         _ (save-fixtures! body)
         _ (score-finished-week! body)]
